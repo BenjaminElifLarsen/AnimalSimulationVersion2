@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AnimalSimulationVersion2
 {
-    class Carnivore : Animal, IHunt
+    abstract class Carnivore : Animal, IHunt
     {
         public Carnivore(string species) : base(species)
         {

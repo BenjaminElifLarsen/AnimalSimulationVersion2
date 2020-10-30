@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AnimalSimulationVersion2
 {
-    class Herbavore : Animal
+    abstract class Herbavore : Animal
     {
         public Herbavore(string species) : base (species)
         {

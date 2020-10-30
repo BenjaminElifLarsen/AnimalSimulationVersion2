@@ -17,7 +17,7 @@ namespace AnimalSimulationVersion2
         public float MaxAge { get; set; }
         public char Gender { get; set; }
         public int[] BirthAmount { get; set; }
-        public string Species { get; set; }
+        public string Species { get; set; } //if going with classes like "Lion" or "Cat" no need for this, execept for you need one for subspecies.
         public float MovementSpeed { get; set; }
         public float Hunger { get; set; }
         public float TimeSinceReproduction { get; set; }
