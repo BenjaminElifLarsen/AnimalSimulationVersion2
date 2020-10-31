@@ -7,13 +7,14 @@ namespace AnimalSimulationVersion2
 {
     public class Helper : IHelper
     {
+        private static List<string> ids;
         public static IHelper Instance { get; }
         static Helper()
         {
+            ids = new List<string>();
             Instance = new Helper();
         }
         private Helper() { }
-
 
         public T[] DeepCopy<T>(T[] array)
         {
@@ -37,34 +38,34 @@ namespace AnimalSimulationVersion2
             array = list.ToArray();
         }
 
-        public void Add<T>(List<T> list, T value)
-        {
-            list.Add(value);
-        }
-
+        public void Add<T>(List<T> list, T value) => list.Add(value);
+        
         public string GenerateID()
         {
             throw new NotImplementedException();
         }
 
-        public void Remove<T>(List<T> list, T value)
-        {
-            throw new NotImplementedException();
-        }
+        public void Remove<T>(List<T> list, T value) => list.Remove(value);
 
         public void Remove<T>(T[] array, T value)
         {
             throw new NotImplementedException();
         }
 
-        public bool Contains<T>(List<T> list, T value)
+        public bool Contains<T>(List<T> list, T value) //https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.equalitycomparer-1.default?view=netcore-3.1
         {
-            throw new NotImplementedException();
+            foreach (T val in list)
+                if (EqualityComparer<T>.Default.Equals(val,value))
+                    return true;
+            return false;
         }
 
         public bool Contains<T>(T[] array, T value)
         {
-            throw new NotImplementedException();
+            foreach (T val in array)
+                if (EqualityComparer<T>.Default.Equals(val, value))
+                    return true;
+            return false;
         }
     }
 }

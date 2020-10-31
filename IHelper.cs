@@ -14,6 +14,6 @@ namespace AnimalSimulationVersion2
         public void Remove<T>(T[] array, T value);
         public bool Contains<T>(List<T> list, T value);
         public bool Contains<T>(T[] array, T value);
-        public string GenerateID();
+        public string GenerateID(); 
     }
 }
