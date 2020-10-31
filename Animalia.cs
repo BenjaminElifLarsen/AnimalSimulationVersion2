@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AnimalSimulationVersion2
 {
-    abstract class Animal
+    abstract class Animalia
     {
         /// <summary>
         /// The ID of the food that is hunted.
@@ -35,10 +35,9 @@ namespace AnimalSimulationVersion2
         public float Health { get; set; }
         public string[] FoodArray { get; set; } 
         public string[] HuntedBy { get; set; } //the IDs that are after it
-        public string Active { get; set; } //dayactive, nightactive or both
         public float NutrienValue { get; set; }
 
-        public Animal(string species, int reproductionAge, float[] location, float maxAge, int[] birthAmount, float movementSpeed, float hunger, Point[] design, int[] colour, string[] foodSource, string active, float nutrienceValue, IHelper helper ) : this(helper)
+        public Animalia(string species, int reproductionAge, float[] location, float maxAge, int[] birthAmount, float movementSpeed, float hunger, Point[] design, int[] colour, string[] foodSource, float nutrienceValue, IHelper helper ) : this(helper)
         {
             Species = species; //maybe have all parameters related to the animal as a struct. 
             ReproductionAge = reproductionAge;
@@ -49,10 +48,9 @@ namespace AnimalSimulationVersion2
             Design = design;
             Colour = colour;
             FoodArray = foodSource;
-            Active = active;
             NutrienValue = nutrienceValue;
         }
-        private Animal(IHelper helper)
+        private Animalia(IHelper helper)
         {
             this.helper = helper;
         }

@@ -14,7 +14,6 @@ namespace AnimalSimulationVersion2
 
         public void FindTargetEventHandler(); //not all species are territorial toward all genders of its species
 
-
         public (int x, int y)[] GenerateTerritory();
     }
 }

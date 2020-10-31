@@ -5,9 +5,9 @@ using System.Text;
 
 namespace AnimalSimulationVersion2
 {
-    abstract class Carnivore : Animal, IHunt
+    abstract class Carnivore : Animalia, IHunt
     {
-        public Carnivore(string species, int reproductionAge, float[] location, float maxAge, int[] birthAmount, float movementSpeed, float hunger, Point[] design, int[] colour, string[] foodSource, string active, float nutrienceValue, IHelper helper) : base(species, reproductionAge, location, maxAge, birthAmount, movementSpeed, hunger, design, colour, foodSource, active, nutrienceValue, helper)
+        public Carnivore(string species, int reproductionAge, float[] location, float maxAge, int[] birthAmount, float movementSpeed, float hunger, Point[] design, int[] colour, string[] foodSource, float nutrienceValue, IHelper helper) : base(species, reproductionAge, location, maxAge, birthAmount, movementSpeed, hunger, design, colour, foodSource, nutrienceValue, helper)
         {
         }
 

@@ -7,7 +7,7 @@ namespace AnimalSimulationVersion2
 {
     class Wolf : Carnivore, ISleep, ITerritorial
     {
-        public Wolf(string species, int reproductionAge, float[] location, float maxAge, int[] birthAmount, float movementSpeed, float hunger, Point[] design, int[] colour, string[] foodSource, string active, float nutrienceValue, IHelper helper) : base(species, reproductionAge, location, maxAge, birthAmount, movementSpeed, hunger, design, colour, foodSource, active, nutrienceValue, helper)
+        public Wolf(string species, int reproductionAge, float[] location, float maxAge, int[] birthAmount, float movementSpeed, float hunger, Point[] design, int[] colour, string[] foodSource, float nutrienceValue, IHelper helper) : base(species, reproductionAge, location, maxAge, birthAmount, movementSpeed, hunger, design, colour, foodSource, nutrienceValue, helper)
         {
             //Wolf wolf = new Wolf(null, 1, null, 2, null, 3, 4, null, null, null, "5", 1, Helper.Instance);
             //helper.DeepCopy(new int[] { 5 });
@@ -16,6 +16,7 @@ namespace AnimalSimulationVersion2
 
         public string[] Targets { get; set; }
         public (int x, int y)[] Territory { get; set; }
+        public string Active { get; set; }
 
         public void AttackOther(string ID)
         {
@@ -56,6 +57,11 @@ namespace AnimalSimulationVersion2
             throw new NotImplementedException();
         }
         public (int x, int y)[] GenerateTerritory()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsActive(string period, string activePeriod)
         {
             throw new NotImplementedException();
         }
