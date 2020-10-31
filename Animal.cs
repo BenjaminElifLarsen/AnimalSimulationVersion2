@@ -10,6 +10,7 @@ namespace AnimalSimulationVersion2
         protected string foodID;
         protected string MateID;
         protected MapInformation mapInformation;
+        protected IArraySupport helper;
 
         public float Age { get; set; }
         public int ReproductionAge { get; set; }
@@ -20,8 +21,8 @@ namespace AnimalSimulationVersion2
         public string Species { get; set; } //if going with classes like "Lion" or "Cat" no need for this, execept for you need one for subspecies.
         public float MovementSpeed { get; set; }
         public float Hunger { get; set; }
-        public float TimeSinceReproduction { get; set; }
-        public List<Point> Design { get; set; }
+        public float TimeSinceReproduction { get; set; } //maybe have a cooldown value
+        public Point[] Design { get; set; }
         public int[] Colour { get; set; }
         public string ID { get; set; }
         public float Health { get; set; }
@@ -30,9 +31,23 @@ namespace AnimalSimulationVersion2
         public string Active { get; set; } //dayactive, nightactive or both
         public float NutrienValue { get; set; }
 
-        public Animal(string species)
+        public Animal(string species, int reproductionAge, float[] location, float maxAge, int[] birthAmount, float movementSpeed, float hunger, Point[] design, int[] colour, string[] foodSource, string active, float nutrienceValue, IArraySupport helper ) : this(helper)
         {
-            Species = species;
+            Species = species; //maybe have all parameters related to the animal as a struct. 
+            ReproductionAge = reproductionAge;
+            Location = location; //need to deep copy it
+            BirthAmount = birthAmount;
+            MovementSpeed = movementSpeed;
+            Hunger = hunger;
+            Design = design;
+            Colour = colour;
+            FoodArray = foodSource;
+            Active = active;
+            NutrienValue = nutrienceValue;
+        }
+        private Animal(IArraySupport helper)
+        {
+            this.helper = helper;
         }
 
         public abstract void Control();
@@ -45,35 +60,35 @@ namespace AnimalSimulationVersion2
         protected abstract void Eat();
         protected abstract void Death();
 
-        protected void IsPossiblePreyEventHandler()
+        protected virtual void IsPossiblePreyEventHandler()
         { //delegate. Send back location, ID and species. 
-
+            (float[] PreyLocation, string PreyID, string PreySpeices) preyInformation = (Location, ID, Species);
         }
-        protected void IsPreyEventHandler()
+        protected virtual void IsPreyEventHandler()
         { //delegate. Take the ID of the predator and add it to the array. 
 
         }
-        protected void RemovePreyEventHandler()
+        protected virtual void RemovePreyEventHandler()
         { //delegate. The prey has died or is lost to this animal. 
 
         }
-        protected void CanMateEventHandler()
+        protected virtual void CanMateEventHandler()
         { //delegate. Check species, if above or is reproduction age, check if it is the corret gender and if it is, send back the ID
 
         }
-        protected void GetMateEventHandler()
+        protected virtual void GetMateEventHandler()
         { //delegate. Take the ID of the mate.
 
         }
-        protected void RemoveMateEventHandler() 
+        protected virtual void RemoveMateEventHandler() 
         { //delegate. The mate is dead or no longer needing this animal.
             
         }
         protected void DrawEventHandler()
         { //delegate. Transmit location, design and colour back.
-
+            (Point[] Design, int[] Colour, float[] Location) drawInforamtion = (Design, Colour, Location);
         }
-        protected void RemoveSubscriptions()
+        protected virtual void RemoveSubscriptions()
         {
 
         }

@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 namespace AnimalSimulationVersion2
 {
     abstract class Carnivore : Animal, IHunt
     {
-        public Carnivore(string species) : base(species)
+        public Carnivore(string species, int reproductionAge, float[] location, float maxAge, int[] birthAmount, float movementSpeed, float hunger, Point[] design, int[] colour, string[] foodSource, string active, float nutrienceValue, IArraySupport helper) : base(species, reproductionAge, location, maxAge, birthAmount, movementSpeed, hunger, design, colour, foodSource, active, nutrienceValue, helper)
         {
-
         }
 
         public virtual void AttackPrey()
