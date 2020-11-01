@@ -7,53 +7,26 @@ namespace AnimalSimulationVersion2
 {
     abstract class Herbavore : Animalia
     {
-        public Herbavore(string species, int reproductionAge, float[] location, float maxAge, int[] birthAmount, float movementSpeed, float hunger, Point[] design, int[] colour, string[] foodSource, float nutrienceValue, IHelper helper) : base(species, reproductionAge, location, maxAge, birthAmount, movementSpeed, hunger, design, colour, foodSource, nutrienceValue, helper)
+        public Herbavore(string species, int reproductionAge, float[] location, float maxAge, int[] birthAmount, float movementSpeed, float hunger, Point[] design, (int Red, int Green, int Blue) colour, string[] foodSource, float nutrienceValue, IHelper helper, AnimalPublisher animalPublisher) : base(species, reproductionAge, location, maxAge, birthAmount, movementSpeed, hunger, design, colour, foodSource, nutrienceValue, helper, animalPublisher)
         {
         }
 
-        public override void AI()
-        {
-            throw new NotImplementedException();
-        }
+        public abstract override void AI();
 
-        protected override void Death()
-        {
-            throw new NotImplementedException();
-        }
+        protected abstract override void Death();
 
-        protected override void Eat()
-        {
-            throw new NotImplementedException();
-        }
+        protected abstract override void Eat();
 
-        protected override void FindFood()
-        {
-            throw new NotImplementedException();
-        }
+        protected abstract override void FindFood();
 
-        protected override void FindMate()
-        {
-            throw new NotImplementedException();
-        }
+        protected abstract override void FindMate();
 
-        protected override char GenerateGender()
-        {
-            throw new NotImplementedException();
-        }
+        protected abstract override char GenerateGender();
 
-        protected override string GenerateID()
-        {
-            throw new NotImplementedException();
-        }
+        protected abstract override string GenerateID();
 
-        protected override void Mating()
-        {
-            throw new NotImplementedException();
-        }
+        protected abstract override void Mating();
 
-        protected override void Move()
-        {
-            throw new NotImplementedException();
-        }
+        protected abstract override void Move();
     }
 }
