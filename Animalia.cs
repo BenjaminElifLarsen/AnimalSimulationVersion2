@@ -95,6 +95,7 @@ namespace AnimalSimulationVersion2
         /// The end location the animal is moving to.
         /// </summary>
         public (float X, float Y) MoveTo { get; set; }
+        public float CurrentMovementSpeed { get; set; }
 
         public Animalia(string species, int reproductionAge, (float X, float Y) location, float maxAge, (byte Minimum, byte Maximum) birthAmount, float movementSpeed, float hunger, Point[] design, (int Red, int Green, int Blue) colour, string[] foodSource, float nutrienceValue, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher ) : this(helper, animalPublisher, drawPublisher)
         {
