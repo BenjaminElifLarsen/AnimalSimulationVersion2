@@ -60,9 +60,9 @@ namespace AnimalSimulationVersion2
         /// </summary>
         public float Hunger { get; set; }
         /// <summary>
-        /// The amount of time since last reproduction in seconds.
+        /// The amount of time before the animal will feel a need to reproduce.
         /// </summary>
-        public float TimeSinceReproduction { get; set; } //maybe have a cooldown value
+        public float TimeToReproductionNeed { get; set; } //maybe have a cooldown value
         /// <summary>
         /// The design of the animal.
         /// </summary>
@@ -91,6 +91,10 @@ namespace AnimalSimulationVersion2
         /// The nutrience value of the animal.
         /// </summary>
         public float NutrienValue { get; set; }
+        /// <summary>
+        /// The end location the animal is moving to.
+        /// </summary>
+        public (float X, float Y) MoveTo { get; set; }
 
         public Animalia(string species, int reproductionAge, (float X, float Y) location, float maxAge, (byte Minimum, byte Maximum) birthAmount, float movementSpeed, float hunger, Point[] design, (int Red, int Green, int Blue) colour, string[] foodSource, float nutrienceValue, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher ) : this(helper, animalPublisher, drawPublisher)
         {
@@ -134,17 +138,49 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// Finds a mate for the animal.
         /// </summary>
-        protected abstract void FindMate(); //have this as an interface, perhaps //some animals find a mate for line
+        protected virtual string FindMate()
+        {
+            string nearestMate = null;
+            float distance = Single.MaxValue;
+            List<(string mateID, (float X, float Y) Location)> possibleMates = animalPublisher.PossibleMates(Species, Gender);
+            foreach((string Mate, (float X, float Y) Location) information in possibleMates)
+            {
+                float distanceTo = Math.Abs((information.Location.X - Location.X)) + Math.Abs((information.Location.Y - Location.Y));
+                if(distanceTo < distance)
+                {
+                    distance = distanceTo;
+                    nearestMate = information.Mate;
+                }
+            }
+            return nearestMate; //need a delegate to get location, can use the same delegate for prey and mate
+        }
         /// <summary>
         /// Animal mates.
         /// </summary>
-        protected abstract void Mating(); 
+        protected abstract void Mating();
         //protected abstract string GenerateID();
         //protected abstract char GenerateGender(); //have this in the IHelper. It should take an array of possible genders and a % for each of them. Actually, maybe it is better that each species contains a function and the values needed written in each class
         /// <summary>
         /// Finds food
         /// </summary>
-        protected abstract void FindFood(); //maybe have a property for when the animal should start looking for food that is compared to Hunger
+        protected virtual string FindFood()//maybe have a property for when the animal should start looking for food that is compared to Hunger (not used in this method but rather as a check to see if this method should be called)
+        {
+            string nearestFood = null;
+            float distance = Single.MaxValue;
+            List<((float X, float Y) PreyLocation, string PreyID, string PreySpecies)> possiblePreys = animalPublisher.GetPossiblePreys();
+            foreach(((float X, float Y) Location, string PreyID, string Species) information in possiblePreys)
+            {
+                float distanceTo = Math.Abs((information.Location.X - Location.X)) + Math.Abs((information.Location.Y - Location.Y));
+                if(helper.Contains(FoodSource,information.Species))
+                    if(distanceTo < distance)
+                    {
+                        distance = distanceTo;
+                        nearestFood = information.PreyID;
+                    }
+            }
+
+            return nearestFood;
+        } 
         /// <summary>
         /// Animal eats food
         /// </summary>
