@@ -23,10 +23,6 @@ namespace AnimalSimulationVersion2
 
         protected abstract override void Eat();
 
-        protected abstract override void FindFood();
-
-        protected abstract override void FindMate();
-
         protected abstract override void Mating();
 
         protected abstract override void Move();
