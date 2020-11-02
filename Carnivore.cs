@@ -25,7 +25,7 @@ namespace AnimalSimulationVersion2
 
         protected abstract override void Eat();
 
-        protected abstract override void Mating();
+        protected abstract override void Mate();
 
         protected abstract override void Move();
     }
