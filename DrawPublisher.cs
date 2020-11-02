@@ -11,11 +11,11 @@ namespace AnimalSimulationVersion2
         public event drawEventHandler RaiseDrawEvent;
 
         public List<(Point[] Design, (int Red, int Green, int Blue) Colour, float[] Location)> Draw()
-        { //move
+        { 
             return OnDraw(new ControlEvents.DrawEventArgs());
         }
         protected List<(Point[] Design, (int Red, int Green, int Blue) Colour, float[] Location)> OnDraw(ControlEvents.DrawEventArgs e)
-        { //move
+        { 
             drawEventHandler eventHandler = RaiseDrawEvent;
             if (eventHandler != null)
             {

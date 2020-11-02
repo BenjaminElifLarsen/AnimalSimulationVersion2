@@ -27,9 +27,6 @@ namespace AnimalSimulationVersion2
         public delegate void removeMateEventHandler(object sender, ControlEvents.RemoveMateEventArgs args);
         public event removeMateEventHandler RaiseRemoveMateEvent;
 
-        //Draw //this and its code should not be here, but in another publisher. 
-
-
         //AI
         public delegate void aiEvnetHandler(object sender, ControlEvents.AIEventArgs args);
         public event aiEvnetHandler RaiseAIEvent;
