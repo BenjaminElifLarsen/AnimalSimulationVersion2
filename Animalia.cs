@@ -50,7 +50,7 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// The species of the animal.
         /// </summary>
-        public string Species { get; set; } //if going with classes like "Lion" or "Cat" no need for this, execept for you need one for subspecies.
+        public string Species { get; set; }
         /// <summary>
         /// The movement speed per second of the animal.
         /// </summary>
@@ -60,7 +60,7 @@ namespace AnimalSimulationVersion2
         /// </summary>
         public float Hunger { get; set; }
         /// <summary>
-        /// The amount of time before the animal will feel a need to reproduce.
+        /// The amount of time before the animal will feel a need to reproduce in seconds.
         /// </summary>
         public float TimeToReproductionNeed { get; set; } //maybe have a cooldown value
         /// <summary>
@@ -95,13 +95,24 @@ namespace AnimalSimulationVersion2
         /// The end location the animal is moving to.
         /// </summary>
         public (float X, float Y) MoveTo { get; set; }
+        /// <summary>
+        /// The current movementspeed of the animal per second. 
+        /// </summary>
         public float CurrentMovementSpeed { get; set; }
+        /// <summary>
+        /// True if the animal has mated and is waiting on children.
+        /// </summary>
+        public bool HasMated { get; set; }
+        /// <summary>
+        /// The current location of the mate.  
+        /// </summary>
+        public (float X, float Y) MateLocation { get; set; }
 
-        public Animalia(string species, int reproductionAge, (float X, float Y) location, float maxAge, (byte Minimum, byte Maximum) birthAmount, float movementSpeed, float hunger, Point[] design, (int Red, int Green, int Blue) colour, string[] foodSource, float nutrienceValue, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher ) : this(helper, animalPublisher, drawPublisher)
+        public Animalia(string species, int reproductionAge, (float X, float Y) location, float maxAge, (byte Minimum, byte Maximum) birthAmount, float movementSpeed, float hunger, Point[] design, (int Red, int Green, int Blue) colour, string[] foodSource, float nutrienceValue, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher) : this(helper, animalPublisher, drawPublisher)
         {
             Species = species; //maybe have all parameters related to the animal as a struct. 
             ReproductionAge = reproductionAge;
-            Location = location; //need to deep copy it
+            Location = location; 
             BirthAmount = birthAmount;
             MovementSpeed = movementSpeed;
             Hunger = hunger;
@@ -110,6 +121,7 @@ namespace AnimalSimulationVersion2
             FoodSource = foodSource;
             MaxAge = maxAge;
             NutrienValue = nutrienceValue;
+
             ID = helper.GenerateID();
         }
         private Animalia(IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher)
@@ -144,10 +156,10 @@ namespace AnimalSimulationVersion2
             string nearestMate = null;
             float distance = Single.MaxValue;
             List<(string mateID, (float X, float Y) Location)> possibleMates = animalPublisher.PossibleMates(Species, Gender);
-            foreach((string Mate, (float X, float Y) Location) information in possibleMates)
+            foreach ((string Mate, (float X, float Y) Location) information in possibleMates)
             {
                 float distanceTo = Math.Abs((information.Location.X - Location.X)) + Math.Abs((information.Location.Y - Location.Y));
-                if(distanceTo < distance)
+                if (distanceTo < distance)
                 {
                     distance = distanceTo;
                     nearestMate = information.Mate;
@@ -156,11 +168,37 @@ namespace AnimalSimulationVersion2
             return nearestMate; //need a delegate to get location, can use the same delegate for prey and mate
         }
         /// <summary>
+        /// Gets the current location of the Mate.
+        /// </summary>
+        /// <param name="mateID">The ID of the mate.</param>
+        /// <returns>Returns the location of the mate.</returns>
+        protected virtual (float X, float Y) GetMateLocation(string mateID)
+        {
+            throw new NotImplementedException();
+        }
+        /// <summary>
         /// Animal mates.
         /// </summary>
-        protected abstract void Mating();
+        protected abstract void Mate();
         //protected abstract string GenerateID();
-        //protected abstract char GenerateGender(); //have this in the IHelper. It should take an array of possible genders and a % for each of them. Actually, maybe it is better that each species contains a function and the values needed written in each class
+        protected virtual char GenerateGender((char Gender, byte Weight)[] genderInformation) //it should take an array of possible genders and a % for each of them.
+        {
+            ushort totalWeight = 0;
+            List<(char Gender, ushort EndLocation)> genderEndPosistion = new List<(char, ushort)>();
+            foreach((char Gender, byte Weight) information in genderInformation)
+            {
+                totalWeight += information.Weight;
+                genderEndPosistion.Add((information.Gender, totalWeight));
+            }
+            //generate a random number
+            ushort rolledWeight = (ushort)helper.GenerateRandomNumber(0, totalWeight); //from zero up to and with the totalWeight
+            for(int i = 0; i < genderEndPosistion.Count - 1; i++)
+            {
+                if (!(genderEndPosistion[i].EndLocation < rolledWeight))
+                    return genderEndPosistion[i].Gender;
+            }
+            throw new ArithmeticException(); //not sure if it is the best thing to cast or if it should just return the first gender
+        } 
         /// <summary>
         /// Finds food
         /// </summary>
@@ -169,11 +207,11 @@ namespace AnimalSimulationVersion2
             string nearestFood = null;
             float distance = Single.MaxValue;
             List<((float X, float Y) PreyLocation, string PreyID, string PreySpecies)> possiblePreys = animalPublisher.GetPossiblePreys();
-            foreach(((float X, float Y) Location, string PreyID, string Species) information in possiblePreys)
+            foreach (((float X, float Y) Location, string PreyID, string Species) information in possiblePreys)
             {
                 float distanceTo = Math.Abs((information.Location.X - Location.X)) + Math.Abs((information.Location.Y - Location.Y));
-                if(helper.Contains(FoodSource,information.Species))
-                    if(distanceTo < distance)
+                if (helper.Contains(FoodSource, information.Species))
+                    if (distanceTo < distance)
                     {
                         distance = distanceTo;
                         nearestFood = information.PreyID;
@@ -181,7 +219,7 @@ namespace AnimalSimulationVersion2
             }
 
             return nearestFood;
-        } 
+        }
         /// <summary>
         /// Animal eats food
         /// </summary>
@@ -227,10 +265,10 @@ namespace AnimalSimulationVersion2
         /// <param name="e"></param>
         protected virtual void CanMateEventHandler(object sender, ControlEvents.PossibleMateEventArgs e)
         { //delegate. Check species, if above or is reproduction age, check if it is the corret gender and if it is, send back the ID
-            if(mateID == null)
-                if(e.Information.Species == Species)
-                    if(e.Information.Gender != Gender)
-                        if(Age >= ReproductionAge)
+            if (mateID == null)
+                if (e.Information.Species == Species)
+                    if (e.Information.Gender != Gender)
+                        if (Age >= ReproductionAge)
                             e.AddMateInformation((ID, Location));
         }
         /// <summary>
@@ -248,10 +286,14 @@ namespace AnimalSimulationVersion2
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected virtual void RemoveMateEventHandler(object sender, ControlEvents.RemoveMateEventArgs e) 
+        protected virtual void RemoveMateEventHandler(object sender, ControlEvents.RemoveMateEventArgs e)
         { //delegate. The mate is dead or no longer needing this animal.
             if (e.IDs.receiverID == ID)
                 mateID = null;
+        }
+        public void MateLocationEventHandler(object sender)
+        {
+            throw new NotImplementedException();
         }
         /// <summary>
         /// Asked to return information that permits the animal to be drawned.
