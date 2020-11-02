@@ -9,18 +9,18 @@ namespace AnimalSimulationVersion2
     {
         public class GetPossiblePreyEventArgs
         {
-            private List<(float[] PreyLocation, string PreyID, string PreySpecies)> preys = new List<(float[] PreyLocation, string PreyID, string PreySpecies)>();
+            private List<((float X, float Y) PreyLocation, string PreyID, string PreySpecies)> preys = new List<((float X, float Y) PreyLocation, string PreyID, string PreySpecies)>();
             public GetPossiblePreyEventArgs()
             {
 
             }
 
-            public void AddPreyInformation((float[] PreyLocation, string PreyID, string PreySpecies) infoToAdd)
+            public void AddPreyInformation(((float X, float Y) PreyLocation, string PreyID, string PreySpecies) infoToAdd)
             {
                 preys.Add(infoToAdd);
             }
 
-            public List<(float[] PreyLocation, string PreyID, string PreySpecies)> GetPossiblePreys()
+            public List<((float X, float Y) PreyLocation, string PreyID, string PreySpecies)> GetPossiblePreys()
             {
                 return preys;
             }
@@ -69,33 +69,33 @@ namespace AnimalSimulationVersion2
         }
         public class PossibleMateEventArgs
         {
-            private List<(string mateID, float[] Location)> possibleMates = new List<(string mateID, float[] Location)>();
+            private List<(string mateID, (float X, float Y) Location)> possibleMates = new List<(string mateID, (float X, float Y) Location)>();
             public PossibleMateEventArgs(string species, char gender)
             {
                 Information = (species, gender);
             }
             public (string Species, char Gender) Information { get;  }
-            public void AddMateInformation((string mateID, float[] Location) information)
+            public void AddMateInformation((string mateID, (float X, float Y) Location) information)
             {
                 possibleMates.Add(information);
             }
-            public List<(string mateID, float[] Location)> GetPossibleMates()
+            public List<(string mateID, (float X, float Y) Location)> GetPossibleMates()
             {
                 return possibleMates;
             }
         }
         public class DrawEventArgs
         {
-            private List<(Point[] Design, (int Red, int Green, int Blue) Colour, float[] Location)> drawInformation = new List<(Point[] Design, (int Red, int Green, int Blue) Colour, float[] Location)>();
+            private List<(Point[] Design, (int Red, int Green, int Blue) Colour, (float X, float Y) Location)> drawInformation = new List<(Point[] Design, (int Red, int Green, int Blue) Colour, (float X, float Y) Location)>();
             public DrawEventArgs()
             {
 
             }
-            public void AddDrawInformation((Point[] Design, (int Red, int Green, int Blue), float[] Location) information)
+            public void AddDrawInformation((Point[] Design, (int Red, int Green, int Blue), (float X, float Y) Location) information)
             {
                 drawInformation.Add(information);
             }
-            public List<(Point[] Design, (int Red, int Green, int Blue) Colour, float[] Location)> DrawInformation()
+            public List<(Point[] Design, (int Red, int Green, int Blue) Colour, (float X, float Y) Location)> DrawInformation()
             {
                 return drawInformation;
             }
