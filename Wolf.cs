@@ -28,11 +28,23 @@ namespace AnimalSimulationVersion2
 
         public override void AI()
         {
-            if (Health <= 0)
+            if (Health <= 0) //nothing is finalised for the AI design.
                 Death();
             else
             {
-
+                if(Hunger < 50) //softcode that value later.
+                {
+                    if(foodID == null) //if wolves do not mate for life, maybe discard the mateID if not null if it is hungry
+                        FindFood();
+                }else if (Age >= ReproductionAge)
+                {
+                    if(TimeToReproductionNeed <= 0)
+                    {
+                        if(mateID == null)
+                            mateID = FindMate();
+                    }
+                }
+                Move();
             }
         }
 
@@ -75,16 +87,6 @@ namespace AnimalSimulationVersion2
         }
 
         protected override void Eat()
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void FindFood()
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void FindMate()
         {
             throw new NotImplementedException();
         }
