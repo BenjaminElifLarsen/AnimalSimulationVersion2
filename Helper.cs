@@ -63,7 +63,7 @@ namespace AnimalSimulationVersion2
         public bool Contains<T>(T[] array, T value)
         {
             foreach (T val in array)
-                if (EqualityComparer<T>.Default.Equals(val, value))
+                if (EqualityComparer<T>.Default.Equals(val, value)) //needs testing, so set up unit testing stuff.
                     return true;
             return false;
         }
