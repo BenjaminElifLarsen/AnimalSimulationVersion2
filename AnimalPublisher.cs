@@ -31,11 +31,11 @@ namespace AnimalSimulationVersion2
         public delegate void aiEvnetHandler(object sender, ControlEvents.AIEventArgs args);
         public event aiEvnetHandler RaiseAIEvent;
 
-        public List<(float[] PreyLocation, string PreyID, string PreySpecies)> GetPossiblePreys()
+        public List<((float X, float Y) PreyLocation, string PreyID, string PreySpecies)> GetPossiblePreys()
         {
             return OnGetPossiblePreys(new ControlEvents.GetPossiblePreyEventArgs());
         }
-        protected List<(float[] PreyLocation, string PreyID, string PreySpecies)> OnGetPossiblePreys(ControlEvents.GetPossiblePreyEventArgs e)
+        protected List<((float X, float Y) PreyLocation, string PreyID, string PreySpecies)> OnGetPossiblePreys(ControlEvents.GetPossiblePreyEventArgs e)
         {
             getPossiblePreyEventHandler eventHandler = RaiseFindPreyEvent;
             if(eventHandler != null)
@@ -68,11 +68,11 @@ namespace AnimalSimulationVersion2
                 eventHandler.Invoke(this, e);
         }
 
-        public List<(string mateID, float[] Location)> PossibleMates(string species, char gender)
+        public List<(string mateID, (float X, float Y) Location)> PossibleMates(string species, char gender)
         {
             return OnPossibleMates(new ControlEvents.PossibleMateEventArgs(species, gender));
         }
-        protected List<(string mateID, float[] Location)> OnPossibleMates(ControlEvents.PossibleMateEventArgs e)
+        protected List<(string mateID, (float X, float Y) Location)> OnPossibleMates(ControlEvents.PossibleMateEventArgs e)
         {
             possibleMatesEventHandler eventHandler = RaisePossibleMatesEvent;
             if (eventHandler != null)
