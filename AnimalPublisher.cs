@@ -31,6 +31,17 @@ namespace AnimalSimulationVersion2
         public delegate void aiEvnetHandler(object sender, ControlEvents.AIEventArgs args);
         public event aiEvnetHandler RaiseAIEvent;
 
+        //location
+        public delegate void getLocationEventHandler(object sender, ControlEvents.GetOtherLocation args);
+        public event getLocationEventHandler RaiseGetLocation;
+
+        //deaths
+        public delegate void eatenEventHandler(object sender, ControlEvents.EatenEventArgs args);
+        public event eatenEventHandler RaiseEaten;
+
+        public delegate void diedEventHandler(object sender, ControlEvents.DeadEventArgs args);
+        public event diedEventHandler RaiseDied;
+
         public List<((float X, float Y) PreyLocation, string PreyID, string PreySpecies)> GetPossiblePreys()
         {
             return OnGetPossiblePreys(new ControlEvents.GetPossiblePreyEventArgs());
@@ -114,6 +125,47 @@ namespace AnimalSimulationVersion2
             aiEvnetHandler evnetHandler = RaiseAIEvent;
             if (evnetHandler != null)
                 evnetHandler.Invoke(this, e);
+        }
+
+        public (float X, float Y) GetLocation(string receiverID)
+        {
+            return OnGetLocation(new ControlEvents.GetOtherLocation(receiverID));
+        }
+        protected (float X, float Y) OnGetLocation(ControlEvents.GetOtherLocation e)
+        {
+            getLocationEventHandler eventHandler = RaiseGetLocation;
+            if(eventHandler != null)
+            {
+                eventHandler.Invoke(this, e);
+                return e.GetLocation;
+            }
+            return (-1,-1);
+        }
+
+        public void Death(string receiverID)
+        {
+            OnDeath(new ControlEvents.DeadEventArgs(receiverID));
+        }
+        protected void OnDeath(ControlEvents.DeadEventArgs e)
+        {
+            diedEventHandler eventHandler = RaiseDied;
+            if (eventHandler != null)
+                eventHandler.Invoke(this, e);
+        }
+
+        public float Eat(string receiverID)
+        {
+            return OnEat(new ControlEvents.EatenEventArgs(receiverID));
+        }
+        protected float OnEat(ControlEvents.EatenEventArgs e)
+        {
+            eatenEventHandler eventHandler = RaiseEaten;
+            if(eventHandler != null)
+            {
+                eventHandler.Invoke(this, e);
+                return e.GetNutrience();
+            }
+            return -1;
         }
     }
 }
