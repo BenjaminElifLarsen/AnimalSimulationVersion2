@@ -102,12 +102,23 @@ namespace AnimalSimulationVersion2
         }
         public class AIEventArgs
         {
-            private float timeSinceLastUpdate;
-            public float TimeSinceLastUpdate { get => timeSinceLastUpdate; }
+            public float TimeSinceLastUpdate { get; }
             public AIEventArgs(float timeSinceLastUpdate)
             {
-                this.timeSinceLastUpdate = timeSinceLastUpdate;
+                this.TimeSinceLastUpdate = timeSinceLastUpdate;
             }
+        }
+        public class EatenEventArgs
+        {
+
+        }
+        public class DeadEventArgs
+        {
+
+        }
+        public class GetOtherLocation
+        {
+
         }
     }
 }
