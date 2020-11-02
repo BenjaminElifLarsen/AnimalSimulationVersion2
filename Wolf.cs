@@ -5,8 +5,10 @@ using System.Text;
 
 namespace AnimalSimulationVersion2
 {
-    class Wolf : Carnivore, ISleep, ITerritorial
+    class Wolf : Carnivore, ISleep, ITerritorial //have an interface for pack/herd behavior? Maybe two interfaces, since in pacts normally only alphas mate, while in herd it is all???
     {
+        protected float lengthOfPregnacy; //in seconds
+        protected float periodInPregnacy; //in seconds
         public override float AttackRange { get; set; }
         public string[] Targets { get; set; }
         public (int x, int y)[] Territory { get; set; }
@@ -26,9 +28,9 @@ namespace AnimalSimulationVersion2
             throw new NotImplementedException();
         }
 
-        public override void AI()
+        public override void AI() //maybe move the code in this over to Carnivore or even Animalia.
         {
-            if (Health <= 0) //nothing is finalised for the AI design.
+            if (Health <= 0 || Age > MaxAge) //nothing is finalised for the AI design.
                 Death();
             else
             {
@@ -48,7 +50,7 @@ namespace AnimalSimulationVersion2
             }
         }
 
-        protected override void Death()
+        protected override void Death() //maybe move up to Animalia 
         {
             if(mateID != null)
             {
@@ -91,8 +93,29 @@ namespace AnimalSimulationVersion2
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Wolf mating.
+        /// </summary>
         protected override void Mating()
         {
+            //either here or before the call, check if the end location and current location is the same.
+            if(Gender == 'f') //later on, alter the FindMate() to check if the wolf is alpha, if a pack wolf, and only mate with the other alpha. 
+            { //maybe have both parents stay together for a while while the female wolf is pregnant. Check up if both parents stay with their children, also if they mate is for life
+                periodInPregnacy += timeSinceLastUpdate;
+                if(periodInPregnacy >= lengthOfPregnacy)
+                { //generate a random number, need to depedency inject a random generator to ensure the values are not the same for each call if multiple calls happen quickly. Also needed for random movement.
+                    byte childAmount = 0; //seems like wolves mate for life, but if losing a mate, they will quickly find another one.
+                    for (int i = 0; i < childAmount; i++)
+                        new Wolf(Species, ReproductionAge, Location, MaxAge, BirthAmount, MovementSpeed, Hunger, Design, Colour, FoodSource, NutrienValue, helper, animalPublisher, drawPublisher);
+                    TimeToReproductionNeed = 200; //keep the new wol(f/ves) in a list for a short period so the IPack methods can be updated to contain the newest family.
+                }
+            }
+            else //how to let the father now of the children.
+            {
+                periodInPregnacy += timeSinceLastUpdate;
+                if (periodInPregnacy >= lengthOfPregnacy)
+                    TimeToReproductionNeed = 200;
+            }
             throw new NotImplementedException();
         }
 
