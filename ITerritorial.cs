@@ -8,7 +8,7 @@ namespace AnimalSimulationVersion2
     {
         public (int x, int y)[] Territory { get; set; }
         public string[] Targets { get; set; } //targets inside of the territorier
-        public void AttackOther(string ID); //generate a random value, if above a threshold it does damage to the other, else damage to itself
+        public void AttackOther(string ID); //generate a random value, if above a threshold it does damage to the other
 
         public void IsAttackedEventHandler();
 
