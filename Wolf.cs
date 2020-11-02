@@ -14,7 +14,9 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// How long time the current pregnacy has lasted in seconds.
         /// </summary>
-        protected float periodInPregnacy; 
+        protected float periodInPregnacy;
+        protected (char Gender, byte Weight)[] genderInformation = new (char Gender, byte Weight)[] { ('f',50),('m',50) };
+
         public override float AttackRange { get; set; }
         public string[] Targets { get; set; }
         public (int x, int y)[] Territory { get; set; }
@@ -30,6 +32,7 @@ namespace AnimalSimulationVersion2
             AttackRange = 20;
             AttackSpeedMultiplier = 1.5f;
             lengthOfPregnacy = 9;
+
         }
 
 
