@@ -291,9 +291,20 @@ namespace AnimalSimulationVersion2
             if (e.IDs.receiverID == ID)
                 mateID = null;
         }
-        public void MateLocationEventHandler(object sender)
-        {
-            throw new NotImplementedException();
+        protected virtual void LocationEventHandler(object sender, ControlEvents.GetOtherLocation e)
+        { //delegate. Someone needs this one's location.
+            if (e.ReceiverID == ID)
+                e.Location = Location;
+        }
+        protected virtual void EatenEventHandler(object sender, ControlEvents.EatenEventArgs e)
+        { //delegate. This animal has been eaten.
+            if (e.ReceiverID == ID)
+                e.SetNutrience(NutrienValue);
+        }
+        protected virtual void DeathEventHandler(object sender, ControlEvents.DeadEventArgs e)
+        { //delegate. This animal has died. E.g. fought to death.
+            if (e.ReceiverID == ID)
+                Death();
         }
         /// <summary>
         /// Asked to return information that permits the animal to be drawned.
