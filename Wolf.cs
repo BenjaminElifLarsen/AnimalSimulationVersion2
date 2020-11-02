@@ -56,8 +56,8 @@ namespace AnimalSimulationVersion2
                 {
                     if ((Hunger < 50 && EnergyLevel > 0) || Hunger < 10) //softcode those values later.
                     {
-                        if (foodID == null) //if wolves do not mate for life, maybe discard the mateID if not null if it is hungry
-                            foodID = FindFood();
+                        if (foodID == null) //figure out what to do if the animal got no need for food, mating and such and should just go to a random location
+                            foodID = FindFood(); //also if they are in a pack/herd they need to stick together.
                         if (foodID != null)
                         {
                             TrackPrey();
@@ -87,12 +87,19 @@ namespace AnimalSimulationVersion2
                     {
                         Sleep(); 
                     }
+                    else
+                    { //set a random location, a wolf should stay close or inside its territory
+                        Move();
+                    }
                 }
                 else
                 {
                     TimeSlept += timeSinceLastUpdate; //consider making a method in ISleep for this
-                    if (TimeSlept >= SleepLength) //maybe allow for an ealy wake up if it is to hungry
+                    if (TimeSlept >= SleepLength || Hunger < 10) 
+                    { //maybe allow for an ealy wake up if it is to hungry
                         Sleeping = false;
+                        EnergyLevel = MaxEnergyLevel * TimeSlept / SleepLength;
+                    }
                 }
 
             }
@@ -203,11 +210,12 @@ namespace AnimalSimulationVersion2
         /// </summary>
         public override void AttackPrey()
         {
-            (float X, float Y) preyLocation = (0,0);  //get location via event
+            (float X, float Y) preyLocation = animalPublisher.GetLocation(foodID);  //get location via event
             float distance = Math.Abs(preyLocation.X - Location.X) + Math.Abs(preyLocation.Y - Location.Y);
             if(distance == 0)
             {
                 Eat();//have two events for dead animals. One for a prey been eaten and one for an animal died 'normally'. For eaten it should returns the animal's nutrience value.
+                CurrentMovementSpeed = MovementSpeed;
             }
             //else if(distance <= AttackRange)
             //{
@@ -217,7 +225,7 @@ namespace AnimalSimulationVersion2
 
         public override void TrackPrey()
         { //maybe it should try and predict the next location of the prey if it is not in attackRange.
-            (float X, float Y) preyLocation = (0, 0);
+            (float X, float Y) preyLocation = animalPublisher.GetLocation(foodID);
             float distance = Math.Abs(preyLocation.X - Location.X) + Math.Abs(preyLocation.Y - Location.Y);
             if(distance > AttackRange)
             {
