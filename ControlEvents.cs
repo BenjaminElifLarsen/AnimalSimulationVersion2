@@ -110,15 +110,32 @@ namespace AnimalSimulationVersion2
         }
         public class EatenEventArgs
         {
-
+            private float nutrienceValue;
+            public string ReceiverID { get; }
+            public EatenEventArgs(string receiverID)
+            {
+                ReceiverID = receiverID;
+            }
+            public void SetNutrience(float value) => nutrienceValue = value;
+            public float GetNutrience() => nutrienceValue;
         }
         public class DeadEventArgs
         {
-
+            public string ReceiverID { get; }
+            public DeadEventArgs(string receiverID)
+            {
+                ReceiverID = receiverID;
+            }
         }
         public class GetOtherLocation
         {
-
+            public string ReceiverID { get; }
+            public (float X, float Y) Location { get; set; }
+            public GetOtherLocation(string receiverID)
+            {
+                ReceiverID = receiverID;
+            }
+            public (float X, float Y) GetLocation => Location;
         }
     }
 }
