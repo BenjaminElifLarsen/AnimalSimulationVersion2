@@ -14,12 +14,15 @@ namespace AnimalSimulationVersion2
         public (int x, int y)[] Territory { get; set; }
         public string Active { get; set; }
         public float EnergyLevel { get; set; }
+        public override float AttackSpeedMultiplier { get; set; }
 
         public Wolf(string species, int reproductionAge, (float X, float Y) location, float maxAge, (byte Minimum, byte Maximum) birthAmount, float movementSpeed, float hunger, Point[] design, (int Red, int Green, int Blue) colour, string[] foodSource, float nutrienceValue, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher) : base(species, reproductionAge, location, maxAge, birthAmount, movementSpeed, hunger, design, colour, foodSource, nutrienceValue, helper, animalPublisher, drawPublisher)
         {
             Wolf wolf = new Wolf(null, 1, (1,2), 2, (1,2), 3, 4, null, (0,0,0), null, 1, Helper.Instance, Publisher.GetAnimalInstance, Publisher.GetDrawInstance);
             //helper.DeepCopy(new int[] { 5 });
             Territory = GenerateTerritory();
+            AttackRange = 20;
+            AttackSpeedMultiplier = 1.5f;
         }
 
 
@@ -119,18 +122,31 @@ namespace AnimalSimulationVersion2
             throw new NotImplementedException();
         }
 
-        protected override void Move()
-        {
+        protected override void Move() //needs to check if the wolf is hungry and go after it, if it is not go for a mate if it can mate else select a random location and go to it
+        { //if it goes for a prey, it should call TrackPrey
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Wolf attacking prey. 
+        /// </summary>
         public override void AttackPrey()
         {
+            (float X, float Y) preyLocation = (0,0);  //get location via event
+            float distance = Math.Abs(preyLocation.X - Location.X) + Math.Abs(preyLocation.Y - Location.Y);
+            if(distance == 0)
+            {
+                Eat();//have two events for dead animals. One for a prey been eaten and one for an animal died 'normally'. For eaten it should returns the animal's nutrience value.
+            }
+            else if(distance <= AttackRange)
+            {
+                CurrentMovementSpeed = MovementSpeed * AttackSpeedMultiplier;
+            } 
             throw new NotImplementedException();
         }
 
         public override void TrackPrey()
-        {
+        { //maybe it should try and predict the next location of the prey if it is not in attackRange.
             throw new NotImplementedException();
         }
 
