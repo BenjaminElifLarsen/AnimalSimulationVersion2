@@ -20,6 +20,7 @@ namespace AnimalSimulationVersion2
         protected Publisher publisher;
         protected IHelper helper;
         protected AnimalPublisher animalPublisher;
+        protected DrawPublisher drawPublisher;
 
         public float Age { get; set; }
         public int ReproductionAge { get; set; }
@@ -39,7 +40,7 @@ namespace AnimalSimulationVersion2
         public string[] HuntedBy { get; set; } //the IDs that are after it
         public float NutrienValue { get; set; }
 
-        public Animalia(string species, int reproductionAge, float[] location, float maxAge, int[] birthAmount, float movementSpeed, float hunger, Point[] design, (int Red, int Green, int Blue) colour, string[] foodSource, float nutrienceValue, IHelper helper, AnimalPublisher animalPublisher ) : this(helper, animalPublisher)
+        public Animalia(string species, int reproductionAge, float[] location, float maxAge, int[] birthAmount, float movementSpeed, float hunger, Point[] design, (int Red, int Green, int Blue) colour, string[] foodSource, float nutrienceValue, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher ) : this(helper, animalPublisher, drawPublisher)
         {
             Species = species; //maybe have all parameters related to the animal as a struct. 
             ReproductionAge = reproductionAge;
@@ -54,10 +55,12 @@ namespace AnimalSimulationVersion2
             NutrienValue = nutrienceValue;
             ID = helper.GenerateID();
         }
-        private Animalia(IHelper helper, AnimalPublisher animalPublisher)
+        private Animalia(IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher)
         {
             this.helper = helper;
             this.animalPublisher = animalPublisher;
+            this.drawPublisher = drawPublisher;
+
             animalPublisher.RaiseFindPreyEvent += IsPossiblePreyEventHandler;
             animalPublisher.RaiseSetPreyEvent += IsPreyEventHandler;
             animalPublisher.RaiseRemovePreyEvent += RemovePreyEventHandler;
@@ -65,6 +68,8 @@ namespace AnimalSimulationVersion2
             animalPublisher.RaiseSetMateEvent += GetMateEventHandler;
             animalPublisher.RaiseRemoveMateEvent += RemoveMateEventHandler;
             animalPublisher.RaiseAIEvent += ControlEventHandler;
+
+            drawPublisher.RaiseDrawEvent += DrawEventHandler;
         }
 
         public abstract void AI();
@@ -72,7 +77,7 @@ namespace AnimalSimulationVersion2
         protected abstract void FindMate(); //have this as an interface, perhaps //some animals find a mate for line
         protected abstract void Mating(); 
         //protected abstract string GenerateID();
-        //protected abstract char GenerateGender(); //have this in the IHelper. It should take an array of possible genders and a % for each of them.
+        //protected abstract char GenerateGender(); //have this in the IHelper. It should take an array of possible genders and a % for each of them. Actually, maybe it is better that each species contains a function and the values needed written in each class
         protected abstract void FindFood();
         protected abstract void Eat();
         protected abstract void Death();
@@ -137,6 +142,8 @@ namespace AnimalSimulationVersion2
             animalPublisher.RaiseSetMateEvent -= GetMateEventHandler;
             animalPublisher.RaiseRemoveMateEvent -= RemoveMateEventHandler;
             animalPublisher.RaiseAIEvent -= ControlEventHandler;
+
+            drawPublisher.RaiseDrawEvent -= DrawEventHandler;
         }
 
     }

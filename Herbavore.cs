@@ -7,7 +7,7 @@ namespace AnimalSimulationVersion2
 {
     abstract class Herbavore : Animalia
     {
-        public Herbavore(string species, int reproductionAge, float[] location, float maxAge, int[] birthAmount, float movementSpeed, float hunger, Point[] design, (int Red, int Green, int Blue) colour, string[] foodSource, float nutrienceValue, IHelper helper, AnimalPublisher animalPublisher) : base(species, reproductionAge, location, maxAge, birthAmount, movementSpeed, hunger, design, colour, foodSource, nutrienceValue, helper, animalPublisher)
+        public Herbavore(string species, int reproductionAge, float[] location, float maxAge, int[] birthAmount, float movementSpeed, float hunger, Point[] design, (int Red, int Green, int Blue) colour, string[] foodSource, float nutrienceValue, IHelper helper, AnimalPublisher animalPublisher, DrawdrawPublisher drawPublisher) : base(species, reproductionAge, location, maxAge, birthAmount, movementSpeed, hunger, design, colour, foodSource, nutrienceValue, helper, animalPublisher, drawPublisher)
         {
         }
 
@@ -21,9 +21,7 @@ namespace AnimalSimulationVersion2
 
         protected abstract override void FindMate();
 
-        protected abstract override char GenerateGender();
-
-        protected abstract override string GenerateID();
+        //protected abstract override char GenerateGender();
 
         protected abstract override void Mating();
 
