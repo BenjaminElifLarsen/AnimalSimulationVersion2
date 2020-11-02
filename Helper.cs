@@ -49,7 +49,9 @@ namespace AnimalSimulationVersion2
 
         public void Remove<T>(T[] array, T value)
         {
-            throw new NotImplementedException();
+            List<T> list = array.ToList();
+            list.Remove(value);
+            array = list.ToArray();
         }
 
         public bool Contains<T>(List<T> list, T value) //https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.equalitycomparer-1.default?view=netcore-3.1
