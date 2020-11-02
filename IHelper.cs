@@ -68,6 +68,7 @@ namespace AnimalSimulationVersion2
         /// Generates an ID.
         /// </summary>
         /// <returns>Returns the generated ID.</returns>
-        public string GenerateID(); 
+        public string GenerateID();
+        public int GenerateRandomNumber(int minimum, int maximum);
     }
 }

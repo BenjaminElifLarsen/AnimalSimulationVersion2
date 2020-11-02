@@ -7,6 +7,7 @@ namespace AnimalSimulationVersion2
 {
     public class Helper : IHelper
     {
+        private static Random rnd;
         private static List<string> ids;
         public static IHelper Instance { get; }
         static Helper()
@@ -68,6 +69,17 @@ namespace AnimalSimulationVersion2
                 if (EqualityComparer<T>.Default.Equals(val, value)) //needs testing, so set up unit testing stuff.
                     return true;
             return false;
+        }
+
+        /// <summary>
+        /// Generates and returns a random number between <paramref name="minimum"/> up to and with <paramref name="maximum"/>.
+        /// </summary>
+        /// <param name="minimum">The minimum number of the possible value.</param>
+        /// <param name="maximum">The maximum number of the possible value.</param>
+        /// <returns>Returns a randomly generated value.</returns>
+        public int GenerateRandomNumber(int minimum, int maximum)
+        {
+            return rnd.Next(minimum, maximum + 1);
         }
     }
 }
