@@ -16,7 +16,15 @@ namespace AnimalSimulationVersion2
         /// The ID of the mate.
         /// </summary>
         protected string mateID;
+        /// <summary>
+        /// The amount of seconds since last update.
+        /// </summary>
         protected float timeSinceLastUpdate;
+        /// <summary>
+        /// The possible genders of the animal and the change for a specific gender.
+        /// </summary>
+        protected (char Gender, byte Weight)[] genderInformation;
+
         protected MapInformation mapInformation;
         protected Publisher publisher;
         protected IHelper helper;
@@ -305,8 +313,11 @@ namespace AnimalSimulationVersion2
         }
         protected virtual void EatenEventHandler(object sender, ControlEvents.EatenEventArgs e)
         { //delegate. This animal has been eaten.
-            if (e.ReceiverID == ID)
+            if (e.ReceiverID == ID) 
+            { 
                 e.SetNutrience(NutrienValue);
+                Death();
+            }
         }
         protected virtual void DeathEventHandler(object sender, ControlEvents.DeadEventArgs e)
         { //delegate. This animal has died. E.g. fought to death.
