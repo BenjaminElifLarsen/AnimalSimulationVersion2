@@ -137,6 +137,9 @@ namespace AnimalSimulationVersion2
             animalPublisher.RaiseSetMateEvent += GetMateEventHandler;
             animalPublisher.RaiseRemoveMateEvent += RemoveMateEventHandler;
             animalPublisher.RaiseAIEvent += ControlEventHandler;
+            animalPublisher.RaiseDied += DeathEventHandler;
+            animalPublisher.RaiseEaten += EatenEventHandler;
+            animalPublisher.RaiseGetLocation += LocationEventHandler;
 
             drawPublisher.RaiseDrawEvent += DrawEventHandler;
         }
@@ -184,20 +187,24 @@ namespace AnimalSimulationVersion2
         protected virtual char GenerateGender((char Gender, byte Weight)[] genderInformation) //it should take an array of possible genders and a % for each of them.
         {
             ushort totalWeight = 0;
-            List<(char Gender, ushort EndLocation)> genderEndPosistion = new List<(char, ushort)>();
+            ushort startLocation;
+            List<(char Gender, ushort StartLocation, ushort EndLocation)> genderStartEndLocation = new List<(char, ushort, ushort)>();
             foreach((char Gender, byte Weight) information in genderInformation)
             {
+                startLocation = totalWeight;
                 totalWeight += information.Weight;
-                genderEndPosistion.Add((information.Gender, totalWeight));
+                genderStartEndLocation.Add((information.Gender, startLocation, totalWeight));
             }
+
             //generate a random number
             ushort rolledWeight = (ushort)helper.GenerateRandomNumber(0, totalWeight); //from zero up to and with the totalWeight
-            for(int i = 0; i < genderEndPosistion.Count - 1; i++)
+            
+            for (int i = 0; i < genderStartEndLocation.Count - 1; i++)
             {
-                if (!(genderEndPosistion[i].EndLocation < rolledWeight))
-                    return genderEndPosistion[i].Gender;
+                if (rolledWeight >= genderStartEndLocation[i].StartLocation && rolledWeight < genderStartEndLocation[i].EndLocation)
+                    return genderStartEndLocation[i].Gender;
             }
-            throw new ArithmeticException(); //not sure if it is the best thing to cast or if it should just return the first gender
+            return genderStartEndLocation[0].Gender; 
         } 
         /// <summary>
         /// Finds food
@@ -338,6 +345,9 @@ namespace AnimalSimulationVersion2
             animalPublisher.RaiseSetMateEvent -= GetMateEventHandler;
             animalPublisher.RaiseRemoveMateEvent -= RemoveMateEventHandler;
             animalPublisher.RaiseAIEvent -= ControlEventHandler;
+            animalPublisher.RaiseDied -= DeathEventHandler;
+            animalPublisher.RaiseEaten -= EatenEventHandler;
+            animalPublisher.RaiseGetLocation -= LocationEventHandler;
 
             drawPublisher.RaiseDrawEvent -= DrawEventHandler;
         }
