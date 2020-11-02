@@ -67,10 +67,10 @@ namespace AnimalSimulationVersion2
             }
             public (string senderID, string receiverID) IDs { get; }
         }
-        public class CanMateEventArgs
+        public class PossibleMateEventArgs
         {
             private List<(string mateID, float[] Location)> possibleMates = new List<(string mateID, float[] Location)>();
-            public CanMateEventArgs(string species, char gender)
+            public PossibleMateEventArgs(string species, char gender)
             {
                 Information = (species, gender);
             }
@@ -102,9 +102,11 @@ namespace AnimalSimulationVersion2
         }
         public class AIEventArgs
         {
-            public AIEventArgs()
+            private float timeSinceLastUpdate;
+            public float TimeSinceLastUpdate { get => timeSinceLastUpdate; }
+            public AIEventArgs(float timeSinceLastUpdate)
             {
-
+                this.timeSinceLastUpdate = timeSinceLastUpdate;
             }
         }
     }

@@ -15,6 +15,7 @@ namespace AnimalSimulationVersion2
         /// The ID of the mate.
         /// </summary>
         protected string mateID;
+        protected float timeSinceLastUpdate;
         protected MapInformation mapInformation;
         protected Publisher publisher;
         protected IHelper helper;
@@ -60,6 +61,10 @@ namespace AnimalSimulationVersion2
             animalPublisher.RaiseFindPreyEvent += IsPossiblePreyEventHandler;
             animalPublisher.RaiseSetPreyEvent += IsPreyEventHandler;
             animalPublisher.RaiseRemovePreyEvent += RemovePreyEventHandler;
+            animalPublisher.RaisePossibleMatesEvent += CanMateEventHandler;
+            animalPublisher.RaiseSetMateEvent += GetMateEventHandler;
+            animalPublisher.RaiseRemoveMateEvent += RemoveMateEventHandler;
+            animalPublisher.RaiseAIEvent += ControlEventHandler;
         }
 
         public abstract void AI();
@@ -90,7 +95,7 @@ namespace AnimalSimulationVersion2
                 helper.Remove(HuntedBy, e.IDs.senderID);
         }
 
-        protected virtual void CanMateEventHandler(object sender, ControlEvents.CanMateEventArgs e)
+        protected virtual void CanMateEventHandler(object sender, ControlEvents.PossibleMateEventArgs e)
         { //delegate. Check species, if above or is reproduction age, check if it is the corret gender and if it is, send back the ID
             if(mateID == null)
                 if(e.Information.Species == Species)
@@ -117,16 +122,21 @@ namespace AnimalSimulationVersion2
             e.AddDrawInformation(drawInforamtion);
         }
 
-        protected void ControlEventHandler(object sender)
+        protected void ControlEventHandler(object sender, ControlEvents.AIEventArgs e)
         { //delegate
+            timeSinceLastUpdate = e.TimeSinceLastUpdate;
             AI();
         }
 
-        protected virtual void RemoveSubscriptions()
+        protected virtual void RemoveSubscriptions() //consider renaming some of the methods to have names that make more sense
         {
             animalPublisher.RaiseFindPreyEvent -= IsPossiblePreyEventHandler;
             animalPublisher.RaiseSetPreyEvent -= IsPreyEventHandler;
             animalPublisher.RaiseRemovePreyEvent -= RemovePreyEventHandler;
+            animalPublisher.RaisePossibleMatesEvent -= CanMateEventHandler;
+            animalPublisher.RaiseSetMateEvent -= GetMateEventHandler;
+            animalPublisher.RaiseRemoveMateEvent -= RemoveMateEventHandler;
+            animalPublisher.RaiseAIEvent -= ControlEventHandler;
         }
 
     }
