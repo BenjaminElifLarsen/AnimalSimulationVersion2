@@ -116,19 +116,19 @@ namespace AnimalSimulationVersion2
         /// </summary>
         public (float X, float Y) MateLocation { get; set; }
 
-        public Animalia(string species, int reproductionAge, (float X, float Y) location, float maxAge, (byte Minimum, byte Maximum) birthAmount, float movementSpeed, float hunger, Point[] design, (int Red, int Green, int Blue) colour, string[] foodSource, float nutrienceValue, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher) : this(helper, animalPublisher, drawPublisher)
+        public Animalia(string species,(float X, float Y) location, string[] foodSource, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher) : this(helper, animalPublisher, drawPublisher)
         {
             Species = species; //maybe have all parameters related to the animal as a struct. 
-            ReproductionAge = reproductionAge;
-            Location = location; 
-            BirthAmount = birthAmount;
-            MovementSpeed = movementSpeed;
-            Hunger = hunger;
-            Design = design;
-            Colour = colour;
+            //ReproductionAge = reproductionAge;
+            Location = location;
+            //BirthAmount = birthAmount;
+            //MovementSpeed = movementSpeed;
+            //Hunger = hunger;
+            //Design = design;
+            //Colour = colour;
             FoodSource = foodSource;
-            MaxAge = maxAge;
-            NutrienValue = nutrienceValue;
+            //MaxAge = maxAge;
+            //NutrienValue = nutrienceValue;
 
             ID = helper.GenerateID();
         }
@@ -232,7 +232,7 @@ namespace AnimalSimulationVersion2
                         nearestFood = information.PreyID;
                     }
             }
-
+            animalPublisher.SetPrey(ID, nearestFood);
             return nearestFood;
         }
         /// <summary>

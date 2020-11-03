@@ -27,7 +27,8 @@ namespace AnimalSimulationVersion2
         public float SleepLength { get; }
         public bool Sleeping { get; set; }
 
-        public Wolf(string species, int reproductionAge, (float X, float Y) location, float maxAge, (byte Minimum, byte Maximum) birthAmount, float movementSpeed, float hunger, Point[] design, (int Red, int Green, int Blue) colour, string[] foodSource, float nutrienceValue, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher) : base(species, reproductionAge, location, maxAge, birthAmount, movementSpeed, hunger, design, colour, foodSource, nutrienceValue, helper, animalPublisher, drawPublisher)
+
+        public Wolf(string species, (float X, float Y) location, string[] foodSource, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher) : base(species, location, foodSource, helper, animalPublisher, drawPublisher)
         {
             //Wolf wolf = new Wolf(null, 1, (1,2), 2, (1,2), 3, 4, null, (0,0,0), null, 1, Helper.Instance, Publisher.GetAnimalInstance, Publisher.GetDrawInstance);
             //helper.DeepCopy(new int[] { 5 });
@@ -177,7 +178,7 @@ namespace AnimalSimulationVersion2
                     { //generate a random number, need to depedency inject a random generator to ensure the values are not the same for each call if multiple calls happen quickly. Also needed for random movement.
                         byte childAmount = (byte)helper.GenerateRandomNumber(BirthAmount.Minimum, BirthAmount.Maximum); //seems like wolves mate for life, but if losing a mate, they will quickly find another one.
                         for (int i = 0; i < childAmount; i++)
-                            new Wolf(Species, ReproductionAge, Location, MaxAge, BirthAmount, MovementSpeed, Hunger, Design, Colour, FoodSource, NutrienValue, helper, animalPublisher, drawPublisher);
+                            new Wolf(Species, Location, FoodSource, helper, animalPublisher, drawPublisher);
                         TimeToReproductionNeed = 200; //keep the new wol(f/ves) in a list for a short period so the IPack methods can be updated to contain the newest family.
                         HasMated = false;
                     }
