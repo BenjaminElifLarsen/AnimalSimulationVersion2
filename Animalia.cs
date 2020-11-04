@@ -7,7 +7,16 @@ using System.Text;
 namespace AnimalSimulationVersion2
 {
     abstract class Animalia
-    {
+    {      
+        /// <summary>
+        /// The length of the pregnacy in seconds.
+        /// </summary>
+        protected float lengthOfPregnacy;
+        /// <summary>
+        /// How long time the current pregnacy has lasted in seconds.
+        /// </summary>
+        protected float periodInPregnacy;
+        protected float reproductionCooldown;
         /// <summary>
         /// The ID of the food that is hunted.
         /// </summary>

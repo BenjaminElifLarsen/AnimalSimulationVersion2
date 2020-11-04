@@ -7,14 +7,6 @@ namespace AnimalSimulationVersion2
 {
     class Wolf : Carnivore, ISleep, ITerritorial //have an interface for pack/herd behavior? Maybe two interfaces, since in pacts normally only alphas mate, while in herd it is all???
     {
-        /// <summary>
-        /// The length of the pregnacy in seconds.
-        /// </summary>
-        protected float lengthOfPregnacy; 
-        /// <summary>
-        /// How long time the current pregnacy has lasted in seconds.
-        /// </summary>
-        protected float periodInPregnacy;
 
         public override float AttackRange { get; set; }
         public string[] Targets { get; set; }
@@ -38,6 +30,7 @@ namespace AnimalSimulationVersion2
             lengthOfPregnacy = 9;
             genderInformation = new (char Gender, byte Weight)[] { ('f', 50), ('m', 50) };
             MaxEnergyLevel = 300;
+            reproductionCooldown = 200;
         }
 
         public void AttackOther(string ID)
@@ -100,7 +93,7 @@ namespace AnimalSimulationVersion2
                     { //maybe allow for an ealy wake up if it is to hungry
                         Sleeping = false;
                         EnergyLevel = MaxEnergyLevel * TimeSlept / SleepLength;
-                    }
+                    }//have an function to decrease energy, TimeToReproductionNeed, hunger etc.
                 }
 
             }
@@ -179,13 +172,13 @@ namespace AnimalSimulationVersion2
                         byte childAmount = (byte)helper.GenerateRandomNumber(BirthAmount.Minimum, BirthAmount.Maximum); //seems like wolves mate for life, but if losing a mate, they will quickly find another one.
                         for (int i = 0; i < childAmount; i++)
                             new Wolf(Species, Location, FoodSource, helper, animalPublisher, drawPublisher);
-                        TimeToReproductionNeed = 200; //keep the new wol(f/ves) in a list for a short period so the IPack methods can be updated to contain the newest family.
+                        TimeToReproductionNeed = reproductionCooldown; //keep the new wol(f/ves) in a list for a short period so the IPack methods can be updated to contain the newest family.
                         HasMated = false;
                     }
                 }
                 else //how to let the father now of the children. Maybe the female should raise an event to let the father know of the children
                 {
-                    TimeToReproductionNeed = 200 + lengthOfPregnacy;
+                    TimeToReproductionNeed = reproductionCooldown + lengthOfPregnacy;
                     HasMated = false;
                 }
             }
@@ -224,7 +217,7 @@ namespace AnimalSimulationVersion2
             //} 
         }
 
-        public override void TrackPrey()
+        public override void TrackPrey() //have something similar for mate or repurpose this to take a id string, but then again this is from an interface
         { //maybe it should try and predict the next location of the prey if it is not in attackRange.
             (float X, float Y) preyLocation = animalPublisher.GetLocation(foodID);
             float distance = Math.Abs(preyLocation.X - Location.X) + Math.Abs(preyLocation.Y - Location.Y);
