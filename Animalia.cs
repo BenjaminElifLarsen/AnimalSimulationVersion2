@@ -169,7 +169,7 @@ namespace AnimalSimulationVersion2
         /// </summary>
         protected abstract void Move();
         /// <summary>
-        /// Finds a mate for the animal.
+        /// Finds a mate for the animal and informs the other animal that it got a mate.
         /// </summary>
         protected virtual string FindMate()
         {
@@ -185,7 +185,9 @@ namespace AnimalSimulationVersion2
                     nearestMate = information.Mate;
                 }
             }
-            return nearestMate; //need a delegate to get location, can use the same delegate for prey and mate
+
+            animalPublisher.SetMate(ID, nearestMate);
+            return nearestMate; 
         }
         /// <summary>
         /// Gets the current location of the Mate.
@@ -224,7 +226,7 @@ namespace AnimalSimulationVersion2
             return genderStartEndLocation[0].Gender; 
         } 
         /// <summary>
-        /// Finds food
+        /// Finds food and informs the food that it has been found.
         /// </summary>
         protected virtual string FindFood()//maybe have a property for when the animal should start looking for food that is compared to Hunger (not used in this method but rather as a check to see if this method should be called)
         {
@@ -267,8 +269,8 @@ namespace AnimalSimulationVersion2
             }
             if(HuntedBy.Length != 0)
             {
-                foreach (string hunter in HuntedBy)
-                    animalPublisher.RemovePrey(ID, hunter);
+                //foreach (string hunter in HuntedBy)
+                //    it needs a special event that when a predator receives it the predator sets its foodID to null
             }
             RemoveSubscriptions();
         }
@@ -331,7 +333,7 @@ namespace AnimalSimulationVersion2
                     mateID = e.IDs.senderID;
         }
         /// <summary>
-        /// Its mate is dead or no longer of need a mate. 
+        /// Its mate is dead or no longer needing a mate. 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
