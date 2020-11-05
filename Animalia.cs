@@ -247,7 +247,11 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// Animal eats food
         /// </summary>
-        protected abstract void Eat();
+        protected virtual void Eat()
+        {
+            Hunger = animalPublisher.Eat(foodID);
+        }
+
         /// <summary>
         /// Animal is dead.
         /// </summary>
