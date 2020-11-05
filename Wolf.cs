@@ -49,12 +49,14 @@ namespace AnimalSimulationVersion2
                 if (!Sleeping)
                 {
                     if ((Hunger < 50 && EnergyLevel > 0) || Hunger < 10) //softcode those values later.
-                    {
+                    {//if hungry, drop the mate
+                        if (mateID != null)
+                            animalPublisher.RemoveMate(ID, mateID);
                         if (foodID == null) //figure out what to do if the animal got no need for food, mating and such and should just go to a random location
                             foodID = FindFood(); //also if they are in a pack/herd they need to stick together.
                         if (foodID != null)
                         {
-                            TrackPrey();
+                            TrackPrey(); 
                             Move();
                             AttackPrey();
                         }
@@ -198,7 +200,7 @@ namespace AnimalSimulationVersion2
             //} 
         }
 
-        public override void TrackPrey() //have something similar for mate or repurpose this to take a id string, but then again this is from an interface
+        public override void TrackPrey() 
         { //maybe it should try and predict the next location of the prey if it is not in attackRange.
             (float X, float Y) preyLocation = animalPublisher.GetLocation(foodID);
             float distance = Math.Abs(preyLocation.X - Location.X) + Math.Abs(preyLocation.Y - Location.Y);

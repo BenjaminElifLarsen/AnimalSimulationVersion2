@@ -42,9 +42,9 @@ namespace AnimalSimulationVersion2
         public delegate void diedEventHandler(object sender, ControlEvents.DeadEventArgs args);
         public event diedEventHandler RaiseDied;
 
-        public List<((float X, float Y) PreyLocation, string PreyID, string PreySpecies)> GetPossiblePreys()
+        public List<((float X, float Y) PreyLocation, string PreyID, string PreySpecies)> GetPossiblePreys(string senderID)
         {
-            return OnGetPossiblePreys(new ControlEvents.GetPossiblePreyEventArgs());
+            return OnGetPossiblePreys(new ControlEvents.GetPossiblePreyEventArgs(senderID));
         }
         protected List<((float X, float Y) PreyLocation, string PreyID, string PreySpecies)> OnGetPossiblePreys(ControlEvents.GetPossiblePreyEventArgs e)
         {
@@ -79,9 +79,9 @@ namespace AnimalSimulationVersion2
                 eventHandler.Invoke(this, e);
         }
 
-        public List<(string mateID, (float X, float Y) Location)> PossibleMates(string species, char gender)
+        public List<(string mateID, (float X, float Y) Location)> PossibleMates(string species, char gender, string senderID)
         {
-            return OnPossibleMates(new ControlEvents.PossibleMateEventArgs(species, gender));
+            return OnPossibleMates(new ControlEvents.PossibleMateEventArgs(species, gender, senderID));
         }
         protected List<(string mateID, (float X, float Y) Location)> OnPossibleMates(ControlEvents.PossibleMateEventArgs e)
         {
@@ -139,7 +139,7 @@ namespace AnimalSimulationVersion2
                 eventHandler.Invoke(this, e);
                 return e.GetLocation;
             }
-            return (-1,-1);
+            return (-1,-1); //have a custom exception for eventHandler being null when the animal got a food/mate id
         }
 
         public void Death(string receiverID)

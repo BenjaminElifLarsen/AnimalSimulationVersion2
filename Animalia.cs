@@ -175,7 +175,7 @@ namespace AnimalSimulationVersion2
         {
             string nearestMate = null;
             float distance = Single.MaxValue;
-            List<(string mateID, (float X, float Y) Location)> possibleMates = animalPublisher.PossibleMates(Species, Gender);
+            List<(string mateID, (float X, float Y) Location)> possibleMates = animalPublisher.PossibleMates(Species, Gender, ID);
             foreach ((string Mate, (float X, float Y) Location) information in possibleMates)
             {
                 float distanceTo = Math.Abs((information.Location.X - Location.X)) + Math.Abs((information.Location.Y - Location.Y));
@@ -194,7 +194,7 @@ namespace AnimalSimulationVersion2
         /// <returns>Returns the location of the mate.</returns>
         protected virtual (float X, float Y) GetMateLocation(string mateID)
         {
-            throw new NotImplementedException();
+            return animalPublisher.GetLocation(mateID);
         }
         /// <summary>
         /// Animal mates.
@@ -230,7 +230,7 @@ namespace AnimalSimulationVersion2
         {
             string nearestFood = null;
             float distance = Single.MaxValue;
-            List<((float X, float Y) PreyLocation, string PreyID, string PreySpecies)> possiblePreys = animalPublisher.GetPossiblePreys();
+            List<((float X, float Y) PreyLocation, string PreyID, string PreySpecies)> possiblePreys = animalPublisher.GetPossiblePreys(ID);
             foreach (((float X, float Y) Location, string PreyID, string Species) information in possiblePreys)
             {
                 float distanceTo = Math.Abs((information.Location.X - Location.X)) + Math.Abs((information.Location.Y - Location.Y));
@@ -265,6 +265,11 @@ namespace AnimalSimulationVersion2
             {
                 animalPublisher.RemovePrey(ID, foodID);
             }
+            if(HuntedBy.Length != 0)
+            {
+                foreach (string hunter in HuntedBy)
+                    animalPublisher.RemovePrey(ID, hunter);
+            }
             RemoveSubscriptions();
         }
         /// <summary>
@@ -274,8 +279,11 @@ namespace AnimalSimulationVersion2
         /// <param name="e"></param>
         protected virtual void IsPossiblePreyEventHandler(object sender, ControlEvents.GetPossiblePreyEventArgs e)
         { //delegate. Send back location, ID and species. 
-            ((float X, float Y) PreyLocation, string PreyID, string PreySpeices) preyInformation = (Location, ID, Species);
-            e.AddPreyInformation(preyInformation);
+            if (e.SenderID != ID)
+            {
+                ((float X, float Y) PreyLocation, string PreyID, string PreySpeices) preyInformation = (Location, ID, Species);
+                e.AddPreyInformation(preyInformation);
+            }
         }
         /// <summary>
         /// Is informed that another animal is considering it food.
@@ -284,8 +292,8 @@ namespace AnimalSimulationVersion2
         /// <param name="e"></param>
         protected virtual void IsPreyEventHandler(object sender, ControlEvents.SetPreyEventArgs e)
         { //delegate. Take the ID of the predator and add it to the array. 
-            if (e.IDs.receiverID == ID)
-                helper.Add(HuntedBy, e.IDs.senderID);
+                if (e.IDs.receiverID == ID)
+                    helper.Add(HuntedBy, e.IDs.senderID);
         }
         /// <summary>
         /// Its predator is dead or have lost this animal.
@@ -294,8 +302,9 @@ namespace AnimalSimulationVersion2
         /// <param name="e"></param>
         protected virtual void RemovePreyEventHandler(object sender, ControlEvents.RemovePreyEventArgs e)
         { //delegate. The prey has died or is lost to this animal. 
-            if (helper.Contains(HuntedBy, e.IDs.senderID))
-                helper.Remove(HuntedBy, e.IDs.senderID);
+            if (e.IDs.senderID != ID)
+                if (helper.Contains(HuntedBy, e.IDs.senderID))
+                    helper.Remove(HuntedBy, e.IDs.senderID);
         }
         /// <summary>
         /// Is asked about whether it is a possible mate for another animal or not.
@@ -304,11 +313,12 @@ namespace AnimalSimulationVersion2
         /// <param name="e"></param>
         protected virtual void CanMateEventHandler(object sender, ControlEvents.PossibleMateEventArgs e)
         { //delegate. Check species, if above or is reproduction age, check if it is the corret gender and if it is, send back the ID
-            if (mateID == null)
-                if (e.Information.Species == Species)
-                    if (e.Information.Gender != Gender)
-                        if (Age >= ReproductionAge)
-                            e.AddMateInformation((ID, Location));
+            if(e.SenderID != ID)
+                if (mateID == null)
+                    if (e.Information.Species == Species)
+                        if (e.Information.Gender != Gender)
+                            if (Age >= ReproductionAge)
+                                e.AddMateInformation((ID, Location));
         }
         /// <summary>
         /// Another animal has chosen this one for its mate. 
@@ -317,8 +327,8 @@ namespace AnimalSimulationVersion2
         /// <param name="e"></param>
         protected virtual void GetMateEventHandler(object sender, ControlEvents.SetMateEventArgs e)
         { //delegate. Take the ID of the mate.
-            if (e.IDs.receiverID == ID)
-                mateID = e.IDs.senderID;
+                if (e.IDs.receiverID == ID)
+                    mateID = e.IDs.senderID;
         }
         /// <summary>
         /// Its mate is dead or no longer of need a mate. 
@@ -327,13 +337,13 @@ namespace AnimalSimulationVersion2
         /// <param name="e"></param>
         protected virtual void RemoveMateEventHandler(object sender, ControlEvents.RemoveMateEventArgs e)
         { //delegate. The mate is dead or no longer needing this animal.
-            if (e.IDs.receiverID == ID)
-                mateID = null;
+                if (e.IDs.receiverID == ID)
+                    mateID = null;
         }
         protected virtual void LocationEventHandler(object sender, ControlEvents.GetOtherLocation e)
         { //delegate. Someone needs this one's location.
-            if (e.ReceiverID == ID)
-                e.Location = Location;
+                if (e.ReceiverID == ID)
+                    e.Location = Location;
         }
         protected virtual void EatenEventHandler(object sender, ControlEvents.EatenEventArgs e)
         { //delegate. This animal has been eaten.

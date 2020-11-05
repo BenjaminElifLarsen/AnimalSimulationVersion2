@@ -10,9 +10,10 @@ namespace AnimalSimulationVersion2
         public class GetPossiblePreyEventArgs
         {
             private List<((float X, float Y) PreyLocation, string PreyID, string PreySpecies)> preys = new List<((float X, float Y) PreyLocation, string PreyID, string PreySpecies)>();
-            public GetPossiblePreyEventArgs()
+            public string SenderID { get; set; }
+            public GetPossiblePreyEventArgs(string senderID)
             {
-
+                SenderID = senderID;
             }
 
             public void AddPreyInformation(((float X, float Y) PreyLocation, string PreyID, string PreySpecies) infoToAdd)
@@ -70,9 +71,11 @@ namespace AnimalSimulationVersion2
         public class PossibleMateEventArgs
         {
             private List<(string mateID, (float X, float Y) Location)> possibleMates = new List<(string mateID, (float X, float Y) Location)>();
-            public PossibleMateEventArgs(string species, char gender)
+            public string SenderID { get; set; }
+            public PossibleMateEventArgs(string species, char gender, string senderID)
             {
                 Information = (species, gender);
+                SenderID = senderID;
             }
             public (string Species, char Gender) Information { get;  }
             public void AddMateInformation((string mateID, (float X, float Y) Location) information)
