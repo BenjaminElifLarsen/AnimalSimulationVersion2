@@ -171,6 +171,8 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// Finds a mate for the animal and informs the other animal that it got a mate.
         /// </summary>
+        /// <remarks>It will return null if no mate can be found</remarks>
+        /// <returns>The ID of the mate if found. If no mate is found it returns null.</returns>
         protected virtual string FindMate()
         {
             string nearestMate = null;
@@ -224,10 +226,12 @@ namespace AnimalSimulationVersion2
                     return genderStartEndLocation[i].Gender;
             }
             return genderStartEndLocation[0].Gender; 
-        } 
+        }
         /// <summary>
         /// Finds food and informs the food that it has been found.
         /// </summary>
+        /// <remarks>It will return null if no food can be found</remarks>
+        /// <returns>The ID of the food if found. If no food is found it returns null.</returns>
         protected virtual string FindFood()//maybe have a property for when the animal should start looking for food that is compared to Hunger (not used in this method but rather as a check to see if this method should be called)
         {
             string nearestFood = null;
