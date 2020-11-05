@@ -32,7 +32,7 @@ namespace AnimalSimulationVersion2
             MaxEnergyLevel = 300;
             reproductionCooldown = 200;
             Colour = (200, 10, 10);
-            Design = new Point[] { new Point(10,10), new Point(10, 20), new Point(20, 20), new Point(20, 10) };
+            Design = new Point[] { new Point(0,0), new Point(10, 0), new Point(10, 10), new Point(0, 10) };
         }
 
         public void AttackOther(string ID)
