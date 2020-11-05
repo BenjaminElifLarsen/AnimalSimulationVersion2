@@ -42,6 +42,11 @@ namespace AnimalSimulationVersion2
         public delegate void diedEventHandler(object sender, ControlEvents.DeadEventArgs args);
         public event diedEventHandler RaiseDied;
 
+        /// <summary>
+        /// Gets the location, ID and species of every single subscriber.
+        /// </summary>
+        /// <param name="senderID">The ID of the caller.</param>
+        /// <returns>Returns a list container the location, ID and species of every single subscriber.</returns>
         public List<((float X, float Y) PreyLocation, string PreyID, string PreySpecies)> GetPossiblePreys(string senderID)
         {
             return OnGetPossiblePreys(new ControlEvents.GetPossiblePreyEventArgs(senderID));
@@ -56,7 +61,11 @@ namespace AnimalSimulationVersion2
             }
             return null;
         }
-
+        /// <summary>
+        /// Informs <paramref name="receiverID"/> that it is a prey of <paramref name="senderID"/>.
+        /// </summary>
+        /// <param name="senderID">The ID of the caller.</param>
+        /// <param name="receiverID">The ID of the receiver.</param>
         public void SetPrey(string senderID, string receiverID)
         {
             OnSetPrey(new ControlEvents.SetPreyEventArgs(senderID, receiverID));
@@ -67,7 +76,11 @@ namespace AnimalSimulationVersion2
             if (eventHandler != null)
                 eventHandler.Invoke(this, e);
         }
-
+        /// <summary>
+        /// Informs <paramref name="receiverID"/> that it is no longer a prey of <paramref name="senderID"/>.
+        /// </summary>
+        /// <param name="senderID">The ID of the caller.</param>
+        /// <param name="receiverID">The ID of the prey</param>
         public void RemovePrey(string senderID, string receiverID)
         {
             OnRemovePrey(new ControlEvents.RemovePreyEventArgs(senderID, receiverID));
@@ -78,7 +91,13 @@ namespace AnimalSimulationVersion2
             if (eventHandler != null)
                 eventHandler.Invoke(this, e);
         }
-
+        /// <summary>
+        /// Gets a list of all possible mates.
+        /// </summary>
+        /// <param name="species">The species of the caller.</param>
+        /// <param name="gender">The gender of the caller.</param>
+        /// <param name="senderID">The ID of the caller.</param>
+        /// <returns></returns>
         public List<(string mateID, (float X, float Y) Location)> PossibleMates(string species, char gender, string senderID)
         {
             return OnPossibleMates(new ControlEvents.PossibleMateEventArgs(species, gender, senderID));
@@ -93,7 +112,11 @@ namespace AnimalSimulationVersion2
             }
             return null;
         }
-
+        /// <summary>
+        /// Informs <paramref name="receiverID"/> that it is mate to <paramref name="senderID"/>.
+        /// </summary>
+        /// <param name="senderID"></param>
+        /// <param name="receiverID"></param>
         public void SetMate(string senderID, string receiverID)
         {
             OnSetMate(new ControlEvents.SetMateEventArgs(senderID, receiverID));
@@ -104,7 +127,11 @@ namespace AnimalSimulationVersion2
             if (eventHandler != null)
                 eventHandler.Invoke(this,e);
         }
-
+        /// <summary>
+        /// Informs <paramref name="receiverID"/> that it is no longer mate to <paramref name="senderID"/>.
+        /// </summary>
+        /// <param name="senderID"></param>
+        /// <param name="receiverID"></param>
         public void RemoveMate(string senderID, string receiverID)
         {
             OnRemoveMate(new ControlEvents.RemoveMateEventArgs(senderID, receiverID));
@@ -115,7 +142,10 @@ namespace AnimalSimulationVersion2
             if (eventHandler != null)
                 eventHandler.Invoke(this, e);
         }
-
+        /// <summary>
+        /// Runs the AI and transmit <paramref name="timeSinceLastUpdate"/> with it for any code that needs to time interval between this call and the last call.
+        /// </summary>
+        /// <param name="timeSinceLastUpdate"></param>
         public void AI(float timeSinceLastUpdate)
         {
             OnAI(new ControlEvents.AIEventArgs(timeSinceLastUpdate));
@@ -126,7 +156,11 @@ namespace AnimalSimulationVersion2
             if (evnetHandler != null)
                 evnetHandler.Invoke(this, e);
         }
-
+        /// <summary>
+        /// Gets the location of <paramref name="receiverID"/>.
+        /// </summary>
+        /// <param name="receiverID"></param>
+        /// <returns></returns>
         public (float X, float Y) GetLocation(string receiverID)
         {
             return OnGetLocation(new ControlEvents.GetOtherLocation(receiverID));
@@ -141,7 +175,10 @@ namespace AnimalSimulationVersion2
             }
             return (-1,-1); //have a custom exception for eventHandler being null when the animal got a food/mate id
         }
-
+        /// <summary>
+        /// Informs <paramref name="receiverID"/> that it has died.
+        /// </summary>
+        /// <param name="receiverID"></param>
         public void Death(string receiverID)
         {
             OnDeath(new ControlEvents.DeadEventArgs(receiverID));
@@ -152,7 +189,11 @@ namespace AnimalSimulationVersion2
             if (eventHandler != null)
                 eventHandler.Invoke(this, e);
         }
-
+        /// <summary>
+        /// Informs <paramref name="receiverID"/> that it has been eaten.
+        /// </summary>
+        /// <param name="receiverID"></param>
+        /// <returns></returns>
         public float Eat(string receiverID)
         {
             return OnEat(new ControlEvents.EatenEventArgs(receiverID));
