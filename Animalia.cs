@@ -124,7 +124,16 @@ namespace AnimalSimulationVersion2
         /// The current location of the mate.  
         /// </summary>
         public (float X, float Y) MateLocation { get; set; }
-
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <param name="species"></param>
+        /// <param name="location"></param>
+        /// <param name="foodSource"></param>
+        /// <param name="helper"></param>
+        /// <param name="animalPublisher"></param>
+        /// <param name="drawPublisher"></param>
+        /// <param name="mapInformation"></param>
         public Animalia(string species,(float X, float Y) location, string[] foodSource, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : this(helper, animalPublisher, drawPublisher, mapInformation)
         {
             Species = species; //maybe have all parameters related to the animal as a struct. 
@@ -141,6 +150,13 @@ namespace AnimalSimulationVersion2
 
             ID = helper.GenerateID();
         }
+        /// <summary>
+        /// Extra constructor that sets all instances and eventhandlers //rewrite
+        /// </summary>
+        /// <param name="helper">An instance of IHelper.</param>
+        /// <param name="animalPublisher">An instance of AnimalPublisher.</param>
+        /// <param name="drawPublisher">An instance of DrawPublisher.</param>
+        /// <param name="mapInformation">An instance of MapInformation.</param>
         private Animalia(IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation)
         {
             this.helper = helper;
