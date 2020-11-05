@@ -9,9 +9,11 @@ namespace AnimalSimulationVersion2
     {
         private static Random rnd;
         private static List<string> ids;
+        private ulong idNumber = 0;
         public static IHelper Instance { get; }
         static Helper()
         {
+            rnd = new Random();
             ids = new List<string>();
             Instance = new Helper();
         }
@@ -43,6 +45,8 @@ namespace AnimalSimulationVersion2
         
         public string GenerateID()
         {
+            idNumber++;
+            return idNumber.ToString();
             throw new NotImplementedException();
         }
 
