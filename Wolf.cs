@@ -20,7 +20,7 @@ namespace AnimalSimulationVersion2
         public bool Sleeping { get; set; }
 
 
-        public Wolf(string species, (float X, float Y) location, string[] foodSource, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher) : base(species, location, foodSource, helper, animalPublisher, drawPublisher)
+        public Wolf(string species, (float X, float Y) location, string[] foodSource, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, animalPublisher, drawPublisher, mapInformation)
         {
             //Wolf wolf = new Wolf(null, 1, (1,2), 2, (1,2), 3, 4, null, (0,0,0), null, 1, Helper.Instance, Publisher.GetAnimalInstance, Publisher.GetDrawInstance);
             //helper.DeepCopy(new int[] { 5 });
@@ -31,6 +31,8 @@ namespace AnimalSimulationVersion2
             genderInformation = new (char Gender, byte Weight)[] { ('f', 50), ('m', 50) };
             MaxEnergyLevel = 300;
             reproductionCooldown = 200;
+            Colour = (200, 10, 10);
+            Design = new Point[] { new Point(10,10), new Point(10, 20), new Point(20, 20), new Point(20, 10) };
         }
 
         public void AttackOther(string ID)
@@ -155,7 +157,7 @@ namespace AnimalSimulationVersion2
                     { //generate a random number, need to depedency inject a random generator to ensure the values are not the same for each call if multiple calls happen quickly. Also needed for random movement.
                         byte childAmount = (byte)helper.GenerateRandomNumber(BirthAmount.Minimum, BirthAmount.Maximum); //seems like wolves mate for life, but if losing a mate, they will quickly find another one.
                         for (int i = 0; i < childAmount; i++)
-                            new Wolf(Species, Location, FoodSource, helper, animalPublisher, drawPublisher);
+                            new Wolf(Species, Location, FoodSource, helper, animalPublisher, drawPublisher,mapInformation);
                         TimeToReproductionNeed = reproductionCooldown; //keep the new wol(f/ves) in a list for a short period so the IPack methods can be updated to contain the newest family.
                         HasMated = false;
                     }

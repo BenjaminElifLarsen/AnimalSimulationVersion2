@@ -125,7 +125,7 @@ namespace AnimalSimulationVersion2
         /// </summary>
         public (float X, float Y) MateLocation { get; set; }
 
-        public Animalia(string species,(float X, float Y) location, string[] foodSource, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher) : this(helper, animalPublisher, drawPublisher)
+        public Animalia(string species,(float X, float Y) location, string[] foodSource, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : this(helper, animalPublisher, drawPublisher, mapInformation)
         {
             Species = species; //maybe have all parameters related to the animal as a struct. 
             //ReproductionAge = reproductionAge;
@@ -141,11 +141,12 @@ namespace AnimalSimulationVersion2
 
             ID = helper.GenerateID();
         }
-        private Animalia(IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher)
+        private Animalia(IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation)
         {
             this.helper = helper;
             this.animalPublisher = animalPublisher;
             this.drawPublisher = drawPublisher;
+            this.mapInformation = mapInformation;
 
             animalPublisher.RaiseFindPreyEvent += IsPossiblePreyEventHandler;
             animalPublisher.RaiseSetPreyEvent += IsPreyEventHandler;

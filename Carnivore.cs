@@ -12,7 +12,7 @@ namespace AnimalSimulationVersion2
         public abstract float AttackSpeedMultiplier { get; set; }
         public (float X, float Y) PreyLastLocation { get; set; }
 
-        public Carnivore(string species, (float X, float Y) location, string[] foodSource, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher) : base(species, location, foodSource, helper, animalPublisher, drawPublisher)
+        public Carnivore(string species, (float X, float Y) location, string[] foodSource, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, animalPublisher, drawPublisher, mapInformation)
         {
         }
 
