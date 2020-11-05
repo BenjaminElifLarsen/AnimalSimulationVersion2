@@ -157,6 +157,7 @@ namespace AnimalSimulationVersion2
             animalPublisher.RaiseDied += DeathEventHandler;
             animalPublisher.RaiseEaten += EatenEventHandler;
             animalPublisher.RaiseGetLocation += LocationEventHandler;
+            animalPublisher.RaiseInformHunterOfPreyDeath += PreyHasDiedEventHandler;
 
             drawPublisher.RaiseDrawEvent += DrawEventHandler;
         }
@@ -413,6 +414,7 @@ namespace AnimalSimulationVersion2
             animalPublisher.RaiseDied -= DeathEventHandler;
             animalPublisher.RaiseEaten -= EatenEventHandler;
             animalPublisher.RaiseGetLocation -= LocationEventHandler;
+            animalPublisher.RaiseInformHunterOfPreyDeath -= PreyHasDiedEventHandler;
 
             drawPublisher.RaiseDrawEvent -= DrawEventHandler;
         }

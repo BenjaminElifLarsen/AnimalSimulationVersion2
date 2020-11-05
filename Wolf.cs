@@ -83,7 +83,6 @@ namespace AnimalSimulationVersion2
                     }
                     else
                     { //set a random location, a wolf should stay close or inside its territory
-                        //GenerateLocation (if Location != MoveTo)
                         if (Location == MoveTo)
                             MoveTo = GenerateRandomEndLocation();
                         Move();
