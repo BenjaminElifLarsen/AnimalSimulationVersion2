@@ -169,6 +169,14 @@ namespace AnimalSimulationVersion2
         /// </summary>
         protected abstract void Move();
         /// <summary>
+        /// Generates a random end location on the map. X and Y will each be between 0 and the maximum value of their respective maximum possible distance.
+        /// </summary>
+        /// <returns>Returns a new X and Y coordinate for the animal to move too.</returns>
+        protected virtual (float X, float Y) GenerateRandomEndLocation()
+        {
+            return (helper.GenerateRandomNumber(0,mapInformation.GetSizeOfMap.width-1), helper.GenerateRandomNumber(0, mapInformation.GetSizeOfMap.height - 1));
+        }
+        /// <summary>
         /// Finds a mate for the animal and informs the other animal that it got a mate.
         /// </summary>
         /// <remarks>It will return null if no mate can be found</remarks>
