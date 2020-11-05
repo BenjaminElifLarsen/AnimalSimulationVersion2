@@ -17,6 +17,9 @@ namespace AnimalSimulationVersion2
         public delegate void removePreyEventHandler(object sender, ControlEvents.RemovePreyEventArgs args);
         public event removePreyEventHandler RaiseRemovePreyEvent;
 
+        public delegate void informPredatorOfPreyDeathEventHandler(object sender, ControlEvents.InformPredatorOfPreyDeathEventArgs args);
+        public event informPredatorOfPreyDeathEventHandler RaiseInformHunterOfPreyDeath;
+
         //mate
         public delegate void possibleMatesEventHandler(object sender, ControlEvents.PossibleMateEventArgs args);
         public event possibleMatesEventHandler RaisePossibleMatesEvent;
@@ -32,7 +35,7 @@ namespace AnimalSimulationVersion2
         public event aiEvnetHandler RaiseAIEvent;
 
         //location
-        public delegate void getLocationEventHandler(object sender, ControlEvents.GetOtherLocation args);
+        public delegate void getLocationEventHandler(object sender, ControlEvents.GetOtherLocationEventArgs args);
         public event getLocationEventHandler RaiseGetLocation;
 
         //deaths
@@ -163,9 +166,9 @@ namespace AnimalSimulationVersion2
         /// <returns></returns>
         public (float X, float Y) GetLocation(string receiverID)
         {
-            return OnGetLocation(new ControlEvents.GetOtherLocation(receiverID));
+            return OnGetLocation(new ControlEvents.GetOtherLocationEventArgs(receiverID));
         }
-        protected (float X, float Y) OnGetLocation(ControlEvents.GetOtherLocation e)
+        protected (float X, float Y) OnGetLocation(ControlEvents.GetOtherLocationEventArgs e)
         {
             getLocationEventHandler eventHandler = RaiseGetLocation;
             if(eventHandler != null)
@@ -207,6 +210,21 @@ namespace AnimalSimulationVersion2
                 return e.GetNutrience();
             }
             return -1;
+        }
+        /// <summary>
+        /// Informs <paramref name="receiverID"/> of the death of its prey <paramref name="senderID"/>.
+        /// </summary>
+        /// <param name="senderID"></param>
+        /// <param name="receiverID"></param>
+        public void InformPredatorOfDeath(string senderID, string receiverID)
+        {
+            OnInformPredatorOfDeath(new ControlEvents.InformPredatorOfPreyDeathEventArgs(senderID, receiverID));
+        }
+        protected void OnInformPredatorOfDeath(ControlEvents.InformPredatorOfPreyDeathEventArgs e)
+        {
+            informPredatorOfPreyDeathEventHandler eventHandler = RaiseInformHunterOfPreyDeath;
+            if (eventHandler != null)
+                eventHandler.Invoke(this, e);
         }
     }
 }

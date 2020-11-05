@@ -281,7 +281,8 @@ namespace AnimalSimulationVersion2
             }
             if(HuntedBy.Length != 0)
             {
-                //foreach (string hunter in HuntedBy)
+                foreach (string hunterID in HuntedBy)
+                    animalPublisher.InformPredatorOfDeath(ID, hunterID);
                 //    it needs a special event that when a predator receives it the predator sets its foodID to null
             }
             RemoveSubscriptions();
@@ -320,6 +321,11 @@ namespace AnimalSimulationVersion2
                 if (helper.Contains(HuntedBy, e.IDs.senderID))
                     helper.Remove(HuntedBy, e.IDs.senderID);
         }
+        protected virtual void PreyHasDiedEventHandler(object sender, ControlEvents.InformPredatorOfPreyDeathEventArgs e)
+        {
+            if (e.IDs.ReceiverID == ID)
+                foodID = null;
+        }
         /// <summary>
         /// Is asked about whether it is a possible mate for another animal or not.
         /// </summary>
@@ -354,7 +360,7 @@ namespace AnimalSimulationVersion2
                 if (e.IDs.receiverID == ID)
                     mateID = null;
         }
-        protected virtual void LocationEventHandler(object sender, ControlEvents.GetOtherLocation e)
+        protected virtual void LocationEventHandler(object sender, ControlEvents.GetOtherLocationEventArgs e)
         { //delegate. Someone needs this one's location.
                 if (e.ReceiverID == ID)
                     e.Location = Location;

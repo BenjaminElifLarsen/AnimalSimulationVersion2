@@ -130,15 +130,23 @@ namespace AnimalSimulationVersion2
                 ReceiverID = receiverID;
             }
         }
-        public class GetOtherLocation
+        public class GetOtherLocationEventArgs
         {
             public string ReceiverID { get; }
             public (float X, float Y) Location { get; set; }
-            public GetOtherLocation(string receiverID)
+            public GetOtherLocationEventArgs(string receiverID)
             {
                 ReceiverID = receiverID;
             }
             public (float X, float Y) GetLocation => Location;
+        }
+        public class InformPredatorOfPreyDeathEventArgs
+        {
+            public (string SenderID, string ReceiverID) IDs { get; set; }
+            public InformPredatorOfPreyDeathEventArgs(string senderID, string receiverID)
+            {
+                IDs = (senderID,receiverID);
+            }
         }
     }
 }
