@@ -149,7 +149,7 @@ namespace AnimalSimulationVersion2
 
             animalPublisher.RaiseFindPreyEvent += IsPossiblePreyEventHandler;
             animalPublisher.RaiseSetPreyEvent += IsPreyEventHandler;
-            animalPublisher.RaiseRemovePreyEvent += RemovePreyEventHandler;
+            animalPublisher.RaiseRemovePreyEvent += RemovePredatorEventHandler;
             animalPublisher.RaisePossibleMatesEvent += CanMateEventHandler;
             animalPublisher.RaiseSetMateEvent += GetMateEventHandler;
             animalPublisher.RaiseRemoveMateEvent += RemoveMateEventHandler;
@@ -316,14 +316,14 @@ namespace AnimalSimulationVersion2
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected virtual void RemovePreyEventHandler(object sender, ControlEvents.RemovePreyEventArgs e)
-        { //delegate. The prey has died or is lost to this animal. 
+        protected virtual void RemovePredatorEventHandler(object sender, ControlEvents.RemovePreyEventArgs e)
+        { //delegate. The predator has died or is lost to this animal. 
             if (e.IDs.senderID != ID)
                 if (helper.Contains(HuntedBy, e.IDs.senderID))
                     helper.Remove(HuntedBy, e.IDs.senderID);
         }
         protected virtual void PreyHasDiedEventHandler(object sender, ControlEvents.InformPredatorOfPreyDeathEventArgs e)
-        {
+        { //delegate. The prey has died.
             if (e.IDs.ReceiverID == ID)
                 foodID = null;
         }
@@ -406,7 +406,7 @@ namespace AnimalSimulationVersion2
         {
             animalPublisher.RaiseFindPreyEvent -= IsPossiblePreyEventHandler;
             animalPublisher.RaiseSetPreyEvent -= IsPreyEventHandler;
-            animalPublisher.RaiseRemovePreyEvent -= RemovePreyEventHandler;
+            animalPublisher.RaiseRemovePreyEvent -= RemovePredatorEventHandler;
             animalPublisher.RaisePossibleMatesEvent -= CanMateEventHandler;
             animalPublisher.RaiseSetMateEvent -= GetMateEventHandler;
             animalPublisher.RaiseRemoveMateEvent -= RemoveMateEventHandler;
