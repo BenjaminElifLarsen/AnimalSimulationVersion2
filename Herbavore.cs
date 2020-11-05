@@ -13,10 +13,6 @@ namespace AnimalSimulationVersion2
 
         public abstract override void AI();
 
-        protected abstract override void Death();
-
-        protected abstract override void Eat();
-
         protected abstract override string FindFood();
 
         protected abstract override string FindMate();
