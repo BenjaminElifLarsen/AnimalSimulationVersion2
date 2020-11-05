@@ -251,7 +251,18 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// Animal is dead.
         /// </summary>
-        protected abstract void Death();
+        protected virtual void Death() 
+        {
+            if (mateID != null)
+            {
+                animalPublisher.RemoveMate(ID, mateID);
+            }
+            if (foodID != null)
+            {
+                animalPublisher.RemovePrey(ID, foodID);
+            }
+            RemoveSubscriptions();
+        }
         /// <summary>
         /// Is asked for information such that another animal can decided if this animal is food or not.
         /// </summary>

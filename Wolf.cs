@@ -61,10 +61,8 @@ namespace AnimalSimulationVersion2
                         else
                             Move();
                     }
-                    else if (Age >= ReproductionAge && EnergyLevel > 0)
+                    else if (Age >= ReproductionAge && EnergyLevel > 0 && TimeToReproductionNeed <= 0)
                     {
-                        if (TimeToReproductionNeed <= 0)
-                        {
                             if (mateID == null)
                                 mateID = FindMate();
                             if (mateID != null)
@@ -75,7 +73,7 @@ namespace AnimalSimulationVersion2
                             }
                             else
                                 Move();
-                        }
+                        
                     }
                     else if (EnergyLevel <= 0)
                     {
@@ -83,6 +81,7 @@ namespace AnimalSimulationVersion2
                     }
                     else
                     { //set a random location, a wolf should stay close or inside its territory
+                        //GenerateLocation (if Location != MoveTo)
                         Move();
                     }
                 }
@@ -97,19 +96,6 @@ namespace AnimalSimulationVersion2
                 }
 
             }
-        }
-
-        protected override void Death() //maybe move up to Animalia 
-        {
-            if(mateID != null)
-            {
-                animalPublisher.RemoveMate(ID, mateID);
-            }
-            if(foodID != null)
-            {
-                animalPublisher.RemovePrey(ID, foodID);
-            }
-            RemoveSubscriptions();
         }
 
         protected override void RemoveSubscriptions()
