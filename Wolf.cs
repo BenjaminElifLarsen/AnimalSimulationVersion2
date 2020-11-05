@@ -74,7 +74,7 @@ namespace AnimalSimulationVersion2
                                 Mate();
                             }
                             else
-                                Move();
+                                Move(); //figure out a good way to lower the amount of calls to Move() in this method.
                         
                     }
                     else if (EnergyLevel <= 0)
