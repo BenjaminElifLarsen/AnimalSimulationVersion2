@@ -131,12 +131,7 @@ namespace AnimalSimulationVersion2
 
         public bool IsActive(string period, string activePeriod)
         {
-            throw new NotImplementedException();
-        }
-
-        protected override void Eat()
-        {
-            Hunger = animalPublisher.Eat(foodID);
+            return period == activePeriod;
         }
 
         /// <summary>

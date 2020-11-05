@@ -22,8 +22,6 @@ namespace AnimalSimulationVersion2
 
         public abstract void TrackPrey();
 
-        protected abstract override void Eat();
-
         protected abstract override void Mate();
 
         protected abstract override void Move();
