@@ -4,6 +4,9 @@ using System.Text;
 
 namespace AnimalSimulationVersion2
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public interface IHelper
     {
         /// <summary>
@@ -69,6 +72,12 @@ namespace AnimalSimulationVersion2
         /// </summary>
         /// <returns>Returns the generated ID.</returns>
         public string GenerateID();
+        /// <summary>
+        /// Generates and returns a random number between <paramref name="minimum"/> up to and with <paramref name="maximum"/>.
+        /// </summary>
+        /// <param name="minimum">The minimum number of the possible value.</param>
+        /// <param name="maximum">The maximum number of the possible value.</param>
+        /// <returns>Returns a randomly generated value.</returns>
         public int GenerateRandomNumber(int minimum, int maximum);
     }
 }

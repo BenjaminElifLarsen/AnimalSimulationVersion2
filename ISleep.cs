@@ -17,3 +17,4 @@ namespace AnimalSimulationVersion2
         
     }
 }
+//for animals that does not sleep with both brain parts at the same time, have a debuff. Maybe just in thier implementation

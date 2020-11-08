@@ -10,6 +10,9 @@ namespace AnimalSimulationVersion2
         private static Random rnd;
         private static List<string> ids;
         private ulong idNumber = 0;
+        /// <summary>
+        /// Get a reference to the instance of Helper.
+        /// </summary>
         public static IHelper Instance { get; }
         static Helper()
         {
@@ -47,7 +50,6 @@ namespace AnimalSimulationVersion2
         {
             idNumber++;
             return idNumber.ToString();
-            throw new NotImplementedException();
         }
 
         public void Remove<T>(List<T> list, T value) => list.Remove(value);
@@ -74,13 +76,6 @@ namespace AnimalSimulationVersion2
                     return true;
             return false;
         }
-
-        /// <summary>
-        /// Generates and returns a random number between <paramref name="minimum"/> up to and with <paramref name="maximum"/>.
-        /// </summary>
-        /// <param name="minimum">The minimum number of the possible value.</param>
-        /// <param name="maximum">The maximum number of the possible value.</param>
-        /// <returns>Returns a randomly generated value.</returns>
         public int GenerateRandomNumber(int minimum, int maximum)
         {
             return rnd.Next(minimum, maximum + 1);

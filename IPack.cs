@@ -12,7 +12,7 @@ namespace AnimalSimulationVersion2
         public abstract byte PackSize { get; set; }
         public abstract byte MaxPackSize { get; set; }
         public abstract bool CanFightForAlpha { get; set; }
-        public abstract void FightAlpha(string alphaID);
-        public abstract void FightChallenger(string challengerID);
+        public abstract void FightAlpha(string alphaID); //delegate
+        public abstract void FightChallenger(string challengerID); //delegate
     }
 }

@@ -168,7 +168,6 @@ namespace AnimalSimulationVersion2
                     HasMated = false;
                 }
             }
-            throw new NotImplementedException();
         }
 
         protected override void Move() //maybe move this up to Animalia
@@ -203,7 +202,7 @@ namespace AnimalSimulationVersion2
             //} 
         }
 
-        public override void TrackPrey() 
+        public override void TrackPrey()  //move this and the others into a single class and give an instance to it 
         { //maybe it should try and predict the next location of the prey if it is not in attackRange.
             (float X, float Y) preyLocation = animalPublisher.GetLocation(foodID);
             float distance = Math.Abs(preyLocation.X - Location.X) + Math.Abs(preyLocation.Y - Location.Y);
