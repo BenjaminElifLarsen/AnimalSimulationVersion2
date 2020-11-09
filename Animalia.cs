@@ -77,6 +77,10 @@ namespace AnimalSimulationVersion2
         /// </summary>
         public float Hunger { get; set; }
         /// <summary>
+        /// The maximum hunger level of the animal.
+        /// </summary>
+        public float MaxHunger { get; set; }
+        /// <summary>
         /// The amount of time before the animal will feel a need to reproduce in seconds.
         /// </summary>
         public float TimeToReproductionNeed { get; set; } //maybe have a cooldown value
@@ -121,6 +125,10 @@ namespace AnimalSimulationVersion2
         /// </summary>
         public bool HasMated { get; set; }
         /// <summary>
+        /// 
+        /// </summary>
+        public float OneAgeInSeconds;
+        /// <summary>
         /// The current location of the mate.  
         /// </summary>
         public (float X, float Y) MateLocation { get; set; }
@@ -149,7 +157,9 @@ namespace AnimalSimulationVersion2
             //NutrienValue = nutrienceValue;
             MoveTo = GenerateRandomEndLocation();
             ID = helper.GenerateID();
+            OneAgeInSeconds = mapInformation.OneAgeInSeconds;
             //Gender = GenerateGender(genderInformation);
+            HuntedBy = new string[0];
         }
         /// <summary>
         /// Extra constructor that sets all instances and eventhandlers //rewrite
@@ -283,6 +293,8 @@ namespace AnimalSimulationVersion2
         protected virtual void Eat()
         {
             Hunger = animalPublisher.Eat(foodID);
+            if (Hunger > MaxHunger)
+                Hunger = MaxHunger;
         }
 
         /// <summary>
@@ -326,8 +338,12 @@ namespace AnimalSimulationVersion2
         /// <param name="e"></param>
         protected virtual void IsPreyEventHandler(object sender, ControlEvents.SetPreyEventArgs e)
         { //delegate. Take the ID of the predator and add it to the array. 
-                if (e.IDs.receiverID == ID)
-                    helper.Add(HuntedBy, e.IDs.senderID);
+            if (e.IDs.receiverID == ID) 
+            {
+                string[] array = HuntedBy;
+                helper.Add(ref array, e.IDs.senderID);
+                HuntedBy = array;
+            }
         }
         /// <summary>
         /// Its predator is dead or have lost this animal.
