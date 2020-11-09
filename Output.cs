@@ -12,6 +12,14 @@ namespace AnimalSimulationVersion2
 {
     class Output
     { //draws out to the map image and displays it
+
+
+        public delegate void dostuff(object sender, ImageEventArgs eva);
+        public event dostuff MitEvent;
+
+
+
+
         public Bitmap Map { get; set; }
         public BitmapImage MapImage { get; set; }
         public float FramesPerSecond { get; set; }
@@ -42,25 +50,29 @@ namespace AnimalSimulationVersion2
             DateTime lastTime = DateTime.Now;
             while (true)
             {
-                if ((DateTime.Now-lastTime).TotalSeconds >= TimeInSecondsBetweenFrames) //the part before >= needs also be accessed by the AI thread. 
+                if ((DateTime.Now - lastTime).TotalSeconds >= TimeInSecondsBetweenFrames) //the part before >= needs also be accessed by the AI thread. 
                 {
                     List<(Point[] Design, (int Red, int Green, int Blue) Colour, (float X, float Y) Location)> drawInforamtion = DrawPublisher.Draw();
                     Map = Draw(Map, drawInforamtion);
 
                     lastTime = DateTime.Now;
-                    MapImage = MainWindow.GenerateBitMapImage(Map);
-                    MainWindow.VisualUpdate(MapImage);
+
+                    MitEvent?.Invoke(this, new ImageEventArgs { BitMapImage = Map });
+
+                    //MapImage = MainWindow.GenerateBitMapImage(Map);
+                    //MainWindow.VisualUpdate(MapImage);
+                    //MainWindow.Instance.UpdateVisualImage(MapImage);
                 }
             }
         }
 
         private Bitmap Draw(Bitmap map, List<(Point[] Design, (int Red, int Green, int Blue) Colour, (float X, float Y) Location)> drawInforamtion)
         {
-            using (Graphics g = Graphics.FromImage(map)) 
+            using (Graphics g = Graphics.FromImage(map))
                 foreach ((Point[] Design, (int Red, int Green, int Blue) Colour, (float X, float Y) Location) information in drawInforamtion)
                 {
                     //for now, consider Location as top left.
-                    for(int i = 0; i < information.Design.Length; i++)
+                    for (int i = 0; i < information.Design.Length; i++)
                     {
                         information.Design[i].X += (int)information.Location.X;
                         information.Design[i].Y += (int)information.Location.Y;
@@ -73,5 +85,10 @@ namespace AnimalSimulationVersion2
                 }
             return map;
         }
+    }
+
+    public class ImageEventArgs : EventArgs
+    {
+        public Bitmap BitMapImage { get; set; }
     }
 }
