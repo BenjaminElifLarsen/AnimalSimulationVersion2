@@ -34,8 +34,9 @@ namespace AnimalSimulationVersion2
         /// </summary>
         protected (char Gender, byte Weight)[] genderInformation;
 
+        protected float timeAlive; 
+
         protected MapInformation mapInformation;
-        protected Publisher publisher;
         protected IHelper helper;
         protected AnimalPublisher animalPublisher;
         protected DrawPublisher drawPublisher;
@@ -198,6 +199,20 @@ namespace AnimalSimulationVersion2
         /// </summary>
         protected abstract void Move();
         /// <summary>
+        /// Updates all time sensitive variables. 
+        /// </summary>
+        /// <remarks>
+        /// By default this is: 
+        /// timeAlive, Age Hunger and TimeToProductionNeed
+        /// </remarks>
+        protected virtual void TimeUpdate()
+        {
+            timeAlive += timeSinceLastUpdate;
+            Age = timeAlive / OneAgeInSeconds;
+            Hunger -= timeSinceLastUpdate;
+            TimeToReproductionNeed -= timeSinceLastUpdate;
+        }
+        /// <summary>
         /// Generates a random end location on the map. X and Y will each be between 0 and the maximum value of their respective maximum possible distance.
         /// </summary>
         /// <returns>Returns a new X and Y coordinate for the animal to move too.</returns>
@@ -292,7 +307,7 @@ namespace AnimalSimulationVersion2
         /// </summary>
         protected virtual void Eat()
         {
-            Hunger = animalPublisher.Eat(foodID);
+            Hunger += animalPublisher.Eat(foodID);
             if (Hunger > MaxHunger)
                 Hunger = MaxHunger;
         }
@@ -372,8 +387,9 @@ namespace AnimalSimulationVersion2
                 if (mateID == null)
                     if (e.Information.Species == Species)
                         if (e.Information.Gender != Gender)
-                            if (Age >= ReproductionAge)
-                                e.AddMateInformation((ID, Location));
+                            if(TimeToReproductionNeed <= 0)
+                                if (Age >= ReproductionAge)
+                                    e.AddMateInformation((ID, Location));
         }
         /// <summary>
         /// Another animal has chosen this one for its mate. 
