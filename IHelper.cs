@@ -23,6 +23,7 @@ namespace AnimalSimulationVersion2
         /// <param name="array">The array to copy.</param>
         /// <returns>Returns a deep copy of <paramref name="array"/>.</returns>
         public T[] DeepCopy<T>(T[] array);
+        public (T, T) DeepCopy<T>((T, T) value);
         /// <summary>
         /// Adds <paramref name="value"/> to <paramref name="list"/>
         /// </summary>

@@ -80,5 +80,12 @@ namespace AnimalSimulationVersion2
         {
             return rnd.Next(minimum, maximum + 1);
         }
+
+        public (T, T) DeepCopy<T>((T, T) value)
+        {
+            T value1 = value.Item1;
+            T value2 = value.Item2;
+            return (value1, value2);
+        }
     }
 }
