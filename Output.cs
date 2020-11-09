@@ -14,11 +14,8 @@ namespace AnimalSimulationVersion2
     { //draws out to the map image and displays it
 
 
-        public delegate void dostuff(object sender, ImageEventArgs eva);
-        public event dostuff MitEvent;
-
-
-
+        public delegate void paintEvent(object sender, ImageEventArgs eva);
+        public event paintEvent PaintEvent;
 
         public Bitmap Map { get; set; }
         public BitmapImage MapImage { get; set; }
@@ -74,7 +71,7 @@ namespace AnimalSimulationVersion2
 
                     lastTime = DateTime.Now;
 
-                    MitEvent?.Invoke(this, new ImageEventArgs { BitMapImage = Map });
+                    PaintEvent?.Invoke(this, new ImageEventArgs { BitMapImage = Map });
 
                     //MapImage = MainWindow.GenerateBitMapImage(Map);
                     //MainWindow.VisualUpdate(MapImage);
