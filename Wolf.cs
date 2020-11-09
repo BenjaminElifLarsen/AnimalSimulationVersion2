@@ -20,11 +20,8 @@ namespace AnimalSimulationVersion2
         public float SleepLength { get; }
         public bool Sleeping { get; set; }
 
-
         public Wolf(string species, (float X, float Y) location, string[] foodSource, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, animalPublisher, drawPublisher, mapInformation)
         {
-            //Wolf wolf = new Wolf(null, 1, (1,2), 2, (1,2), 3, 4, null, (0,0,0), null, 1, Helper.Instance, Publisher.GetAnimalInstance, Publisher.GetDrawInstance);
-            //helper.DeepCopy(new int[] { 5 });
             Territory = GenerateTerritory(); //values are not final
             AttackRange = 20;
             AttackSpeedMultiplier = 1.5f;
@@ -53,7 +50,7 @@ namespace AnimalSimulationVersion2
         protected override void TimeUpdate()
         {
             base.TimeUpdate();
-
+            EnergyLevel -= timeSinceLastUpdate;
             if (periodInPregnacy < lengthOfPregnacy && HasMated)
                 periodInPregnacy += timeSinceLastUpdate;
         }
@@ -66,6 +63,10 @@ namespace AnimalSimulationVersion2
                 Death();
             else
             {
+                if (Gender == 'f')
+                    if(HasMated)
+                        if (periodInPregnacy >= lengthOfPregnacy)
+                            GiveBirth();
                 if (!Sleeping)
                 {
                     if ((Hunger < MaxHunger * 0.5 && EnergyLevel > 0) || Hunger < MaxHunger * 0.1) //softcode those values later.
@@ -173,27 +174,28 @@ namespace AnimalSimulationVersion2
             if (MateLocation == Location && !HasMated)
             {
                 periodInPregnacy = 0;
-                HasMated = true;
-            }
-            if (HasMated)
-            {
-                if (Gender == 'f') //later on, alter the FindMate() to check if the wolf is alpha, if a pack wolf, and only mate with the other alpha. 
-                { //maybe have both parents stay together for a while while the female wolf is pregnant. Check up if both parents stay with their children, also if they mate is for life
-                    if (periodInPregnacy >= lengthOfPregnacy) //split this if-statment into another method so the female wolf can give birth even when hungry
-                    { //generate a random number, need to depedency inject a random generator to ensure the values are not the same for each call if multiple calls happen quickly. Also needed for random movement.
-                        byte childAmount = (byte)helper.GenerateRandomNumber(BirthAmount.Minimum, BirthAmount.Maximum); //seems like wolves mate for life, but if losing a mate, they will quickly find another one.
-                        for (int i = 0; i < childAmount; i++) 
-                            new Wolf(Species, Location, FoodSource, helper, animalPublisher, drawPublisher, mapInformation);
-                        TimeToReproductionNeed = reproductionCooldown - lengthOfPregnacy; //keep the new wol(f/ves) in a list for a short period so the IPack methods can be updated to contain the newest family.
-                        HasMated = false;
-                    }
-                }
-                else //how to let the father now of the children. Maybe the female should raise an event to let the father know of the children
+                if(Gender == 'f')
+                    HasMated = true;
+                else
                 {
                     TimeToReproductionNeed = reproductionCooldown;
-                    HasMated = false;
                 }
             }
+        }
+
+        protected override void GiveBirth()
+        {
+            //if (Gender == 'f') //later on, alter the FindMate() to check if the wolf is alpha, if a pack wolf, and only mate with the other alpha. 
+            //{ //maybe have both parents stay together for a while while the female wolf is pregnant. Check up if both parents stay with their children, also if they mate is for life
+                 //split this if-statment into another method so the female wolf can give birth even when hungry
+                 //generate a random number, need to depedency inject a random generator to ensure the values are not the same for each call if multiple calls happen quickly. Also needed for random movement.
+                    byte childAmount = (byte)helper.GenerateRandomNumber(BirthAmount.Minimum, BirthAmount.Maximum); //seems like wolves mate for life, but if losing a mate, they will quickly find another one.
+                    for (int i = 0; i < childAmount; i++)
+                        new Wolf(Species, Location, FoodSource, helper, animalPublisher, drawPublisher, mapInformation);
+                    TimeToReproductionNeed = reproductionCooldown - periodInPregnacy; //keep the new wol(f/ves) in a list for a short period so the IPack methods can be updated to contain the newest family.
+                    HasMated = false;
+                
+            //}
         }
 
         protected override void Move() //maybe move this up to Animalia
