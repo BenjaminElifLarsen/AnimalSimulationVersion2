@@ -25,13 +25,14 @@ namespace AnimalSimulationVersion2
         public float FramesPerSecond { get; set; }
         private float TimeInSecondsBetweenFrames { get; set; }
         private DrawPublisher DrawPublisher { get; set; }
-
+        private AnimalPublisher AnimalPublisher { get; set; }
         public static Output Instance { get; }
 
         static Output()
         {
             Instance = new Output();
             Instance.DrawPublisher = Publisher.GetDrawInstance;
+            Instance.AnimalPublisher = Publisher.GetAnimalInstance; //set this and the one above from MainWindow
             Instance.FramesPerSecond = 30;
             Instance.TimeInSecondsBetweenFrames = 1 / Instance.FramesPerSecond;
         }
@@ -42,6 +43,22 @@ namespace AnimalSimulationVersion2
         }
         public void RunAIThread()
         {
+            Thread thread = new Thread(AIThread);
+            thread.Start();
+        }
+
+        private void AIThread()
+        {
+            DateTime lastTime = DateTime.Now;
+            while (true)
+            {
+                double passedTime = (DateTime.Now - lastTime).TotalSeconds;
+                if (passedTime >= TimeInSecondsBetweenFrames)
+                {
+                    AnimalPublisher.AI((float)passedTime);
+                    lastTime = DateTime.Now;
+                }
+            }
         }
 
         private void VisualThread()
@@ -69,6 +86,8 @@ namespace AnimalSimulationVersion2
         private Bitmap Draw(Bitmap map, List<(Point[] Design, (int Red, int Green, int Blue) Colour, (float X, float Y) Location)> drawInforamtion)
         {
             using (Graphics g = Graphics.FromImage(map))
+            {
+                g.Clear(Color.Black);
                 foreach ((Point[] Design, (int Red, int Green, int Blue) Colour, (float X, float Y) Location) information in drawInforamtion)
                 {
                     Point[] drawLocations = new Point[information.Design.Length];
@@ -84,6 +103,7 @@ namespace AnimalSimulationVersion2
                     }
 
                 }
+            }
             return map;
         }
     }
