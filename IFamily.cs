@@ -21,5 +21,12 @@ namespace AnimalSimulationVersion2
         public abstract bool CanMateFamily { get; set; }
         public abstract bool CanMateSublings { get; set; }
         public abstract bool CanMateChildren { get; set; }
+        class TransmitIDsEventArgs : EventArgs //does not seem like a good idea, perhaps it is fine to just implement the broker in the classes themselves
+        { //ask Thomas
+            public TransmitIDsEventArgs()
+            { //transmit something like (relationship, id)[] family
+
+            }
+        }
     }
 }
