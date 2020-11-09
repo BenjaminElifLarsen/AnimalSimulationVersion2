@@ -15,7 +15,7 @@ namespace AnimalSimulationVersion2
         static MapInformation() //consider a way to set the map size and any other possible information
         {
             Instance = new MapInformation();
-            Instance.OneAgeInSeconds = 6;
+            Instance.OneAgeInSeconds = 12;
         }
     }
 }
