@@ -403,7 +403,7 @@ namespace AnimalSimulationVersion2
         /// <param name="e"></param>
         protected virtual void DrawEventHandler(object sender, ControlEvents.DrawEventArgs e)
         { //delegate. Transmit location, design and colour back.
-            (Point[] Design, (int Red, int Green, int Blue), (float X, float Y) Location) drawInforamtion = (Design, Colour, Location);
+            (Point[] Design, (int Red, int Green, int Blue), (float X, float Y) Location) drawInforamtion = (helper.DeepCopy(Design), Colour, Location); //(type,type) will ac
             e.AddDrawInformation(drawInforamtion);
         }
         /// <summary>
