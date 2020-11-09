@@ -37,7 +37,7 @@ namespace AnimalSimulationVersion2
         /// <typeparam name="T">The type of the array.</typeparam>
         /// <param name="array">The array to add too.</param>
         /// <param name="value">The value to add.</param>
-        public void Add<T>(T[] array, T value);
+        public void Add<T>(ref T[] array, T value);
         /// <summary>
         /// Removes <paramref name="value"/> from <paramref name="list"/>.
         /// </summary>

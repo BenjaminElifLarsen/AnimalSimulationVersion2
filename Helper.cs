@@ -37,8 +37,9 @@ namespace AnimalSimulationVersion2
                 newList.Add(list[i]);
             return newList;
         }
-        public void Add<T>(T[] array, T value)
+        public void Add<T>(ref T[] array, T value)
         {
+            
             List<T> list = array.ToList();
             list.Add(value);
             array = list.ToArray();
@@ -71,6 +72,8 @@ namespace AnimalSimulationVersion2
 
         public bool Contains<T>(T[] array, T value)
         {
+            if (array == null) //later change this to throw a null reference exception.
+                return false;
             foreach (T val in array)
                 if (EqualityComparer<T>.Default.Equals(val, value)) //needs testing, so set up unit testing stuff.
                     return true;
