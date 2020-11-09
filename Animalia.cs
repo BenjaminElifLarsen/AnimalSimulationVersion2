@@ -147,8 +147,9 @@ namespace AnimalSimulationVersion2
             FoodSource = foodSource;
             //MaxAge = maxAge;
             //NutrienValue = nutrienceValue;
-
+            MoveTo = GenerateRandomEndLocation();
             ID = helper.GenerateID();
+            //Gender = GenerateGender(genderInformation);
         }
         /// <summary>
         /// Extra constructor that sets all instances and eventhandlers //rewrite
@@ -231,12 +232,12 @@ namespace AnimalSimulationVersion2
         /// </summary>
         protected abstract void Mate();
         //protected abstract string GenerateID();
-        protected virtual char GenerateGender((char Gender, byte Weight)[] genderInformation) //it should take an array of possible genders and a % for each of them.
+        protected virtual char GenerateGender((char Gender, byte Weight)[] genderInfo) //it should take an array of possible genders and a % for each of them.
         {
             ushort totalWeight = 0;
             ushort startLocation;
             List<(char Gender, ushort StartLocation, ushort EndLocation)> genderStartEndLocation = new List<(char, ushort, ushort)>();
-            foreach((char Gender, byte Weight) information in genderInformation)
+            foreach((char Gender, byte Weight) information in genderInfo)
             {
                 startLocation = totalWeight;
                 totalWeight += information.Weight;
@@ -246,7 +247,7 @@ namespace AnimalSimulationVersion2
             //generate a random number
             ushort rolledWeight = (ushort)helper.GenerateRandomNumber(0, totalWeight); //from zero up to and with the totalWeight
             
-            for (int i = 0; i < genderStartEndLocation.Count - 1; i++)
+            for (int i = 0; i < genderStartEndLocation.Count; i++)
             {
                 if (rolledWeight >= genderStartEndLocation[i].StartLocation && rolledWeight < genderStartEndLocation[i].EndLocation)
                     return genderStartEndLocation[i].Gender;
