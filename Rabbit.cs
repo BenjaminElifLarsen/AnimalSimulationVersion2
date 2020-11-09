@@ -40,6 +40,11 @@ namespace AnimalSimulationVersion2
             throw new NotImplementedException();
         }
 
+        protected override void GiveBirth()
+        {
+            throw new NotImplementedException();
+        }
+
         protected override void Mate()
         {
             throw new NotImplementedException();
