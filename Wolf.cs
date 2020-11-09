@@ -31,15 +31,17 @@ namespace AnimalSimulationVersion2
             lengthOfPregnacy = 9;
             genderInformation = new (char Gender, byte Weight)[] { ('f', 50), ('m', 50) };
             MaxEnergyLevel = 300; //perhaps have things like energy level, hunger etc. be in seconds. 
-            reproductionCooldown = 200;
+            reproductionCooldown = 20;
             Colour = (200, 10, 10);
             Design = new Point[] { new Point(0, 0), new Point(10, 0), new Point(10, 10), new Point(0, 10) };
             Health = 100;
             MovementSpeed = 20;
-            MaxHunger = 0;
+            MaxHunger = 100;
             Hunger = MaxHunger;
             EnergyLevel = MaxEnergyLevel;
             BirthAmount = (1, 3);
+            MaxAge = 20;
+            ReproductionAge = 4;
             Gender = GenerateGender(genderInformation); //would be better if this could be called in the base, but genderInformation is first set after... maybe move it up the variable
         }
 
@@ -48,17 +50,25 @@ namespace AnimalSimulationVersion2
             throw new NotImplementedException();
         }
 
+        protected override void TimeUpdate()
+        {
+            base.TimeUpdate();
+
+            if (periodInPregnacy < lengthOfPregnacy && HasMated)
+                periodInPregnacy += timeSinceLastUpdate;
+        }
+
         public override void AI() //maybe move the code in this over to Carnivore or even Animalia.
         {
+            TimeUpdate();
+
             if (Health <= 0 || Age > MaxAge) //nothing is finalised for the AI design.
                 Death();
             else
             {
-                if (periodInPregnacy < lengthOfPregnacy && HasMated)
-                    periodInPregnacy += timeSinceLastUpdate;
                 if (!Sleeping)
                 {
-                    if ((Hunger < 50 && EnergyLevel > 0) || Hunger < 10) //softcode those values later.
+                    if ((Hunger < MaxHunger * 0.5 && EnergyLevel > 0) || Hunger < MaxHunger * 0.1) //softcode those values later.
                     {//if hungry, drop the mate
                         if (mateID != null)
                             animalPublisher.RemoveMate(ID, mateID);
@@ -169,18 +179,18 @@ namespace AnimalSimulationVersion2
             {
                 if (Gender == 'f') //later on, alter the FindMate() to check if the wolf is alpha, if a pack wolf, and only mate with the other alpha. 
                 { //maybe have both parents stay together for a while while the female wolf is pregnant. Check up if both parents stay with their children, also if they mate is for life
-                    if (periodInPregnacy >= lengthOfPregnacy)
+                    if (periodInPregnacy >= lengthOfPregnacy) //split this if-statment into another method so the female wolf can give birth even when hungry
                     { //generate a random number, need to depedency inject a random generator to ensure the values are not the same for each call if multiple calls happen quickly. Also needed for random movement.
                         byte childAmount = (byte)helper.GenerateRandomNumber(BirthAmount.Minimum, BirthAmount.Maximum); //seems like wolves mate for life, but if losing a mate, they will quickly find another one.
-                        for (int i = 0; i < childAmount; i++)
+                        for (int i = 0; i < childAmount; i++) 
                             new Wolf(Species, Location, FoodSource, helper, animalPublisher, drawPublisher, mapInformation);
-                        TimeToReproductionNeed = reproductionCooldown; //keep the new wol(f/ves) in a list for a short period so the IPack methods can be updated to contain the newest family.
+                        TimeToReproductionNeed = reproductionCooldown - lengthOfPregnacy; //keep the new wol(f/ves) in a list for a short period so the IPack methods can be updated to contain the newest family.
                         HasMated = false;
                     }
                 }
                 else //how to let the father now of the children. Maybe the female should raise an event to let the father know of the children
                 {
-                    TimeToReproductionNeed = reproductionCooldown + lengthOfPregnacy;
+                    TimeToReproductionNeed = reproductionCooldown;
                     HasMated = false;
                 }
             }
