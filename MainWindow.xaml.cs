@@ -53,7 +53,8 @@ namespace AnimalSimulationVersion2
             new Wolf("Carnis Lupus", (20, 20), new string[] { "Rabbit" }, Helper.Instance, Publisher.GetAnimalInstance, Publisher.GetDrawInstance, MapInformation.Instance); //here for testing and nothing else.
             new Wolf("Carnis Lupus", (30, 20), new string[] { "Rabbit" }, Helper.Instance, Publisher.GetAnimalInstance, Publisher.GetDrawInstance, MapInformation.Instance); //here for testing and nothing else.
             new Wolf("Carnis Lupus", (20, 30), new string[]{ "Rabbit" }, Helper.Instance, Publisher.GetAnimalInstance, Publisher.GetDrawInstance, MapInformation.Instance); //here for testing and nothing else.
-            new Rabbit("Rabbit", (100,100), null, Helper.Instance, Publisher.GetAnimalInstance, Publisher.GetDrawInstance, MapInformation.Instance);
+            for(int i = 0; i < 10; i++)
+                new Rabbit("Rabbit", (100,100), null, Helper.Instance, Publisher.GetAnimalInstance, Publisher.GetDrawInstance, MapInformation.Instance);
             output.RunVisualThread();
             output.RunAIThread();
 
