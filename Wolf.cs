@@ -23,11 +23,10 @@ namespace AnimalSimulationVersion2
         public Wolf(string species, (float X, float Y) location, string[] foodSource, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, animalPublisher, drawPublisher, mapInformation)
         {
             Territory = GenerateTerritory(); //values are not final
-            AttackRange = 20;
+            AttackRange = 20; //order these into groups. 
             AttackSpeedMultiplier = 1.5f;
             lengthOfPregnacy = 9;
             genderInformation = new (char Gender, byte Weight)[] { ('f', 50), ('m', 50) };
-            MaxEnergyLevel = 300; //perhaps have things like energy level, hunger etc. be in seconds. 
             reproductionCooldown = 20;
             Colour = (200, 10, 10);
             Design = new Point[] { new Point(0, 0), new Point(10, 0), new Point(10, 10), new Point(0, 10) };
@@ -35,10 +34,13 @@ namespace AnimalSimulationVersion2
             MovementSpeed = 20;
             MaxHunger = 100;
             Hunger = MaxHunger;
+            MaxEnergyLevel = 140; //perhaps have things like energy level, hunger etc. be in seconds. 
             EnergyLevel = MaxEnergyLevel;
+            SleepLength = 10; 
             BirthAmount = (1, 3);
             MaxAge = 20;
             ReproductionAge = 4;
+            HungerFoodSeekingLevel = 0.5f;
             Gender = GenerateGender(genderInformation); //would be better if this could be called in the base, but genderInformation is first set after... maybe move it up the variable
         }
 
@@ -69,10 +71,13 @@ namespace AnimalSimulationVersion2
                             GiveBirth();
                 if (!Sleeping)
                 {
-                    if ((Hunger < MaxHunger * 0.5 && EnergyLevel > 0) || Hunger < MaxHunger * 0.1) //softcode those values later.
+                    if ((Hunger < MaxHunger * HungerFoodSeekingLevel && EnergyLevel > 0) || Hunger < MaxHunger * 0.1) //softcode those values later.
                     {//if hungry, drop the mate
-                        if (mateID != null)
+                        if (mateID != null) 
+                        {
                             animalPublisher.RemoveMate(ID, mateID);
+                            mateID = null;
+                        }
                         if (foodID == null) //figure out what to do if the animal got no need for food, mating and such and should just go to a random location
                             foodID = FindFood(); //also if they are in a pack/herd they need to stick together.
                         if (foodID != null)
