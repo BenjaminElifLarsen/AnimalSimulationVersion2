@@ -9,16 +9,19 @@ namespace AnimalSimulationVersion2
     /// </summary>
     interface IFamily
     { //how to get the IDs...
-        public abstract string[] Parents { get; set; }
-        public abstract string[] Family { get; set; }
-        public abstract string[] Siblings { get; set; }
-        public abstract string[] Children { get; set; }
+        public enum FamilyRelationship
+        {
+            Parent = 1,
+            Sibling = 2,
+            Child = 3,
+            NonFamily = 0
+        }
+
+        public abstract (FamilyRelationship Relationship, string ID)[] Family { get; set; }
         public abstract bool CanHuntParents { get; set; }
-        public abstract bool CanHuntFamily { get; set; }
         public abstract bool CanHuntSublings { get; set; }
         public abstract bool CanHuntChildren { get; set; }
         public abstract bool CanMateParents { get; set; }
-        public abstract bool CanMateFamily { get; set; }
         public abstract bool CanMateSublings { get; set; }
         public abstract bool CanMateChildren { get; set; }
         class TransmitIDsEventArgs : EventArgs //does not seem like a good idea, perhaps it is fine to just implement the broker in the classes themselves
