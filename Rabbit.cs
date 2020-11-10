@@ -11,7 +11,7 @@ namespace AnimalSimulationVersion2
         {
             MovementSpeed = 10;
             Colour = (0,120,120);
-            Design = new Point[] { new Point(0, 0), new Point(6, 0), new Point(6, 6), new Point(0, 6) };
+            Design = new Point[] { new Point(3,0), new Point(6, 6), new Point(0, 6) };
             NutrienValue = 100;
         }
 
