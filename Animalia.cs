@@ -134,6 +134,10 @@ namespace AnimalSimulationVersion2
         /// </summary>
         public (float X, float Y) MateLocation { get; set; }
         /// <summary>
+        /// The % of hunger in form of 0.n that should get the animal to hunt //rewrite
+        /// </summary>
+        protected float HungerFoodSeekingLevel { get; set; }
+        /// <summary>
         /// Default constructor
         /// </summary>
         /// <param name="species"></param>
@@ -239,7 +243,7 @@ namespace AnimalSimulationVersion2
                     nearestMate = information.Mate;
                 }
             }
-
+            if(nearestMate != null)
             animalPublisher.SetMate(ID, nearestMate);
             return nearestMate; 
         }
@@ -303,7 +307,8 @@ namespace AnimalSimulationVersion2
                         nearestFood = information.PreyID;
                     }
             }
-            animalPublisher.SetPrey(ID, nearestFood);
+            if(nearestFood != null)
+                animalPublisher.SetPrey(ID, nearestFood);
             return nearestFood;
         }
         /// <summary>
@@ -388,12 +393,13 @@ namespace AnimalSimulationVersion2
         protected virtual void CanMateEventHandler(object sender, ControlEvents.PossibleMateEventArgs e)
         { //delegate. Check species, if above or is reproduction age, check if it is the corret gender and if it is, send back the ID
             if(e.SenderID != ID)
-                if (mateID == null)
-                    if (e.Information.Species == Species)
-                        if (e.Information.Gender != Gender)
-                            if(TimeToReproductionNeed <= 0)
-                                if (Age >= ReproductionAge)
-                                    e.AddMateInformation((ID, Location));
+                if(Hunger > MaxHunger * HungerFoodSeekingLevel)
+                    if (mateID == null)
+                        if (e.Information.Species == Species)
+                            if (e.Information.Gender != Gender)
+                                if(TimeToReproductionNeed <= 0)
+                                    if (Age >= ReproductionAge)
+                                        e.AddMateInformation((ID, Location));
         }
         /// <summary>
         /// Another animal has chosen this one for its mate. 
