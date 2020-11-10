@@ -85,21 +85,22 @@ namespace AnimalSimulationVersion2
             using (Graphics g = Graphics.FromImage(map))
             {
                 g.Clear(Color.Black);
-                foreach ((Point[] Design, (int Red, int Green, int Blue) Colour, (float X, float Y) Location) information in drawInforamtion)
-                {
-                    Point[] drawLocations = new Point[information.Design.Length];
-                    //for now, consider Location as top left.
-                    for (int i = 0; i < information.Design.Length; i++)
+                if(drawInforamtion != null)
+                    foreach ((Point[] Design, (int Red, int Green, int Blue) Colour, (float X, float Y) Location) information in drawInforamtion)
                     {
-                        drawLocations[i].X = (int)(information.Design[i].X + information.Location.X); //maybe create a new Point array of same size, call it drawinglocations and use that one instead of information.Design
-                        drawLocations[i].Y = (int)(information.Design[i].Y + information.Location.Y);
-                    }
-                    using (Pen pen = new Pen(Color.FromArgb(information.Colour.Red, information.Colour.Green, information.Colour.Blue), 1))
-                    {
-                        g.DrawPolygon(pen, drawLocations);
-                    }
+                        Point[] drawLocations = new Point[information.Design.Length];
+                        //for now, consider Location as top left.
+                        for (int i = 0; i < information.Design.Length; i++)
+                        {
+                            drawLocations[i].X = (int)(information.Design[i].X + information.Location.X); //maybe create a new Point array of same size, call it drawinglocations and use that one instead of information.Design
+                            drawLocations[i].Y = (int)(information.Design[i].Y + information.Location.Y);
+                        }
+                        using (Pen pen = new Pen(Color.FromArgb(information.Colour.Red, information.Colour.Green, information.Colour.Blue), 1))
+                        {
+                            g.DrawPolygon(pen, drawLocations);
+                        }
 
-                }
+                    }
             }
             return map;
         }

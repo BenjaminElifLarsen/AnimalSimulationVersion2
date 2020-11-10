@@ -75,11 +75,11 @@ namespace AnimalSimulationVersion2
                     {//if hungry, drop the mate
                         if (mateID != null) 
                         {
-                            animalPublisher.RemoveMate(ID, mateID);
+                            animalPublisher.RemoveMate(ID, mateID); //rename AnimalPublisher to LifeformPublisher 
                             mateID = null;
                         }
-                        if (foodID == null) //figure out what to do if the animal got no need for food, mating and such and should just go to a random location
-                            foodID = FindFood(); //also if they are in a pack/herd they need to stick together.
+                        if (foodID == null) 
+                            foodID = FindFood(); //if they are in a pack/herd they need to stick together.
                         if (foodID != null)
                         {
                             TrackPrey();
@@ -119,10 +119,10 @@ namespace AnimalSimulationVersion2
                 {
                     TimeSlept += timeSinceLastUpdate; //consider making a method in ISleep for this
                     if (TimeSlept >= SleepLength || Hunger < 10)
-                    { //maybe allow for an ealy wake up if it is to hungry
+                    { 
                         Sleeping = false;
                         EnergyLevel = MaxEnergyLevel * TimeSlept / SleepLength;
-                    }//have an function to decrease energy, TimeToReproductionNeed, hunger etc.
+                    }
                 }
 
                 void DefaultMovement()

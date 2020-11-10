@@ -149,21 +149,12 @@ namespace AnimalSimulationVersion2
         /// <param name="mapInformation"></param>
         public Animalia(string species,(float X, float Y) location, string[] foodSource, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : this(helper, animalPublisher, drawPublisher, mapInformation)
         {
-            Species = species; //maybe have all parameters related to the animal as a struct. 
-            //ReproductionAge = reproductionAge;
+            Species = species; 
             Location = location;
-            //BirthAmount = birthAmount;
-            //MovementSpeed = movementSpeed;
-            //Hunger = hunger;
-            //Design = design;
-            //Colour = colour;
             FoodSource = foodSource;
-            //MaxAge = maxAge;
-            //NutrienValue = nutrienceValue;
             MoveTo = GenerateRandomEndLocation();
             ID = helper.GenerateID();
             OneAgeInSeconds = mapInformation.OneAgeInSeconds;
-            //Gender = GenerateGender(genderInformation);
             HuntedBy = new string[0];
         }
         /// <summary>
@@ -215,6 +206,8 @@ namespace AnimalSimulationVersion2
             Age = timeAlive / OneAgeInSeconds;
             Hunger -= timeSinceLastUpdate;
             TimeToReproductionNeed -= timeSinceLastUpdate;
+            if (Hunger < 0)
+                Health -= timeSinceLastUpdate;
         }
         /// <summary>
         /// Generates a random end location on the map. X and Y will each be between 0 and the maximum value of their respective maximum possible distance.
