@@ -23,7 +23,7 @@ namespace AnimalSimulationVersion2
         private Helper() { }
 
         public T[] DeepCopy<T>(T[] array)
-        {
+        { //can give null reference exception. If called with a null array, throw an exception or return null?
             T[] newArray = new T[array.Length];
             for (int i = 0; i < newArray.Length; i++)
                 newArray[i] = array[i];
