@@ -66,7 +66,7 @@ namespace AnimalSimulationVersion2
             {
                 if ((DateTime.Now - lastTime).TotalSeconds >= TimeInSecondsBetweenFrames) //the part before >= needs also be accessed by the AI thread. 
                 {
-                    List<(Point[] Design, (int Red, int Green, int Blue) Colour, (float X, float Y) Location)> drawInforamtion = DrawPublisher.Draw();
+                    List<(Point[] Design, (byte Red, byte Green, byte Blue) Colour, (float X, float Y) Location)> drawInforamtion = DrawPublisher.Draw();
                     Map = Draw(Map, drawInforamtion);
 
                     lastTime = DateTime.Now;
@@ -80,13 +80,13 @@ namespace AnimalSimulationVersion2
             }
         }
 
-        private Bitmap Draw(Bitmap map, List<(Point[] Design, (int Red, int Green, int Blue) Colour, (float X, float Y) Location)> drawInforamtion)
+        private Bitmap Draw(Bitmap map, List<(Point[] Design, (byte Red, byte Green, byte Blue) Colour, (float X, float Y) Location)> drawInforamtion)
         {
             using (Graphics g = Graphics.FromImage(map))
             {
                 g.Clear(Color.Black);
                 if(drawInforamtion != null)
-                    foreach ((Point[] Design, (int Red, int Green, int Blue) Colour, (float X, float Y) Location) information in drawInforamtion)
+                    foreach ((Point[] Design, (byte Red, byte Green, byte Blue) Colour, (float X, float Y) Location) information in drawInforamtion)
                     {
                         Point[] drawLocations = new Point[information.Design.Length];
                         //for now, consider Location as top left.

@@ -89,16 +89,16 @@ namespace AnimalSimulationVersion2
         }
         public class DrawEventArgs
         {
-            private List<(Point[] Design, (int Red, int Green, int Blue) Colour, (float X, float Y) Location)> drawInformation = new List<(Point[] Design, (int Red, int Green, int Blue) Colour, (float X, float Y) Location)>();
+            private List<(Point[] Design, (byte Red, byte Green, byte Blue) Colour, (float X, float Y) Location)> drawInformation = new List<(Point[] Design, (byte Red, byte Green, byte Blue) Colour, (float X, float Y) Location)>();
             public DrawEventArgs()
             {
 
             }
-            public void AddDrawInformation((Point[] Design, (int Red, int Green, int Blue), (float X, float Y) Location) information)
+            public void AddDrawInformation((Point[] Design, (byte Red, byte Green, byte Blue), (float X, float Y) Location) information)
             {
                 drawInformation.Add(information);
             }
-            public List<(Point[] Design, (int Red, int Green, int Blue) Colour, (float X, float Y) Location)> DrawInformation()
+            public List<(Point[] Design, (byte Red, byte Green, byte Blue) Colour, (float X, float Y) Location)> DrawInformation()
             {
                 return drawInformation;
             }
