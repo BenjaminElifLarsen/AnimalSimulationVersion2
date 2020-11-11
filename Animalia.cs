@@ -33,106 +33,119 @@ namespace AnimalSimulationVersion2
         /// The possible genders of the animal and the change for a specific gender.
         /// </summary>
         protected (char Gender, byte Weight)[] genderInformation;
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected float timeAlive; 
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected MapInformation mapInformation;
+        /// <summary>
+        /// 
+        /// </summary>
         protected IHelper helper;
+        /// <summary>
+        /// 
+        /// </summary>
         protected AnimalPublisher animalPublisher;
+        /// <summary>
+        /// 
+        /// </summary>
         protected DrawPublisher drawPublisher;
 
         /// <summary>
         /// The current age of the animal.
         /// </summary>
-        public float Age { get; set; }
+        protected float Age { get; set; }
         /// <summary>
         /// The age when the animal can reproduce.
         /// </summary>
-        public int ReproductionAge { get; set; }
+        protected int ReproductionAge { get; set; }
         /// <summary>
         /// The current location of the animal.
         /// </summary>
-        public (float X, float Y) Location { get; set; } //(float X, float Y) //maybe allow them to move past the edge of the map to the other side of the map. E.g. min/max to the other.
+        protected (float X, float Y) Location { get; set; } //(float X, float Y) //maybe allow them to move past the edge of the map to the other side of the map. E.g. min/max to the other.
         /// <summary>
         /// The maximum age of the animal.
         /// </summary>
-        public float MaxAge { get; set; }
+        protected float MaxAge { get; set; }
         /// <summary>
         /// The gender of the animal.
         /// </summary>
-        public char Gender { get; set; }
+        protected char Gender { get; set; }
         /// <summary>
         /// The minimum and maximum of children the animal can get in one reproduction.
         /// </summary>
-        public (byte Minimum, byte Maximum) BirthAmount { get; set; }
+        protected (byte Minimum, byte Maximum) BirthAmount { get; set; }
         /// <summary>
         /// The species of the animal.
         /// </summary>
-        public string Species { get; set; }
+        protected string Species { get; set; }
         /// <summary>
         /// The movement speed per second of the animal.
         /// </summary>
-        public float MovementSpeed { get; set; }
+        protected float MovementSpeed { get; set; }
         /// <summary>
         /// The current hunger level of the animal.
         /// </summary>
-        public float Hunger { get; set; }
+        protected float Hunger { get; set; }
         /// <summary>
         /// The maximum hunger level of the animal.
         /// </summary>
-        public float MaxHunger { get; set; }
+        protected float MaxHunger { get; set; }
         /// <summary>
         /// The amount of time before the animal will feel a need to reproduce in seconds.
         /// </summary>
-        public float TimeToReproductionNeed { get; set; } //maybe have a cooldown value
+        protected float TimeToReproductionNeed { get; set; } //maybe have a cooldown value
         /// <summary>
         /// The design of the animal.
         /// </summary>
-        public Point[] Design { get; set; }
+        protected Point[] Design { get; set; }
         /// <summary>
         /// The RGB colour of the animal.
         /// </summary>
-        public (int Red, int Green, int Blue) Colour { get; set; }
+        protected (byte Red, byte Green, byte Blue) Colour { get; set; }
         /// <summary>
         /// The unique ID of the animal.
         /// </summary>
-        public string ID { get; set; }
+        protected string ID { get; set; }
         /// <summary>
         /// The health of the animal.
         /// </summary>
-        public float Health { get; set; }
+        protected float Health { get; set; }
         /// <summary>
         /// The source of food for the animal.
         /// </summary>
-        public string[] FoodSource { get; set; }
+        protected string[] FoodSource { get; set; }
         /// <summary>
         /// Predatores of the animal.
         /// </summary>
-        public string[] HuntedBy { get; set; } //the IDs that are after it
+        protected string[] HuntedBy { get; set; } //the IDs that are after it
         /// <summary>
         /// The nutrience value of the animal.
         /// </summary>
-        public float NutrienValue { get; set; }
+        protected float NutrienValue { get; set; }
         /// <summary>
         /// The end location the animal is moving to.
         /// </summary>
-        public (float X, float Y) MoveTo { get; set; }
+        protected (float X, float Y) MoveTo { get; set; }
         /// <summary>
         /// The current movementspeed of the animal per second. 
         /// </summary>
-        public float CurrentMovementSpeed { get; set; }
+        protected float CurrentMovementSpeed { get; set; }
         /// <summary>
         /// True if the animal has mated and is waiting on children.
         /// </summary>
-        public bool HasMated { get; set; }
+        protected bool HasMated { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        public float OneAgeInSeconds;
+        protected float OneAgeInSeconds { get; set; }
         /// <summary>
         /// The current location of the mate.  
         /// </summary>
-        public (float X, float Y) MateLocation { get; set; }
+        protected (float X, float Y) MateLocation { get; set; }
         /// <summary>
         /// The % of hunger in form of 0.n that should get the animal to hunt //rewrite
         /// </summary>
@@ -147,7 +160,7 @@ namespace AnimalSimulationVersion2
         /// <param name="animalPublisher"></param>
         /// <param name="drawPublisher"></param>
         /// <param name="mapInformation"></param>
-        public Animalia(string species,(float X, float Y) location, string[] foodSource, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : this(helper, animalPublisher, drawPublisher, mapInformation)
+        public Animalia(string species, (float X, float Y) location, string[] foodSource, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : this(helper, animalPublisher, drawPublisher, mapInformation)
         {
             Species = species; 
             Location = location;
@@ -206,6 +219,8 @@ namespace AnimalSimulationVersion2
             Age = timeAlive / OneAgeInSeconds;
             Hunger -= timeSinceLastUpdate;
             TimeToReproductionNeed -= timeSinceLastUpdate;
+            if (periodInPregnacy < lengthOfPregnacy && HasMated)
+                periodInPregnacy += timeSinceLastUpdate;
             if (Hunger < 0)
                 Health -= timeSinceLastUpdate;
         }
@@ -439,8 +454,11 @@ namespace AnimalSimulationVersion2
         /// <param name="e"></param>
         protected virtual void DrawEventHandler(object sender, ControlEvents.DrawEventArgs e)
         { //delegate. Transmit location, design and colour back.
-            (Point[] Design, (int Red, int Green, int Blue), (float X, float Y) Location) drawInforamtion = (helper.DeepCopy(Design), Colour, Location); //(type,type) will ac
-            e.AddDrawInformation(drawInforamtion);
+            if (Design != null)
+            {
+                (Point[] Design, (byte Red, byte Green, byte Blue), (float X, float Y) Location) drawInforamtion = (helper.DeepCopy(Design), Colour, Location); //(type,type) will ac
+                e.AddDrawInformation(drawInforamtion);
+            }
         }
         /// <summary>
         /// Asked to run a sequence of its AI.
