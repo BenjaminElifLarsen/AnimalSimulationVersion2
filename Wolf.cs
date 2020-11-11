@@ -53,8 +53,8 @@ namespace AnimalSimulationVersion2
         {
             base.TimeUpdate();
             EnergyLevel -= timeSinceLastUpdate;
-            if (periodInPregnacy < lengthOfPregnacy && HasMated)
-                periodInPregnacy += timeSinceLastUpdate;
+            if(Sleeping)
+                TimeSlept += timeSinceLastUpdate;
         }
 
         public override void AI() //maybe move the code in this over to Carnivore or even Animalia.
@@ -111,13 +111,12 @@ namespace AnimalSimulationVersion2
                     }
                     else
                     { //set a random location, a wolf should stay close or inside its territory
-
                         DefaultMovement();
                     }
                 }
                 else
                 {
-                    TimeSlept += timeSinceLastUpdate; //consider making a method in ISleep for this
+                    //consider making a method in ISleep for this
                     if (TimeSlept >= SleepLength || Hunger < 10)
                     { 
                         Sleeping = false;
@@ -195,7 +194,7 @@ namespace AnimalSimulationVersion2
                  //split this if-statment into another method so the female wolf can give birth even when hungry
                  //generate a random number, need to depedency inject a random generator to ensure the values are not the same for each call if multiple calls happen quickly. Also needed for random movement.
                     byte childAmount = (byte)helper.GenerateRandomNumber(BirthAmount.Minimum, BirthAmount.Maximum); //seems like wolves mate for life, but if losing a mate, they will quickly find another one.
-                    for (int i = 0; i < childAmount; i++)
+                    for (int i = 0; i < childAmount; i++) //perhaps use the Activator.CreateInstance(...) and this method takes a Type argument, then this implementation could be moved up to Animalia
                         new Wolf(Species, Location, FoodSource, helper, animalPublisher, drawPublisher, mapInformation);
                     TimeToReproductionNeed = reproductionCooldown - periodInPregnacy; //keep the new wol(f/ves) in a list for a short period so the IPack methods can be updated to contain the newest family.
                     HasMated = false;
