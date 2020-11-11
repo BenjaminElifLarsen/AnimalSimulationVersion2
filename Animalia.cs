@@ -6,17 +6,9 @@ using System.Text;
 
 namespace AnimalSimulationVersion2
 {
-    abstract class Animalia
+    abstract class Animalia : Eukaryote
     {      
-        /// <summary>
-        /// The length of the pregnacy in seconds.
-        /// </summary>
-        protected float lengthOfPregnacy;
-        /// <summary>
-        /// How long time the current pregnacy has lasted in seconds.
-        /// </summary>
-        protected float periodInPregnacy;
-        protected float reproductionCooldown;
+        
         /// <summary>
         /// The ID of the food that is hunted.
         /// </summary>
@@ -26,50 +18,10 @@ namespace AnimalSimulationVersion2
         /// </summary>
         protected string mateID;
         /// <summary>
-        /// The amount of seconds since last update.
-        /// </summary>
-        protected float timeSinceLastUpdate;
-        /// <summary>
         /// The possible genders of the animal and the change for a specific gender.
         /// </summary>
         protected (char Gender, byte Weight)[] genderInformation;
-        /// <summary>
-        /// 
-        /// </summary>
-        protected float timeAlive; 
-        /// <summary>
-        /// 
-        /// </summary>
-        protected MapInformation mapInformation;
-        /// <summary>
-        /// 
-        /// </summary>
-        protected IHelper helper;
-        /// <summary>
-        /// 
-        /// </summary>
-        protected AnimalPublisher animalPublisher;
-        /// <summary>
-        /// 
-        /// </summary>
-        protected DrawPublisher drawPublisher;
 
-        /// <summary>
-        /// The current age of the animal.
-        /// </summary>
-        protected float Age { get; set; }
-        /// <summary>
-        /// The age when the animal can reproduce.
-        /// </summary>
-        protected int ReproductionAge { get; set; }
-        /// <summary>
-        /// The current location of the animal.
-        /// </summary>
-        protected (float X, float Y) Location { get; set; } //(float X, float Y) //maybe allow them to move past the edge of the map to the other side of the map. E.g. min/max to the other.
-        /// <summary>
-        /// The maximum age of the animal.
-        /// </summary>
-        protected float MaxAge { get; set; }
         /// <summary>
         /// The gender of the animal.
         /// </summary>
@@ -78,10 +30,6 @@ namespace AnimalSimulationVersion2
         /// The minimum and maximum of children the animal can get in one reproduction.
         /// </summary>
         protected (byte Minimum, byte Maximum) BirthAmount { get; set; }
-        /// <summary>
-        /// The species of the animal.
-        /// </summary>
-        protected string Species { get; set; }
         /// <summary>
         /// The movement speed per second of the animal.
         /// </summary>
@@ -95,37 +43,9 @@ namespace AnimalSimulationVersion2
         /// </summary>
         protected float MaxHunger { get; set; }
         /// <summary>
-        /// The amount of time before the animal will feel a need to reproduce in seconds.
-        /// </summary>
-        protected float TimeToReproductionNeed { get; set; } //maybe have a cooldown value
-        /// <summary>
-        /// The design of the animal.
-        /// </summary>
-        protected Point[] Design { get; set; }
-        /// <summary>
-        /// The RGB colour of the animal.
-        /// </summary>
-        protected (byte Red, byte Green, byte Blue) Colour { get; set; }
-        /// <summary>
-        /// The unique ID of the animal.
-        /// </summary>
-        protected string ID { get; set; }
-        /// <summary>
-        /// The health of the animal.
-        /// </summary>
-        protected float Health { get; set; }
-        /// <summary>
         /// The source of food for the animal.
         /// </summary>
         protected string[] FoodSource { get; set; }
-        /// <summary>
-        /// Predatores of the animal.
-        /// </summary>
-        protected string[] HuntedBy { get; set; } //the IDs that are after it
-        /// <summary>
-        /// The nutrience value of the animal.
-        /// </summary>
-        protected float NutrienValue { get; set; }
         /// <summary>
         /// The end location the animal is moving to.
         /// </summary>
@@ -134,14 +54,6 @@ namespace AnimalSimulationVersion2
         /// The current movementspeed of the animal per second. 
         /// </summary>
         protected float CurrentMovementSpeed { get; set; }
-        /// <summary>
-        /// True if the animal has mated and is waiting on children.
-        /// </summary>
-        protected bool HasMated { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        protected float OneAgeInSeconds { get; set; }
         /// <summary>
         /// The current location of the mate.  
         /// </summary>
@@ -160,48 +72,53 @@ namespace AnimalSimulationVersion2
         /// <param name="animalPublisher"></param>
         /// <param name="drawPublisher"></param>
         /// <param name="mapInformation"></param>
-        public Animalia(string species, (float X, float Y) location, string[] foodSource, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : this(helper, animalPublisher, drawPublisher, mapInformation)
+        public Animalia(string species, (float X, float Y) location, string[] foodSource, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : this(species, location,helper, animalPublisher, drawPublisher, mapInformation)
         {
-            Species = species; 
-            Location = location;
             FoodSource = foodSource;
             MoveTo = GenerateRandomEndLocation();
-            ID = helper.GenerateID();
-            OneAgeInSeconds = mapInformation.OneAgeInSeconds;
-            HuntedBy = new string[0];
         }
+        ///// <summary>
+        ///// Extra constructor that sets all instances and eventhandlers //rewrite
+        ///// </summary>
+        ///// <param name="helper">An instance of IHelper.</param>
+        ///// <param name="animalPublisher">An instance of AnimalPublisher.</param>
+        ///// <param name="drawPublisher">An instance of DrawPublisher.</param>
+        ///// <param name="mapInformation">An instance of MapInformation.</param>
+        //private Animalia(IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation)
+        //{
+
+        //    animalPublisher.RaiseFindPreyEvent += IsPossiblePreyEventHandler;
+        //    animalPublisher.RaiseSetPreyEvent += IsPreyEventHandler;
+        //    animalPublisher.RaiseRemovePreyEvent += RemovePredatorEventHandler;
+        //    animalPublisher.RaisePossibleMatesEvent += CanMateEventHandler;
+        //    animalPublisher.RaiseSetMateEvent += GetMateEventHandler;
+        //    animalPublisher.RaiseRemoveMateEvent += RemoveMateEventHandler;
+        //    animalPublisher.RaiseAIEvent += ControlEventHandler;
+        //    animalPublisher.RaiseDied += DeathEventHandler;
+        //    animalPublisher.RaiseEaten += EatenEventHandler;
+        //    animalPublisher.RaiseGetLocation += LocationEventHandler;
+        //    animalPublisher.RaiseInformHunterOfPreyDeath += PreyHasDiedEventHandler;
+
+        //    drawPublisher.RaiseDrawEvent += DrawEventHandler;
+        //}
         /// <summary>
-        /// Extra constructor that sets all instances and eventhandlers //rewrite
+        /// Extra constructor that sets all Animalia eventhandlers //rewrite
         /// </summary>
+        /// <param name="species"></param>
+        /// <param name="location"></param>
         /// <param name="helper">An instance of IHelper.</param>
         /// <param name="animalPublisher">An instance of AnimalPublisher.</param>
         /// <param name="drawPublisher">An instance of DrawPublisher.</param>
         /// <param name="mapInformation">An instance of MapInformation.</param>
-        private Animalia(IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation)
+        protected Animalia(string species, (float X, float Y) location, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, helper, animalPublisher, drawPublisher, mapInformation)
         {
-            this.helper = helper;
-            this.animalPublisher = animalPublisher;
-            this.drawPublisher = drawPublisher;
-            this.mapInformation = mapInformation;
-
-            animalPublisher.RaiseFindPreyEvent += IsPossiblePreyEventHandler;
-            animalPublisher.RaiseSetPreyEvent += IsPreyEventHandler;
-            animalPublisher.RaiseRemovePreyEvent += RemovePredatorEventHandler;
             animalPublisher.RaisePossibleMatesEvent += CanMateEventHandler;
             animalPublisher.RaiseSetMateEvent += GetMateEventHandler;
             animalPublisher.RaiseRemoveMateEvent += RemoveMateEventHandler;
-            animalPublisher.RaiseAIEvent += ControlEventHandler;
-            animalPublisher.RaiseDied += DeathEventHandler;
-            animalPublisher.RaiseEaten += EatenEventHandler;
-            animalPublisher.RaiseGetLocation += LocationEventHandler;
             animalPublisher.RaiseInformHunterOfPreyDeath += PreyHasDiedEventHandler;
 
-            drawPublisher.RaiseDrawEvent += DrawEventHandler;
         }
-        /// <summary>
-        /// The 'AI' of the animal.
-        /// </summary>
-        public abstract void AI();
+
         /// <summary>
         /// Moves the animal.
         /// </summary>
@@ -213,14 +130,10 @@ namespace AnimalSimulationVersion2
         /// By default this is: 
         /// timeAlive, Age Hunger and TimeToProductionNeed
         /// </remarks>
-        protected virtual void TimeUpdate()
+        protected override void TimeUpdate()
         {
-            timeAlive += timeSinceLastUpdate;
-            Age = timeAlive / OneAgeInSeconds;
+            base.TimeUpdate();
             Hunger -= timeSinceLastUpdate;
-            TimeToReproductionNeed -= timeSinceLastUpdate;
-            if (periodInPregnacy < lengthOfPregnacy && HasMated)
-                periodInPregnacy += timeSinceLastUpdate;
             if (Hunger < 0)
                 Health -= timeSinceLastUpdate;
         }
@@ -332,7 +245,7 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// Animal is dead.
         /// </summary>
-        protected virtual void Death() 
+        protected override void Death() 
         {
             if (mateID != null)
             {
@@ -342,51 +255,8 @@ namespace AnimalSimulationVersion2
             {
                 animalPublisher.RemovePrey(ID, foodID);
             }
-            if(HuntedBy.Length != 0)
-            {
-                foreach (string hunterID in HuntedBy)
-                    animalPublisher.InformPredatorOfDeath(ID, hunterID);
-                //    it needs a special event that when a predator receives it the predator sets its foodID to null
-            }
+            base.Death();
             RemoveSubscriptions();
-        }
-        /// <summary>
-        /// Is asked for information such that another animal can decided if this animal is food or not.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected virtual void IsPossiblePreyEventHandler(object sender, ControlEvents.GetPossiblePreyEventArgs e)
-        { //delegate. Send back location, ID and species. 
-            if (e.SenderID != ID)
-            {
-                ((float X, float Y) PreyLocation, string PreyID, string PreySpeices) preyInformation = (Location, ID, Species);
-                e.AddPreyInformation(preyInformation);
-            }
-        }
-        /// <summary>
-        /// Is informed that another animal is considering it food.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected virtual void IsPreyEventHandler(object sender, ControlEvents.SetPreyEventArgs e)
-        { //delegate. Take the ID of the predator and add it to the array. 
-            if (e.IDs.receiverID == ID) 
-            {
-                string[] array = HuntedBy;
-                helper.Add(ref array, e.IDs.senderID);
-                HuntedBy = array;
-            }
-        }
-        /// <summary>
-        /// Its predator is dead or have lost this animal.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected virtual void RemovePredatorEventHandler(object sender, ControlEvents.RemovePreyEventArgs e)
-        { //delegate. The predator has died or is lost to this animal. 
-            if (e.IDs.senderID != ID)
-                if (helper.Contains(HuntedBy, e.IDs.senderID))
-                    helper.Remove(HuntedBy, e.IDs.senderID);
         }
         protected virtual void PreyHasDiedEventHandler(object sender, ControlEvents.InformPredatorOfPreyDeathEventArgs e)
         { //delegate. The prey has died.
@@ -429,65 +299,16 @@ namespace AnimalSimulationVersion2
                 if (e.IDs.receiverID == ID)
                     mateID = null;
         }
-        protected virtual void LocationEventHandler(object sender, ControlEvents.GetOtherLocationEventArgs e)
-        { //delegate. Someone needs this one's location.
-                if (e.ReceiverID == ID)
-                    e.Location = Location;
-        }
-        protected virtual void EatenEventHandler(object sender, ControlEvents.EatenEventArgs e)
-        { //delegate. This animal has been eaten.
-            if (e.ReceiverID == ID) 
-            { 
-                e.SetNutrience(NutrienValue);
-                Death();
-            }
-        }
-        protected virtual void DeathEventHandler(object sender, ControlEvents.DeadEventArgs e)
-        { //delegate. This animal has died. E.g. fought to death.
-            if (e.ReceiverID == ID)
-                Death();
-        }
-        /// <summary>
-        /// Asked to return information that permits the animal to be drawned.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected virtual void DrawEventHandler(object sender, ControlEvents.DrawEventArgs e)
-        { //delegate. Transmit location, design and colour back.
-            if (Design != null)
-            {
-                (Point[] Design, (byte Red, byte Green, byte Blue), (float X, float Y) Location) drawInforamtion = (helper.DeepCopy(Design), Colour, Location); //(type,type) will ac
-                e.AddDrawInformation(drawInforamtion);
-            }
-        }
-        /// <summary>
-        /// Asked to run a sequence of its AI.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected virtual void ControlEventHandler(object sender, ControlEvents.AIEventArgs e)
-        { //delegate
-            timeSinceLastUpdate = e.TimeSinceLastUpdate;
-            AI();
-        }
         /// <summary>
         /// Remove all subscriptions to ensure the animal can be removed from the memory.
         /// </summary>
-        protected virtual void RemoveSubscriptions() //consider renaming some of the methods to have names that make more sense
+        protected override void RemoveSubscriptions() //consider renaming some of the methods to have names that make more sense
         {
-            animalPublisher.RaiseFindPreyEvent -= IsPossiblePreyEventHandler;
-            animalPublisher.RaiseSetPreyEvent -= IsPreyEventHandler;
-            animalPublisher.RaiseRemovePreyEvent -= RemovePredatorEventHandler;
+            base.RemoveSubscriptions();
             animalPublisher.RaisePossibleMatesEvent -= CanMateEventHandler;
             animalPublisher.RaiseSetMateEvent -= GetMateEventHandler;
             animalPublisher.RaiseRemoveMateEvent -= RemoveMateEventHandler;
-            animalPublisher.RaiseAIEvent -= ControlEventHandler;
-            animalPublisher.RaiseDied -= DeathEventHandler;
-            animalPublisher.RaiseEaten -= EatenEventHandler;
-            animalPublisher.RaiseGetLocation -= LocationEventHandler;
             animalPublisher.RaiseInformHunterOfPreyDeath -= PreyHasDiedEventHandler;
-
-            drawPublisher.RaiseDrawEvent -= DrawEventHandler;
         }
 
     }

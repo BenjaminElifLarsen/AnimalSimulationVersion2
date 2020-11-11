@@ -25,7 +25,7 @@ namespace AnimalSimulationVersion2
             Territory = GenerateTerritory(); //values are not final
             AttackRange = 20; //order these into groups. 
             AttackSpeedMultiplier = 1.5f;
-            lengthOfPregnacy = 9;
+            lengthOfReproduction = 9;
             genderInformation = new (char Gender, byte Weight)[] { ('f', 50), ('m', 50) };
             reproductionCooldown = 20;
             Colour = (200, 10, 10);
@@ -57,7 +57,7 @@ namespace AnimalSimulationVersion2
                 TimeSlept += timeSinceLastUpdate;
         }
 
-        public override void AI() //maybe move the code in this over to Carnivore or even Animalia.
+        protected override void AI() //maybe move the code in this over to Carnivore or even Animalia.
         {
             TimeUpdate();
 
@@ -66,18 +66,18 @@ namespace AnimalSimulationVersion2
             else
             {
                 if (Gender == 'f')
-                    if(HasMated)
-                        if (periodInPregnacy >= lengthOfPregnacy)
+                    if(HasReproduced)
+                        if (periodInReproduction >= lengthOfReproduction)
                             GiveBirth();
                 if (!Sleeping)
                 {
                     if ((Hunger < MaxHunger * HungerFoodSeekingLevel && EnergyLevel > 0) || Hunger < MaxHunger * 0.1) //softcode those values later.
                     {//if hungry, drop the mate
-                        if (mateID != null) 
+                        /*if (mateID != null) 
                         {
                             animalPublisher.RemoveMate(ID, mateID); //rename AnimalPublisher to LifeformPublisher 
                             mateID = null;
-                        }
+                        }*/
                         if (foodID == null) 
                             foodID = FindFood(); //if they are in a pack/herd they need to stick together.
                         if (foodID != null)
@@ -175,11 +175,11 @@ namespace AnimalSimulationVersion2
         /// </summary>
         protected override void Mate()
         {
-            if (MateLocation == Location && !HasMated)
+            if (MateLocation == Location && !HasReproduced)
             {
-                periodInPregnacy = 0;
+                periodInReproduction = 0;
                 if(Gender == 'f')
-                    HasMated = true;
+                    HasReproduced = true;
                 else
                 {
                     TimeToReproductionNeed = reproductionCooldown;
@@ -196,8 +196,8 @@ namespace AnimalSimulationVersion2
                     byte childAmount = (byte)helper.GenerateRandomNumber(BirthAmount.Minimum, BirthAmount.Maximum); //seems like wolves mate for life, but if losing a mate, they will quickly find another one.
                     for (int i = 0; i < childAmount; i++) //perhaps use the Activator.CreateInstance(...) and this method takes a Type argument, then this implementation could be moved up to Animalia
                         new Wolf(Species, Location, FoodSource, helper, animalPublisher, drawPublisher, mapInformation);
-                    TimeToReproductionNeed = reproductionCooldown - periodInPregnacy; //keep the new wol(f/ves) in a list for a short period so the IPack methods can be updated to contain the newest family.
-                    HasMated = false;
+                    TimeToReproductionNeed = reproductionCooldown - periodInReproduction; //keep the new wol(f/ves) in a list for a short period so the IPack methods can be updated to contain the newest family.
+                    HasReproduced = false;
                 
             //}
         }

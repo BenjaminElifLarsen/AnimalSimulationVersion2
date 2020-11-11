@@ -19,7 +19,7 @@ namespace AnimalSimulationVersion2
             reproductionCooldown = 20;
             BirthAmount = (2, 5);
             ReproductionAge = 2;
-            lengthOfPregnacy = 6;
+            lengthOfReproduction = 6;
 
             MaxHunger = 100;
             Hunger = MaxHunger;
@@ -28,12 +28,12 @@ namespace AnimalSimulationVersion2
 
         public int StealthLevel { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public override void AI()
+        protected override void AI()
         {
             TimeUpdate();
             if (Gender == 'f')
-                if (HasMated)
-                    if (periodInPregnacy >= lengthOfPregnacy)
+                if (HasReproduced)
+                    if (periodInReproduction >= lengthOfReproduction)
                         GiveBirth();
             if (Age >= ReproductionAge && TimeToReproductionNeed <= 0)
             {
@@ -71,18 +71,18 @@ namespace AnimalSimulationVersion2
             for (int i = 0; i < childAmount; i++)
                 new Rabbit(Species, Location, FoodSource, helper, animalPublisher, drawPublisher, mapInformation);
             //TimeToReproductionNeed = reproductionCooldown - periodInPregnacy; 
-            HasMated = false;
+            HasReproduced = false;
         }
 
         protected override void Mate()
         {
-            if (MateLocation == Location && !HasMated)
+            if (MateLocation == Location && !HasReproduced)
             {
-                periodInPregnacy = 0;
+                periodInReproduction = 0;
                 if (Gender == 'f')
                 {
-                    HasMated = true;
-                    TimeToReproductionNeed = reproductionCooldown - periodInPregnacy;
+                    HasReproduced = true;
+                    TimeToReproductionNeed = reproductionCooldown - periodInReproduction;
                 }
                 else
                 {

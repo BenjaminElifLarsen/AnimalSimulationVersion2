@@ -18,8 +18,6 @@ namespace AnimalSimulationVersion2
 
         public abstract void AttackPrey();
 
-        public abstract override void AI();
-
         public abstract void TrackPrey();
 
         protected abstract override void Mate();
