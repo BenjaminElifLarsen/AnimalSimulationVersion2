@@ -13,10 +13,6 @@ namespace AnimalSimulationVersion2
 
         public abstract override void AI();
 
-        protected abstract override string FindFood();
-
-        protected abstract override string FindMate();
-
         protected abstract override void Mate();
 
         protected abstract override void Move();
