@@ -77,30 +77,6 @@ namespace AnimalSimulationVersion2
             FoodSource = foodSource;
             MoveTo = GenerateRandomEndLocation();
         }
-        ///// <summary>
-        ///// Extra constructor that sets all instances and eventhandlers //rewrite
-        ///// </summary>
-        ///// <param name="helper">An instance of IHelper.</param>
-        ///// <param name="animalPublisher">An instance of AnimalPublisher.</param>
-        ///// <param name="drawPublisher">An instance of DrawPublisher.</param>
-        ///// <param name="mapInformation">An instance of MapInformation.</param>
-        //private Animalia(IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation)
-        //{
-
-        //    animalPublisher.RaiseFindPreyEvent += IsPossiblePreyEventHandler;
-        //    animalPublisher.RaiseSetPreyEvent += IsPreyEventHandler;
-        //    animalPublisher.RaiseRemovePreyEvent += RemovePredatorEventHandler;
-        //    animalPublisher.RaisePossibleMatesEvent += CanMateEventHandler;
-        //    animalPublisher.RaiseSetMateEvent += GetMateEventHandler;
-        //    animalPublisher.RaiseRemoveMateEvent += RemoveMateEventHandler;
-        //    animalPublisher.RaiseAIEvent += ControlEventHandler;
-        //    animalPublisher.RaiseDied += DeathEventHandler;
-        //    animalPublisher.RaiseEaten += EatenEventHandler;
-        //    animalPublisher.RaiseGetLocation += LocationEventHandler;
-        //    animalPublisher.RaiseInformHunterOfPreyDeath += PreyHasDiedEventHandler;
-
-        //    drawPublisher.RaiseDrawEvent += DrawEventHandler;
-        //}
         /// <summary>
         /// Extra constructor that sets all Animalia eventhandlers //rewrite
         /// </summary>
@@ -122,7 +98,34 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// Moves the animal.
         /// </summary>
-        protected abstract void Move();
+        protected virtual void Move() 
+        {
+            float xDistance = Math.Abs(MoveTo.X - Location.X);
+            float yDistance = Math.Abs(MoveTo.Y - Location.Y);
+            float distanceToEndLocation = xDistance + yDistance;
+            if (distanceToEndLocation != 0)
+            {
+                //calculates the %s of the move distance that belong to x and y and then multiply those numbers with the current movement speed. 
+                float xPercentage = Math.Abs(MoveTo.X - Location.X) / distanceToEndLocation;
+                float xCurrentSpeed = xPercentage * CurrentMovementSpeed * timeSinceLastUpdate; //multiply with the amount of seconds that have gone.
+                float yCurrentSpeed = (1 - xPercentage) * CurrentMovementSpeed * timeSinceLastUpdate;
+                //calculates the direction to move in for each axel. 
+
+                bool moveLeft = (MoveTo.X - Location.X) < 0;
+                bool moveUp = (MoveTo.Y - Location.Y) < 0;
+
+                xCurrentSpeed = xCurrentSpeed >= xDistance ? xDistance : xCurrentSpeed;
+                yCurrentSpeed = yCurrentSpeed >= yDistance ? yDistance : yCurrentSpeed;
+
+                if (moveLeft)
+                    xCurrentSpeed = -xCurrentSpeed;
+                if (moveUp)
+                    yCurrentSpeed = -yCurrentSpeed;
+
+                //set the new location
+                Location = (Location.X + xCurrentSpeed, Location.Y + yCurrentSpeed);
+            }
+        }
         /// <summary>
         /// Updates all time sensitive variables. 
         /// </summary>
@@ -180,9 +183,32 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// Animal mates.
         /// </summary>
-        protected abstract void Mate();
+        protected virtual void Mate()
+        {
+            if (MateLocation == Location && !HasReproduced)
+            {
+                periodInReproduction = 0;
+                if (Gender == 'f')
+                {
+                    HasReproduced = true;
+                    TimeToReproductionNeed = reproductionCooldown - periodInReproduction;
+                }
+                else
+                {
+                    TimeToReproductionNeed = reproductionCooldown;
+                }
+                mateID = null;
+            }
+        }
 
-        //protected abstract string GenerateID();
+
+
+
+        /// <summary>
+        /// Generates a gender for the animal  out from the data in <paramref name="genderInfo"/>.
+        /// </summary>
+        /// <param name="genderInfo">Contains a set of possible genders and gender weights</param>
+        /// <returns></returns>
         protected virtual char GenerateGender((char Gender, byte Weight)[] genderInfo) //it should take an array of possible genders and a % for each of them.
         {
             ushort totalWeight = 0;
