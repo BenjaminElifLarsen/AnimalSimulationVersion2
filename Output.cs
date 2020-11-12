@@ -52,8 +52,8 @@ namespace AnimalSimulationVersion2
                 double passedTime = (DateTime.Now - lastTime).TotalSeconds;
                 if (passedTime >= TimeInSecondsBetweenFrames)
                 {
-                    AnimalPublisher.AI((float)passedTime);
                     lastTime = DateTime.Now;
+                    AnimalPublisher.AI((float)passedTime);
                 }
             }
         }
@@ -66,16 +66,10 @@ namespace AnimalSimulationVersion2
             {
                 if ((DateTime.Now - lastTime).TotalSeconds >= TimeInSecondsBetweenFrames) //the part before >= needs also be accessed by the AI thread. 
                 {
+                    lastTime = DateTime.Now;
                     List<(Point[] Design, (byte Red, byte Green, byte Blue) Colour, (float X, float Y) Location)> drawInforamtion = DrawPublisher.Draw();
                     Map = Draw(Map, drawInforamtion);
-
-                    lastTime = DateTime.Now;
-
                     PaintEvent?.Invoke(this, new ImageEventArgs { BitMapImage = Map });
-
-                    //MapImage = MainWindow.GenerateBitMapImage(Map);
-                    //MainWindow.VisualUpdate(MapImage);
-                    //MainWindow.Instance.UpdateVisualImage(MapImage);
                 }
             }
         }
