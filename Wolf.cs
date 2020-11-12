@@ -68,7 +68,7 @@ namespace AnimalSimulationVersion2
                 if (Gender == 'f')
                     if(HasReproduced)
                         if (periodInReproduction >= lengthOfReproduction)
-                            GiveBirth();
+                            Reproduce();
                 if (!Sleeping)
                 {
                     if ((Hunger < MaxHunger * HungerFoodSeekingLevel && EnergyLevel > 0) || Hunger < MaxHunger * 0.1) //softcode those values later.
@@ -187,7 +187,7 @@ namespace AnimalSimulationVersion2
             }
         }
 
-        protected override void GiveBirth()
+        protected override void Reproduce()
         {
             //if (Gender == 'f') //later on, alter the FindMate() to check if the wolf is alpha, if a pack wolf, and only mate with the other alpha. 
             //{ //maybe have both parents stay together for a while while the female wolf is pregnant. Check up if both parents stay with their children, also if they mate is for life

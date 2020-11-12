@@ -141,6 +141,11 @@ namespace AnimalSimulationVersion2
             if (periodInReproduction < lengthOfReproduction && HasReproduced)
                 periodInReproduction += timeSinceLastUpdate;
         }
+        /// <summary>
+        /// Lifeform produces offsprings.
+        /// </summary>
+        protected abstract void Reproduce();
+
         protected virtual void Death()
         { 
 

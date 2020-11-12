@@ -181,10 +181,7 @@ namespace AnimalSimulationVersion2
         /// Animal mates.
         /// </summary>
         protected abstract void Mate();
-        /// <summary>
-        /// Animal gives birth.
-        /// </summary>
-        protected abstract void GiveBirth();
+
         //protected abstract string GenerateID();
         protected virtual char GenerateGender((char Gender, byte Weight)[] genderInfo) //it should take an array of possible genders and a % for each of them.
         {

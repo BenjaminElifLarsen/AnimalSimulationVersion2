@@ -34,7 +34,7 @@ namespace AnimalSimulationVersion2
             if (Gender == 'f')
                 if (HasReproduced)
                     if (periodInReproduction >= lengthOfReproduction)
-                        GiveBirth();
+                        Reproduce();
             if (Age >= ReproductionAge && TimeToReproductionNeed <= 0)
             {
                 if (mateID == null)
@@ -65,7 +65,7 @@ namespace AnimalSimulationVersion2
             throw new NotImplementedException();
         }
 
-        protected override void GiveBirth()
+        protected override void Reproduce()
         {
             byte childAmount = (byte)helper.GenerateRandomNumber(BirthAmount.Minimum, BirthAmount.Maximum); 
             for (int i = 0; i < childAmount; i++)
