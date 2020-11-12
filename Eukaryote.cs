@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
+﻿using System.Drawing;
 
 namespace AnimalSimulationVersion2
 {
     abstract class Eukaryote
-    {
+    { //consider having a vector or posistion class rather than using (X,Y). E.g. a class with 3 floats, X, Y, Z
         /// <summary>
         /// 
         /// </summary>
