@@ -1,0 +1,337 @@
+<diagram program="umletino" version="14.3.0"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>710</x><y>0</y><w>530</w><h>820</h></coordinates><panel_attributes>/Eukaryote/
+--
+# timeAlive : float
+# timeSinceLastUpdate : float
+# reproductionCooldown : float
+# lengthOfReproduction : float
+# periodInReproduction : float
+# mapInformation : MapInformation
+# helper : IHelper
+# animalPublisher : AnimalPublisher
+# drawPublisher : DrawPublisher
+--
+# getAge() : float
+# setAge(float) : void
+# getReproductionAge() : float
+# setReproductionAge(float): void
+# getMaxAge() : float
+# setMaxAge(float) : void
+# getSpecies() : float
+# setSpecies(float) : void
+# (X, Y) getLocation() : (float,float)
+# setLocation(float,float) : void
+# getTimeToReproductionNeed() : float
+# setTimeToReproductionNeed(float) : void
+# getDesign() : Point[]
+# setDesign(Point[]) : void
+# (Red, Green, Blue) getColour() : (byte,byte,byte)
+# setColour(byte,byte,byte) : void
+# getID() : string
+# setID(string) : void
+# getHealth() : float
+# setHealth(float) : void
+# getHuntedBy() : string[]
+# setHuntedBy(string[]) : void
+# getNutrienValue() : float
+# setNutrienValue(float) : void
+# getOneAgeInSeconds() : float
+# setOneAgeInSeconsd(float) : void
+# getHasReproduced() : bool
+# setHasReproduced(bool) : void
+--
++ Eukaryote(string,(float, float), IHelper, AnimalPublisher, DrawPublisher, MapInformation)
+- Eukaryote(IHelper, AnimalPublisher, DrawPublisher, MapInformation)
+/# AI() : void/
+{virtual} # TimeUpdate() : void
+/# Reproduce() : void /
+{virtual} # Death() : void
+{virtual} # IsPossiblePreyEventHandler(object, ControlEvents.GetPossiblePreyEventArgs) : void
+{virtual} # IsPreyEventHandler(object, ControlEvents.SetPreyEventArgs) : void
+{virtual} # RemovePredatorEventHandler(object, ControlEvents.RemovePreyEventArgs) : void
+{virtual} # LocationEventHandler(object, ControlEvents.GetOtherLocationEventArgs) : void
+{virtual} # EatenEventHandler(object, ControlEvents.EatenEventArgs) : void
+{virtual} # DeathEventHandler(object, ControlEvents.DeadEventArgs) : void
+{virtual} # DrawEventHandler(object, ControlEvents.DrawEventArgs) : void
+{virtual} # ControlEventHandler(object, ControlEvents.AIEventArgs) : void
+{virtual] # RemoveSubscriptions() : void
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>440</x><y>910</y><w>470</w><h>120</h></coordinates><panel_attributes>/Plantae/
+--
+# spreadRange : float
+# (Minimum, Maximum) offspringAmount : (byte,byte)
+--
++ Plantae(string,(float, float), IHelper, AnimalPublisher, DrawPublisher, MapInformation)
+/# Polinate() : void /
+{override} # Reproduce() : void
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1010</x><y>910</y><w>500</w><h>610</h></coordinates><panel_attributes>/Animalia/
+--
+# foodID : string
+# mateID : string
+# (Gender, Weight) genderInformation : (char,byte)[]
+--
+# getGender() : char
+# setGender(char) : void
+# (Minimum, Maximum) getBirthAmount() : (byte,byte)
+# setBirthAmount(byte,byte) : void
+# getMovementSpeed() : float
+# setMovementSpeed(float) : void
+# getHunger() : float
+# setHunger(float) : void
+# getMaxHunger() : float
+# setMaxHunger(float) : float
+# getFoodSource() : string[]
+# setFoodSource(string[]) : void
+# (X, Y) getMoveTo() : (float,float)
+# setMoveTo(float,float) : void
+# getCurrentMovementSpeed() : float
+# setCurrentMovementSpeed(float) : void
+# getHungerFoodSeekingLevel() : float
+# setHungerFoodSeekingLevel(float) : void
+--
++ Animalia(string,(float, float), IHelper, AnimalPublisher, DrawPublisher, MapInformation)
+# Animalia(string,(float, float), IHelper, AnimalPublisher, DrawPublisher, MapInformation)
+{virtual} # Move() : void
+{override} # TimeUpdate() : void
+{virtual} # (X, Y) GenerateRandomEndLocation() : (float,float)
+{virtual} # FindMate() : string
+{virtual} # (X, Y) GetMateLocation(string) : (float,float)
+{virtual} Mate() : void 
+{virtual} # GenerateGender((char, byte)[]) : char
+{virtual} # FindFood() : string
+{virtual} # Eat() : void
+{override} # Death() : void
+{virtual} # PreyHasDiedEventHandler(object, ControlEvents.PossibleMateEventArgs) : void
+{virtual} # CanMateEventHandler(object, ControlEvents.PossibleMateEventArgs) : void 
+{virtual} # GetMateEventHandler(object, ControlEvents.SetMateEventArgs) : void
+{virtual} # RemoveMateEventHandler(object, ControlEvents.RemoveMateEventArgs) : void
+{override} # RemoveSubscriptions() : void
+
+
+
+
+
+
+
+
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>670</x><y>810</y><w>310</w><h>120</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>290;10;290;80;10;80;10;100</additional_attributes></element><element><id>Relation</id><coordinates><x>950</x><y>810</y><w>330</w><h>120</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;80;310;80;310;100</additional_attributes></element><element><id>Text</id><coordinates><x>970</x><y>860</y><w>120</w><h>30</h></coordinates><panel_attributes>Type of Kingdom
+style=wordwrap</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>760</x><y>1580</y><w>490</w><h>60</h></coordinates><panel_attributes>/Carnivore/
+--
++ Carnivore(string,(float, float), IHelper, AnimalPublisher, DrawPublisher, MapInformation)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1270</x><y>1580</y><w>500</w><h>60</h></coordinates><panel_attributes>/Herbavore/
+--
++ Herbavore(string,(float, float), IHelper, AnimalPublisher, DrawPublisher, MapInformation)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>510</x><y>1070</y><w>490</w><h>300</h></coordinates><panel_attributes>/Dioecious/
+--
+# mateID : string
+# (X, Y) mateLocation : (float,float)
+# mateDistance : float
+# reproductionExtraTime : float
+# distanceDivider : float
+--
+# getGender() : char
+# setGender(char) : void
+--
++ Dioecious(string,(float, float), IHelper, AnimalPublisher, DrawPublisher, MapInformation)
+{override} # AI() : void
+{virtual} # (X, Y) GetMateLocation(string) : (float,float)
+{override} # TimeUpdate() : void
+{override} # Polinate() : void
+{virtual} # GenderGenerator() : char
+{virtual} # FindMate() : string
+{virtual} # DistanceTime((float,float)) : float
+{virtual} # CanMateEventHandler(object, ControlEvents.PossibleMAteEventArgs) : void
+{override} # RemoveSubscriptions() : void
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>1070</y><w>500</w><h>80</h></coordinates><panel_attributes>/Monoecious/
+--
++ Monoecious(string,(float, float), IHelper, AnimalPublisher, DrawPublisher, MapInformation)
+{override} # AI() : void
+{override} # Polinate() : void
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>340</x><y>1020</y><w>340</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>320;10;320;30;10;30;10;50</additional_attributes></element><element><id>Relation</id><coordinates><x>650</x><y>1020</y><w>220</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;30;200;30;200;50</additional_attributes></element><element><id>Relation</id><coordinates><x>1250</x><y>1510</y><w>90</w><h>90</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;50;70;50;70;70</additional_attributes></element><element><id>Relation</id><coordinates><x>1190</x><y>1510</y><w>90</w><h>90</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>70;10;70;50;10;50;10;70</additional_attributes></element><element><id>Text</id><coordinates><x>1180</x><y>1530</y><w>100</w><h>30</h></coordinates><panel_attributes>Type of Food
+style=wordwrap</panel_attributes><additional_attributes></additional_attributes></element><element><id>Text</id><coordinates><x>670</x><y>1030</y><w>120</w><h>30</h></coordinates><panel_attributes>Type of Sexuality
+style=wordwrap</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>560</x><y>1680</y><w>460</w><h>140</h></coordinates><panel_attributes>Wolf
+--
++ Wolf(string,(float, float), IHelper, AnimalPublisher, DrawPublisher, MapInformation)
+{override} # TimeUpdate() : void
+{override} # AI() : void
+{override} # RemoveSubscriptions() : void
+{override} # Reproduce() : void
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1540</x><y>1700</y><w>470</w><h>80</h></coordinates><panel_attributes>Rabbit
+--
++ Rabbit(string,(float, float), IHelper, AnimalPublisher, DrawPublisher, MapInformation)
+{override} # AI() : void
+{override} # Reproduce() : void
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1510</x><y>1630</y><w>280</w><h>90</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;40;260;40;260;70</additional_attributes></element><element><id>Relation</id><coordinates><x>780</x><y>1630</y><w>240</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>220;10;220;30;10;30;10;50</additional_attributes></element><element><id>Text</id><coordinates><x>920</x><y>1640</y><w>120</w><h>30</h></coordinates><panel_attributes>Species
+style=wordwrap</panel_attributes><additional_attributes></additional_attributes></element><element><id>Text</id><coordinates><x>1530</x><y>1640</y><w>120</w><h>30</h></coordinates><panel_attributes>Species
+style=wordwrap</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1760</x><y>1570</y><w>150</w><h>50</h></coordinates><panel_attributes>lt=)-
+m1=require
+IEscapePredator
+</panel_attributes><additional_attributes>120;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>1760</x><y>1610</y><w>150</w><h>50</h></coordinates><panel_attributes>lt=-()
+m2=provide
+IEscapePredator</panel_attributes><additional_attributes>10;20;130;20</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1530</x><y>910</y><w>250</w><h>220</h></coordinates><panel_attributes>&lt;&lt;Interface&gt;&gt;
+IHelper
+--
++ DeepCopy&lt;T&gt;(List&lt;T&gt;) : List&lt;T&gt;
++ DeepCopy&lt;T&gt;(T[]) : T[]
++ DeepCopy&lt;T&gt;((T,T)) : (T,T)
++ Add&lt;T&gt;(List&lt;T&gt;, T) : void
++ Add&lt;T&gt;(ref T[], T) : void
++ Remove&lt;T&gt;(List&lt;T&gt;, T) : void
++ Remove&lt;T&gt;(T[], T) : void
++ Contains&lt;T&gt;(List&lt;T&gt;, T) : bool
++ Contains&lt;T&gt;(T[], T] : bool
++ GenerateID() : string
++ GenerateRandomNumber(int,int) : int
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1790</x><y>1050</y><w>100</w><h>50</h></coordinates><panel_attributes>lt=-()
+m2=provide
+IHelper</panel_attributes><additional_attributes>80;20;10;20</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1870</x><y>1000</y><w>250</w><h>130</h></coordinates><panel_attributes>Helper
+--
+_- rnd : Random _
+_- ids : List&lt;string&gt; _
+_- idNumber :ulong_
+--
++ Instance : IHelper 
+_Helper()_
+- Helper()
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1530</x><y>1140</y><w>370</w><h>350</h></coordinates><panel_attributes>&lt;&lt;interface&gt;&gt;
+IEscapePredator
+--
++ (ID, TimeSinceEsacape) getLostPredators() : (string,float)[]
++ setLostPredators((string,float)[]) : void
++ getEscapeSpeedMultiplier() : float
++ setEscapeSpeedMultiplier(float) : void
++ getDiscoverRange() : float
++ setDiscoverRange(float) : void
++ getDiscoverChance() : byte
++ setDiscoverChance(byte) : void
++ getPredatorID() : string
++ setPredatorID(string) : void
++ getTimeThresholdForBeingHuntedAgain() : float
++ setTimeThresholdForBeingHuntedAgain(float) : void
++ getEscapeSprintTime() : float
++ setEscapeSprintTime(float) : void
++ getTimeSprinted() : float
++ setTimeSprinted(float) : void
+--
++ (X, Y) EscapeLocation(string) : (float,float)
++ DiscoveredPredator(float, byte) : bool
++ TryLosePredator() : bool
++ LostPredator() : void
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>650</x><y>1570</y><w>130</w><h>50</h></coordinates><panel_attributes>lt=)-
+m1=require
+IHunt
+</panel_attributes><additional_attributes>20;20;110;20</additional_attributes></element><element><id>Relation</id><coordinates><x>650</x><y>1610</y><w>130</w><h>50</h></coordinates><panel_attributes>lt=-()
+m2=provide
+IHunt</panel_attributes><additional_attributes>110;20;10;20</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1910</x><y>1140</y><w>250</w><h>170</h></coordinates><panel_attributes>&lt;&lt;Interface&gt;&gt;
+IHunt
+--
++ (X, Y) getPreyLastLocation() : (float,float)
++ setPreyLastLocation(float,float) : void
++ getAttackRange() : float
++ setAttackRange(float) : void
++ getAttackSpeedMultiplier() : float
++ setAttackSpeedMultiplier(float) : void
+--
++ TrackPrey() : void
++ AttackPrey() : void
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>450</x><y>1670</y><w>130</w><h>50</h></coordinates><panel_attributes>lt=)-
+m1=require
+ISleep
+</panel_attributes><additional_attributes>20;20;110;20</additional_attributes></element><element><id>Relation</id><coordinates><x>450</x><y>1710</y><w>130</w><h>50</h></coordinates><panel_attributes>lt=)-
+m1=require
+ITerritorial
+</panel_attributes><additional_attributes>20;20;110;20</additional_attributes></element><element><id>Relation</id><coordinates><x>450</x><y>1750</y><w>130</w><h>50</h></coordinates><panel_attributes>lt=-()
+m2=provide
+ISleep</panel_attributes><additional_attributes>110;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>450</x><y>1790</y><w>130</w><h>50</h></coordinates><panel_attributes>lt=-()
+m2=provide
+ITerritorial</panel_attributes><additional_attributes>110;20;10;20</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1910</x><y>1320</y><w>250</w><h>190</h></coordinates><panel_attributes>&lt;&lt;Interface&gt;&gt;
+ISleep
+--
++ getSleeping() : bool
++ setSleeping(bool) : void
++ getTimeSlept() : float
++ setTimeSlept(float) : void
++ getSleepLength() : float
++ getEnergyLevel() : float
++ setEnergyLevel(float) : void
++ getMaxEnergyLevel() : float
+--
++ Sleep() : void
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2170</x><y>1140</y><w>250</w><h>170</h></coordinates><panel_attributes>&lt;&lt;Interface&gt;&gt;
+ITerritorial
+--
++ (x,y) getTerritory() : (ushort, ushort)[]
++ setTerritory((ushort,ushort)[]): void
++ getTargets() : string[]
++ setTargets(string[]) : void
+--
++ AttachOther(string) : void
++ IsAttackedEventHandler() : void
++ FindTargetEventHandler() : void
++ GenerateTerritory() : (ushort, ushort) </panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2000</x><y>1690</y><w>150</w><h>50</h></coordinates><panel_attributes>lt=)-
+m1=require
+IHide
+</panel_attributes><additional_attributes>120;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>2000</x><y>1720</y><w>150</w><h>50</h></coordinates><panel_attributes>lt=-()
+m2=provide
+IHide</panel_attributes><additional_attributes>10;20;130;20</additional_attributes></element><element><id>Relation</id><coordinates><x>990</x><y>1630</y><w>80</w><h>280</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;30;60;30;60;260;30;260</additional_attributes></element><element><id>Relation</id><coordinates><x>1470</x><y>1630</y><w>70</w><h>270</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>50;10;50;40;10;40;10;250</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2170</x><y>1320</y><w>250</w><h>160</h></coordinates><panel_attributes>&lt;&lt;Interface&gt;&gt;
+IHide
+--
++ getStealthLevel() : int
++ setStealthLevel(int) : void
++ getTimeHidden() : float
++ setTimeHidden(float) : void
++ getMaxHideTime() : float
++ setMaxHideTime(float) : void
+--
++ HideFromPredator() : void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2430</x><y>1140</y><w>350</w><h>260</h></coordinates><panel_attributes>&lt;&lt;Interface&gt;&gt;
+IFamily
+--
+/+ (Relationship, ID) getFamily() : (FamilyRelationship, ID)[]/
+/+ setFamily((FamilyRelationsip,ID)[]) : void/
+/+ getCanHuntParents() : bool/
+/+ setCanHuntParents(bool) : void/
+/+ getCanHuntSiblings() : bool/
+/+ setCanHuntSiblings(bool) : void/
+/+ getCanHuntChildren() : bool/
+/+ setCanHuntChildren(bool) : void/
+/+ getCanMateParents() : bool/
+/+ setCanMateParents(bool) : void/
+/+ getCanMateSiblings() : bool/
+/+ setCanMateSiblings(bool) : void/
+/+ getCanMateChildren() : bool/
+/+ setCanMateChildren(bool) : void/</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2780</x><y>1180</y><w>60</w><h>40</h></coordinates><panel_attributes>lt=-(+)
+</panel_attributes><additional_attributes>40;20;10;20</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2820</x><y>1140</y><w>130</w><h>110</h></coordinates><panel_attributes>&lt;&lt;enumeration&gt;&gt;
+FamilyRelationship
+--
+Parent : 1
+Sibling : 2
+Child : 3
+NonFamily : 0</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1910</x><y>1520</y><w>250</w><h>110</h></coordinates><panel_attributes>&lt;&lt;Interface&gt;&gt;
+IHerd
+--
+/+ getHerdSize() : ushort/
+/+ setHerdSize(ushort) : void/
+/+ getMaxHerdSize() : ushort/
+/+ setMaxHerdSize(ushort) : void/</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2430</x><y>1410</y><w>350</w><h>250</h></coordinates><panel_attributes>&lt;&lt;Interface&gt;&gt;
+IPack
+--
+/+ (Relationship, ID) getPackMembers() : (PackMembers,string)[]/
+/+ setPackMembers((PackMembers,string)[]) : void/
+/+ getPackSize() : byte/
+/+ setPackSize(byte): void/
+/+ getMaxPackSize() : byte/
+/+ setMaxPackSize(byte): void/
+/+ getTimeBetweenFights() : float/
+/+ setTimeBetweenFights(float) : void/
+/+ getFightCooldown() : float/
+/+ setFightCooldown(float) : void/
+/+ getCanFightForAlpha() : float/
+/+ setCanFightForAlpha(float) : void/
+--
+/+ FightAlpha(string) : void/
+/+ FightChallenger(string) : void/</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2820</x><y>1410</y><w>130</w><h>110</h></coordinates><panel_attributes>&lt;&lt;enumeration&gt;&gt;
+PackRelationship
+--
+Alpha : 1
+Member : 2
+NonMember: 0</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2780</x><y>1440</y><w>60</w><h>40</h></coordinates><panel_attributes>lt=-(+)
+</panel_attributes><additional_attributes>40;20;10;20</additional_attributes></element></diagram>
