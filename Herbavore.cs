@@ -9,14 +9,14 @@ namespace AnimalSimulationVersion2
     {
         public Herbavore(string species, (float X, float Y) location, string[] foodSource, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, animalPublisher, drawPublisher, mapInformation)
         {
-            LostPredators = new (string[] ID, float TimeSinceEscape)[0];
+            LostPredators = new (string ID, float TimeSinceEscape)[0];
 
         }
 
-        public (string[] ID, float TimeSinceEscape)[] LostPredators { get; set; }
+        public (string ID, float TimeSinceEscape)[] LostPredators { get; set; }
         public float EscapeSpeedMultiplier { get; set; }
         public float DiscoverRange { get; set; }
-        public byte DiscoverChange { get; set; }
+        public byte DiscoverChance { get; set; }
         public string PredatorID { get; set; }
         public float TimeThresholdForBeingHuntedAgain { get; set; }
         public float EscapeSprintTime { get; set; }
