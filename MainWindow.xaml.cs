@@ -45,10 +45,9 @@ namespace AnimalSimulationVersion2
             output.PaintEvent += Output_UpdateVisualEvent;
 
             output.Map = new Bitmap(mapInformation.GetSizeOfMap.width, mapInformation.GetSizeOfMap.height);
-            new Wolf("Carnis Lupus", (00, 00), new string[] { "Oryctolagus Cuniculus" }, Helper.Instance, Publisher.GetAnimalInstance, Publisher.GetDrawInstance, MapInformation.Instance); //here for testing and nothing else.
-            new Wolf("Carnis Lupus", (130, 20), new string[] { "Oryctolagus Cuniculus" }, Helper.Instance, Publisher.GetAnimalInstance, Publisher.GetDrawInstance, MapInformation.Instance); //here for testing and nothing else.
-            new Wolf("Carnis Lupus", (70, 230), new string[] { "Oryctolagus Cuniculus" }, Helper.Instance, Publisher.GetAnimalInstance, Publisher.GetDrawInstance, MapInformation.Instance); //here for testing and nothing else.
-            for(int i = 0; i < 6; i++)
+            for(int i = 0; i < 10; i++)
+                new Wolf("Carnis Lupus", (00, 00), new string[] { "Oryctolagus Cuniculus" }, Helper.Instance, Publisher.GetAnimalInstance, Publisher.GetDrawInstance, MapInformation.Instance); //here for testing and nothing else.
+            for(int i = 0; i < 10; i++)
                 new Rabbit("Oryctolagus Cuniculus", (100,100), null, Helper.Instance, Publisher.GetAnimalInstance, Publisher.GetDrawInstance, MapInformation.Instance);
             output.RunVisualThread();
             output.RunAIThread();
