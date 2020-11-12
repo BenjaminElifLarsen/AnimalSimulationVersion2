@@ -12,7 +12,6 @@ namespace AnimalSimulationVersion2
         public override float AttackRange { get; set; }
         public string[] Targets { get; set; }
         public (ushort x, ushort y)[] Territory { get; set; }
-        public string Active { get; }
         public float EnergyLevel { get; set; }
         public override float AttackSpeedMultiplier { get; set; }
         public float MaxEnergyLevel { get; }
@@ -165,27 +164,7 @@ namespace AnimalSimulationVersion2
             return corners;
         }
 
-        public bool IsActive(string period, string activePeriod)
-        {
-            return period == activePeriod;
-        }
 
-        /// <summary>
-        /// Wolf mating.
-        /// </summary>
-        protected override void Mate()
-        {
-            if (MateLocation == Location && !HasReproduced)
-            {
-                periodInReproduction = 0;
-                if(Gender == 'f')
-                    HasReproduced = true;
-                else
-                {
-                    TimeToReproductionNeed = reproductionCooldown;
-                }
-            }
-        }
 
         protected override void Reproduce()
         {
@@ -196,39 +175,11 @@ namespace AnimalSimulationVersion2
                     byte childAmount = (byte)helper.GenerateRandomNumber(BirthAmount.Minimum, BirthAmount.Maximum); //seems like wolves mate for life, but if losing a mate, they will quickly find another one.
                     for (int i = 0; i < childAmount; i++) //perhaps use the Activator.CreateInstance(...) and this method takes a Type argument, then this implementation could be moved up to Animalia
                         new Wolf(Species, Location, FoodSource, helper, animalPublisher, drawPublisher, mapInformation);
-                    TimeToReproductionNeed = reproductionCooldown - periodInReproduction; //keep the new wol(f/ves) in a list for a short period so the IPack methods can be updated to contain the newest family.
                     HasReproduced = false;
                 
             //}
         }
-
-        protected override void Move() //maybe move this up to Animalia
-        {
-            float xDistance = Math.Abs(MoveTo.X - Location.X);
-            float yDistance = Math.Abs(MoveTo.Y - Location.Y);
-            float distanceToEndLocation = xDistance + yDistance;
-            if(distanceToEndLocation != 0) { 
-                //calculates the %s of the move distance that belong to x and y and then multiply those numbers with the current movement speed. 
-                float xPercentage = Math.Abs(MoveTo.X - Location.X) / distanceToEndLocation;
-                float xCurrentSpeed = xPercentage * CurrentMovementSpeed * timeSinceLastUpdate; //multiply with the amount of seconds that have gone.
-                float yCurrentSpeed = (1 - xPercentage) * CurrentMovementSpeed * timeSinceLastUpdate;
-                //calculates the direction to move in for each axel. 
-
-                bool moveLeft = (MoveTo.X - Location.X) < 0;
-                bool moveUp = (MoveTo.Y - Location.Y) < 0;
-
-                xCurrentSpeed = xCurrentSpeed >= xDistance ? xDistance : xCurrentSpeed;
-                yCurrentSpeed = yCurrentSpeed >= yDistance ? yDistance : yCurrentSpeed;
-
-                if (moveLeft)
-                    xCurrentSpeed = -xCurrentSpeed;
-                if (moveUp)
-                    yCurrentSpeed = -yCurrentSpeed;
-
-                //set the new location
-                Location = (Location.X + xCurrentSpeed, Location.Y + yCurrentSpeed);
-            }
-        }
+        
 
         /// <summary>
         /// Wolf attacking prey. 
