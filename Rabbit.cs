@@ -27,30 +27,37 @@ namespace AnimalSimulationVersion2
         }
 
         public int StealthLevel { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public float TimeHidden { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public float MaxHideTime { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         protected override void AI()
         {
             TimeUpdate();
-            if (Gender == 'f')
-                if (HasReproduced)
-                    if (periodInReproduction >= lengthOfReproduction)
-                        Reproduce();
-            if (Age >= ReproductionAge && TimeToReproductionNeed <= 0)
+            if (Age >= MaxAge || Health <= 0)
+                Death();
+            else
             {
-                if (mateID == null)
-                    mateID = FindMate();
-                if (mateID != null)
+                if (Gender == 'f')
+                    if (HasReproduced)
+                        if (periodInReproduction >= lengthOfReproduction)
+                            Reproduce();
+                if (Age >= ReproductionAge && TimeToReproductionNeed <= 0)
                 {
-                    CurrentMovementSpeed = MovementSpeed;
-                    MoveTo = MateLocation = GetMateLocation(mateID);
-                    Move();
-                    Mate();
+                    if (mateID == null)
+                        mateID = FindMate();
+                    if (mateID != null)
+                    {
+                        CurrentMovementSpeed = MovementSpeed;
+                        MoveTo = MateLocation = GetMateLocation(mateID);
+                        Move();
+                        Mate();
+                    }
+                    else
+                        DefaultMovement();
                 }
                 else
                     DefaultMovement();
             }
-            else
-                DefaultMovement();
             void DefaultMovement()
             {
                 if (Location == MoveTo)
@@ -74,51 +81,6 @@ namespace AnimalSimulationVersion2
             HasReproduced = false;
         }
 
-        protected override void Mate()
-        {
-            if (MateLocation == Location && !HasReproduced)
-            {
-                periodInReproduction = 0;
-                if (Gender == 'f')
-                {
-                    HasReproduced = true;
-                    TimeToReproductionNeed = reproductionCooldown - periodInReproduction;
-                }
-                else
-                {
-                    TimeToReproductionNeed = reproductionCooldown;
-                }
-                mateID = null;
-            }
-        }
 
-        protected override void Move()
-        {
-            float xDistance = Math.Abs(MoveTo.X - Location.X);
-            float yDistance = Math.Abs(MoveTo.Y - Location.Y);
-            float distanceToEndLocation = xDistance + yDistance;
-            if (distanceToEndLocation != 0)
-            {
-                //calculates the %s of the move distance that belong to x and y and then multiply those numbers with the current movement speed. 
-                float xPercentage = Math.Abs(MoveTo.X - Location.X) / distanceToEndLocation;
-                float xCurrentSpeed = xPercentage * CurrentMovementSpeed * timeSinceLastUpdate; //multiply with the amount of seconds that have gone.
-                float yCurrentSpeed = (1 - xPercentage) * CurrentMovementSpeed * timeSinceLastUpdate;
-                //calculates the direction to move in for each axel. 
-
-                bool moveLeft = (MoveTo.X - Location.X) < 0;
-                bool moveUp = (MoveTo.Y - Location.Y) < 0;
-
-                xCurrentSpeed = xCurrentSpeed >= xDistance ? xDistance : xCurrentSpeed;
-                yCurrentSpeed = yCurrentSpeed >= yDistance ? yDistance : yCurrentSpeed;
-
-                if (moveLeft)
-                    xCurrentSpeed = -xCurrentSpeed;
-                if (moveUp)
-                    yCurrentSpeed = -yCurrentSpeed;
-
-                //set the new location
-                Location = (Location.X + xCurrentSpeed, Location.Y + yCurrentSpeed);
-            }
-        }
     }
 }
