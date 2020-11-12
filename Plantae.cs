@@ -24,7 +24,31 @@ namespace AnimalSimulationVersion2
         /// Baisc implementation of polinating the plant.
         /// </summary>
         protected abstract void Polinate();
+        /// <summary>
+        /// Basic implementation of reproduction
+        /// </summary>
+        protected override void Reproduce() //needs testing
+        {
+            byte amountOfOffsprings = (byte)helper.GenerateRandomNumber(offspringAmount.Minimum, offspringAmount.Maximum);
+            Type type = this.GetType();
+            object[] dataObject = new object[6];
+            dataObject[0] = Species;
+            dataObject[2] = helper;
+            dataObject[3] = animalPublisher;
+            dataObject[4] = drawPublisher;
+            dataObject[5] = mapInformation;
+            for (byte i = 0; i < amountOfOffsprings; i++)
+            {
+                float xPercentage = (float)(helper.GenerateRandomNumber(0, 100) / 100f);
+                float xMaxDistance = xPercentage * spreadRange;
+                float yMaxDistance = (1 - xPercentage) * spreadRange;
+                float xDistance = helper.GenerateRandomNumber(0, (int)xMaxDistance) - xMaxDistance / 2f;
+                float yDistance = helper.GenerateRandomNumber(0, (int)yMaxDistance) - yMaxDistance / 2f;
+                (float X, float Y) spawnLocation = (Location.X + xDistance, Location.Y + yDistance);
+                dataObject[1] = spawnLocation;
+                Activator.CreateInstance(type, dataObject);
+            }
+            HasReproduced = false;
+        }
     }
-    //perhaps for non-monoecious species they should find the nearest mate and add the distance to the reproduction time
-    //e.g. distance/20 (non-hard coding number in the end, but a property) 
 }
