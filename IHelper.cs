@@ -51,7 +51,7 @@ namespace AnimalSimulationVersion2
         /// <typeparam name="T">The type of the array.</typeparam>
         /// <param name="array">The array to remove from.</param>
         /// <param name="value">The value to remove.</param>
-        public void Remove<T>(T[] array, T value);
+        public void Remove<T>(ref T[] array, T value);
         /// <summary>
         /// Checks if <paramref name="value"/> is present in <paramref name="list"/> and returns true if it does.
         /// </summary>
