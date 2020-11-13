@@ -29,7 +29,7 @@ namespace AnimalSimulationVersion2
             reproductionCooldown = 20;
             Colour = (200, 10, 10);
             Design = new Point[] { new Point(0, 0), new Point(10, 0), new Point(10, 10), new Point(0, 10) };
-            Health = 100;
+            Health = MaxHealth;
             MovementSpeed = 20;
             MaxHunger = 100;
             Hunger = MaxHunger;
@@ -71,12 +71,7 @@ namespace AnimalSimulationVersion2
                 if (!Sleeping)
                 {
                     if ((Hunger < MaxHunger * HungerFoodSeekingLevel && EnergyLevel > 0) || Hunger < MaxHunger * 0.1) //softcode those values later.
-                    {//if hungry, drop the mate
-                        /*if (mateID != null) 
-                        {
-                            animalPublisher.RemoveMate(ID, mateID); //rename AnimalPublisher to LifeformPublisher 
-                            mateID = null;
-                        }*/
+                    {
                         if (foodID == null) 
                             foodID = FindFood(); //if they are in a pack/herd they need to stick together.
                         if (foodID != null)
