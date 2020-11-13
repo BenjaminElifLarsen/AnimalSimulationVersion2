@@ -6,12 +6,12 @@ namespace AnimalSimulationVersion2
     class Dioecious : Plantae
     {
         protected string mateID;
-        protected (float X, float Y) mateLocation;
+        protected Vector mateLocation;
         protected float mateDistance;
         protected float reproductionExtraTime;
         protected float distanceDivider;
         protected char Gender { get; set; }
-        public Dioecious(string species, (float X, float Y) location, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, helper, animalPublisher, drawPublisher, mapInformation)
+        public Dioecious(string species, Vector location, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, helper, animalPublisher, drawPublisher, mapInformation)
         {
             Gender = GenderGenerator();
             animalPublisher.RaisePossibleMatesEvent += CanMateEventHandler;
@@ -44,7 +44,7 @@ namespace AnimalSimulationVersion2
         /// </summary>
         /// <param name="mateID"></param>
         /// <returns></returns>
-        protected virtual (float X, float Y) GetMateLocation(string mateID)
+        protected virtual Vector GetMateLocation(string mateID)
         {
             return animalPublisher.GetLocation(mateID);
         }
@@ -80,10 +80,10 @@ namespace AnimalSimulationVersion2
         {
             string nearestMate = null;
             float distance = Single.MaxValue;
-            List<(string mateID, (float X, float Y) Location)> possibleMates = animalPublisher.PossibleMates(Species, Gender, ID);
-            foreach ((string Mate, (float X, float Y) Location) information in possibleMates)
+            List<(string mateID, Vector Location)> possibleMates = animalPublisher.PossibleMates(Species, Gender, ID);
+            foreach ((string Mate, Vector Location) information in possibleMates)
             {
-                float distanceTo = Math.Abs((information.Location.X - Location.X)) + Math.Abs((information.Location.Y - Location.Y));
+                float distanceTo = information.Location.DistanceBetweenVectors(Location);//Math.Abs((information.Location.X - Location.X)) + Math.Abs((information.Location.Y - Location.Y));
                 if (distanceTo < distance)
                 {
                     distance = distanceTo;
@@ -98,7 +98,7 @@ namespace AnimalSimulationVersion2
         /// Calculates the time increasement for reproduction based upon distance.
         /// </summary>
         /// <returns></returns>
-        protected virtual float DistanceTime((float X, float Y) locationOfMate)
+        protected virtual float DistanceTime(Vector locationOfMate)
         {
             float distance = (float)Math.Sqrt(Math.Pow(Math.Abs(Location.X - locationOfMate.X),2) + Math.Pow(Math.Abs(Location.Y - locationOfMate.Y), 2));
 

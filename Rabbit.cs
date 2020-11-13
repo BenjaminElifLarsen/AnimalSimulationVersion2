@@ -13,7 +13,7 @@ namespace AnimalSimulationVersion2
         public bool IsHiding { get; set; }
         //public (float TimeSinceLost, string HunterID)[] LostPredators { get; set; }
 
-        public Rabbit(string species, (float X, float Y) location, string[] foodSource, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, animalPublisher, drawPublisher, mapInformation)
+        public Rabbit(string species, Vector location, string[] foodSource, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, animalPublisher, drawPublisher, mapInformation)
         {
             MovementSpeed = 10;
             Colour = (0,120,120);
@@ -76,7 +76,7 @@ namespace AnimalSimulationVersion2
             }
             void DefaultMovement()
             {
-                if (Location == MoveTo)
+                if (Vector.Compare(Location,MoveTo))
                     MoveTo = GenerateRandomEndLocation();
                 CurrentMovementSpeed = MovementSpeed;
                 Move();
@@ -149,7 +149,7 @@ namespace AnimalSimulationVersion2
                 hunterIDs[i] = LostPredators[i].ID;
             if (e.SenderID != ID && !helper.Contains(hunterIDs, e.SenderID))
             {
-                ((float X, float Y) PreyLocation, string PreyID, string PreySpeices) preyInformation = (Location, ID, Species);
+                (Vector PreyLocation, string PreyID, string PreySpeices) preyInformation = (Location, ID, Species);
                 e.AddPreyInformation(preyInformation);
             }
         }

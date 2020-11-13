@@ -16,7 +16,7 @@ namespace AnimalSimulationVersion2
         protected float spreadRange;
         protected (byte Minimum, byte Maximum) offspringAmount;
 
-        public Plantae(string species, (float X, float Y) location, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, helper, animalPublisher, drawPublisher, mapInformation)
+        public Plantae(string species, Vector location, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, helper, animalPublisher, drawPublisher, mapInformation)
         {
         }
 

@@ -7,7 +7,7 @@ namespace AnimalSimulationVersion2
 {
     abstract class Herbavore : Animalia, IEscapePredator
     {
-        public Herbavore(string species, (float X, float Y) location, string[] foodSource, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, animalPublisher, drawPublisher, mapInformation)
+        public Herbavore(string species, Vector location, string[] foodSource, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, animalPublisher, drawPublisher, mapInformation)
         {
             LostPredators = new (string ID, float TimeSinceEscape)[0];
 
@@ -29,8 +29,8 @@ namespace AnimalSimulationVersion2
                 List<(float X, float Y, string ID)> predators = new List<(float X, float Y, string ID)>();
                 foreach (string id in HuntedBy)
                 {
-                    (float X, float Y) location = animalPublisher.GetLocation(id);
-                    if (Math.Abs(location.X - Location.X) + Math.Abs(location.Y - Location.Y) <= discoverRange)
+                    Vector location = animalPublisher.GetLocation(id);
+                    if (location.DistanceBetweenVectors(location) <= discoverRange)
                         predators.Add((location.X, location.Y, id));
                 }
                 foreach((float X, float Y, string ID) predator in predators)

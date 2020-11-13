@@ -9,19 +9,19 @@ namespace AnimalSimulationVersion2
     {
         public class GetPossiblePreyEventArgs
         {
-            private List<((float X, float Y) PreyLocation, string PreyID, string PreySpecies)> preys = new List<((float X, float Y) PreyLocation, string PreyID, string PreySpecies)>();
+            private List<(Vector PreyLocation, string PreyID, string PreySpecies)> preys = new List<(Vector PreyLocation, string PreyID, string PreySpecies)>();
             public string SenderID { get; set; }
             public GetPossiblePreyEventArgs(string senderID)
             {
                 SenderID = senderID;
             }
 
-            public void AddPreyInformation(((float X, float Y) PreyLocation, string PreyID, string PreySpecies) infoToAdd)
+            public void AddPreyInformation((Vector PreyLocation, string PreyID, string PreySpecies) infoToAdd)
             {
                 preys.Add(infoToAdd);
             }
 
-            public List<((float X, float Y) PreyLocation, string PreyID, string PreySpecies)> GetPossiblePreys()
+            public List<(Vector PreyLocation, string PreyID, string PreySpecies)> GetPossiblePreys()
             {
                 return preys;
             }
@@ -70,7 +70,7 @@ namespace AnimalSimulationVersion2
         }
         public class PossibleMateEventArgs
         {
-            private List<(string mateID, (float X, float Y) Location)> possibleMates = new List<(string mateID, (float X, float Y) Location)>();
+            private List<(string mateID, Vector Location)> possibleMates = new List<(string mateID, Vector Location)>();
             public string SenderID { get; set; }
             public PossibleMateEventArgs(string species, char gender, string senderID)
             {
@@ -78,27 +78,27 @@ namespace AnimalSimulationVersion2
                 SenderID = senderID;
             }
             public (string Species, char Gender) Information { get;  }
-            public void AddMateInformation((string mateID, (float X, float Y) Location) information)
+            public void AddMateInformation((string mateID, Vector Location) information)
             {
                 possibleMates.Add(information);
             }
-            public List<(string mateID, (float X, float Y) Location)> GetPossibleMates()
+            public List<(string mateID, Vector Location)> GetPossibleMates()
             {
                 return possibleMates;
             }
         }
         public class DrawEventArgs
         {
-            private List<(Point[] Design, (byte Red, byte Green, byte Blue) Colour, (float X, float Y) Location)> drawInformation = new List<(Point[] Design, (byte Red, byte Green, byte Blue) Colour, (float X, float Y) Location)>();
+            private List<(Point[] Design, (byte Red, byte Green, byte Blue) Colour, Vector Location)> drawInformation = new List<(Point[] Design, (byte Red, byte Green, byte Blue) Colour, Vector Location)>();
             public DrawEventArgs()
             {
 
             }
-            public void AddDrawInformation((Point[] Design, (byte Red, byte Green, byte Blue), (float X, float Y) Location) information)
+            public void AddDrawInformation((Point[] Design, (byte Red, byte Green, byte Blue), Vector Location) information)
             {
                 drawInformation.Add(information);
             }
-            public List<(Point[] Design, (byte Red, byte Green, byte Blue) Colour, (float X, float Y) Location)> DrawInformation()
+            public List<(Point[] Design, (byte Red, byte Green, byte Blue) Colour, Vector Location)> DrawInformation()
             {
                 return drawInformation;
             }
@@ -133,12 +133,12 @@ namespace AnimalSimulationVersion2
         public class GetOtherLocationEventArgs
         {
             public string ReceiverID { get; }
-            public (float X, float Y) Location { get; set; }
+            public Vector Location { get; set; }
             public GetOtherLocationEventArgs(string receiverID)
             {
                 ReceiverID = receiverID;
             }
-            public (float X, float Y) GetLocation => Location;
+            public Vector GetLocation => Location;
         }
         public class InformPredatorOfPreyDeathEventArgs
         {

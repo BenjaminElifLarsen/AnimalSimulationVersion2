@@ -10,11 +10,11 @@ namespace AnimalSimulationVersion2
         public delegate void drawEventHandler(object sender, ControlEvents.DrawEventArgs args);
         public event drawEventHandler RaiseDrawEvent;
 
-        public List<(Point[] Design, (byte Red, byte Green, byte Blue) Colour, (float X, float Y) Location)> Draw()
+        public List<(Point[] Design, (byte Red, byte Green, byte Blue) Colour, Vector Location)> Draw()
         { 
             return OnDraw(new ControlEvents.DrawEventArgs());
         }
-        protected List<(Point[] Design, (byte Red, byte Green, byte Blue) Colour, (float X, float Y) Location)> OnDraw(ControlEvents.DrawEventArgs e)
+        protected List<(Point[] Design, (byte Red, byte Green, byte Blue) Colour, Vector Location)> OnDraw(ControlEvents.DrawEventArgs e)
         { 
             drawEventHandler eventHandler = RaiseDrawEvent;
             if (eventHandler != null)

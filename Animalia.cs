@@ -49,7 +49,7 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// The end location the animal is moving to.
         /// </summary>
-        protected (float X, float Y) MoveTo { get; set; }
+        protected Vector MoveTo { get; set; }
         /// <summary>
         /// The current movementspeed of the animal per second. 
         /// </summary>
@@ -57,7 +57,7 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// The current location of the mate.  
         /// </summary>
-        protected (float X, float Y) MateLocation { get; set; }
+        protected Vector MateLocation { get; set; }
         /// <summary>
         /// The % of hunger in form of 0.n that should get the animal to hunt //rewrite
         /// </summary>
@@ -72,8 +72,10 @@ namespace AnimalSimulationVersion2
         /// <param name="animalPublisher"></param>
         /// <param name="drawPublisher"></param>
         /// <param name="mapInformation"></param>
-        public Animalia(string species, (float X, float Y) location, string[] foodSource, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : this(species, location,helper, animalPublisher, drawPublisher, mapInformation)
+        public Animalia(string species, Vector location, string[] foodSource, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : this(species, location,helper, animalPublisher, drawPublisher, mapInformation)
         {
+            MateLocation = Vector.Copy(location);
+            MoveTo = GenerateRandomEndLocation();
             FoodSource = foodSource;
             MoveTo = GenerateRandomEndLocation();
         }
@@ -86,7 +88,7 @@ namespace AnimalSimulationVersion2
         /// <param name="animalPublisher">An instance of AnimalPublisher.</param>
         /// <param name="drawPublisher">An instance of DrawPublisher.</param>
         /// <param name="mapInformation">An instance of MapInformation.</param>
-        protected Animalia(string species, (float X, float Y) location, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, helper, animalPublisher, drawPublisher, mapInformation)
+        protected Animalia(string species, Vector location, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, helper, animalPublisher, drawPublisher, mapInformation)
         {
             animalPublisher.RaisePossibleMatesEvent += CanMateEventHandler;
             animalPublisher.RaiseSetMateEvent += GetMateEventHandler;
@@ -123,7 +125,7 @@ namespace AnimalSimulationVersion2
                     yCurrentSpeed = -yCurrentSpeed;
 
                 //set the new location
-                Location = (Location.X + xCurrentSpeed, Location.Y + yCurrentSpeed);
+                Location = new Vector(Location.X + xCurrentSpeed, Location.Y + yCurrentSpeed,0);
             }
         }
         /// <summary>
@@ -144,9 +146,9 @@ namespace AnimalSimulationVersion2
         /// Generates a random end location on the map. X and Y will each be between 0 and the maximum value of their respective maximum possible distance.
         /// </summary>
         /// <returns>Returns a new X and Y coordinate for the animal to move too.</returns>
-        protected virtual (float X, float Y) GenerateRandomEndLocation()
+        protected virtual Vector GenerateRandomEndLocation()
         {
-            return (helper.GenerateRandomNumber(0,mapInformation.GetSizeOfMap.width-1), helper.GenerateRandomNumber(0, mapInformation.GetSizeOfMap.height - 1));
+            return new Vector(helper.GenerateRandomNumber(0,mapInformation.GetSizeOfMap.width-1), helper.GenerateRandomNumber(0, mapInformation.GetSizeOfMap.height - 1),0);
         }
         /// <summary>
         /// Finds a mate for the animal and informs the other animal that it got a mate.
@@ -157,8 +159,8 @@ namespace AnimalSimulationVersion2
         {
             string nearestMate = null;
             float distance = Single.MaxValue;
-            List<(string mateID, (float X, float Y) Location)> possibleMates = animalPublisher.PossibleMates(Species, Gender, ID);
-            foreach ((string Mate, (float X, float Y) Location) information in possibleMates)
+            List<(string mateID, Vector Location)> possibleMates = animalPublisher.PossibleMates(Species, Gender, ID);
+            foreach ((string Mate, Vector Location) information in possibleMates)
             {
                 float distanceTo = Math.Abs((information.Location.X - Location.X)) + Math.Abs((information.Location.Y - Location.Y));
                 if (distanceTo < distance)
@@ -176,7 +178,7 @@ namespace AnimalSimulationVersion2
         /// </summary>
         /// <param name="mateID">The ID of the mate.</param>
         /// <returns>Returns the location of the mate.</returns>
-        protected virtual (float X, float Y) GetMateLocation(string mateID)
+        protected virtual Vector GetMateLocation(string mateID)
         {
             return animalPublisher.GetLocation(mateID);
         }
@@ -185,7 +187,7 @@ namespace AnimalSimulationVersion2
         /// </summary>
         protected virtual void Mate()
         {
-            if (MateLocation == Location && !HasReproduced)
+            if (Vector.Compare(Location, MateLocation) && !HasReproduced)
             {
                 periodInReproduction = 0;
                 if (Gender == 'f')
@@ -240,10 +242,10 @@ namespace AnimalSimulationVersion2
         {
             string nearestFood = null;
             float distance = Single.MaxValue;
-            List<((float X, float Y) PreyLocation, string PreyID, string PreySpecies)> possiblePreys = animalPublisher.GetPossiblePreys(ID);
-            foreach (((float X, float Y) Location, string PreyID, string Species) information in possiblePreys)
+            List<(Vector PreyLocation, string PreyID, string PreySpecies)> possiblePreys = animalPublisher.GetPossiblePreys(ID);
+            foreach ((Vector Location, string PreyID, string Species) information in possiblePreys)
             {
-                float distanceTo = Math.Abs((information.Location.X - Location.X)) + Math.Abs((information.Location.Y - Location.Y));
+                float distanceTo = information.Location.DistanceBetweenVectors(Location);//Math.Abs((information.Location.X - Location.X)) + Math.Abs((information.Location.Y - Location.Y));
                 if (helper.Contains(FoodSource, information.Species))
                     if (distanceTo < distance)
                     {

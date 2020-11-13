@@ -50,11 +50,11 @@ namespace AnimalSimulationVersion2
         /// </summary>
         /// <param name="senderID">The ID of the caller.</param>
         /// <returns>Returns a list container the location, ID and species of every single subscriber.</returns>
-        public List<((float X, float Y) PreyLocation, string PreyID, string PreySpecies)> GetPossiblePreys(string senderID)
+        public List<(Vector PreyLocation, string PreyID, string PreySpecies)> GetPossiblePreys(string senderID)
         {
             return OnGetPossiblePreys(new ControlEvents.GetPossiblePreyEventArgs(senderID));
         }
-        protected List<((float X, float Y) PreyLocation, string PreyID, string PreySpecies)> OnGetPossiblePreys(ControlEvents.GetPossiblePreyEventArgs e)
+        protected List<(Vector PreyLocation, string PreyID, string PreySpecies)> OnGetPossiblePreys(ControlEvents.GetPossiblePreyEventArgs e)
         {
             getPossiblePreyEventHandler eventHandler = RaiseFindPreyEvent;
             if(eventHandler != null)
@@ -101,11 +101,11 @@ namespace AnimalSimulationVersion2
         /// <param name="gender">The gender of the caller.</param>
         /// <param name="senderID">The ID of the caller.</param>
         /// <returns></returns>
-        public List<(string mateID, (float X, float Y) Location)> PossibleMates(string species, char gender, string senderID)
+        public List<(string mateID, Vector Location)> PossibleMates(string species, char gender, string senderID)
         {
             return OnPossibleMates(new ControlEvents.PossibleMateEventArgs(species, gender, senderID));
         }
-        protected List<(string mateID, (float X, float Y) Location)> OnPossibleMates(ControlEvents.PossibleMateEventArgs e)
+        protected List<(string mateID, Vector Location)> OnPossibleMates(ControlEvents.PossibleMateEventArgs e)
         {
             possibleMatesEventHandler eventHandler = RaisePossibleMatesEvent;
             if (eventHandler != null)
@@ -164,11 +164,11 @@ namespace AnimalSimulationVersion2
         /// </summary>
         /// <param name="receiverID"></param>
         /// <returns></returns>
-        public (float X, float Y) GetLocation(string receiverID)
+        public Vector GetLocation(string receiverID)
         {
             return OnGetLocation(new ControlEvents.GetOtherLocationEventArgs(receiverID));
         }
-        protected (float X, float Y) OnGetLocation(ControlEvents.GetOtherLocationEventArgs e)
+        protected Vector OnGetLocation(ControlEvents.GetOtherLocationEventArgs e)
         {
             getLocationEventHandler eventHandler = RaiseGetLocation;
             if(eventHandler != null)
@@ -176,7 +176,7 @@ namespace AnimalSimulationVersion2
                 eventHandler.Invoke(this, e);
                 return e.GetLocation;
             }
-            return (-1,-1); //have a custom exception for eventHandler being null when the animal got a food/mate id
+            return new Vector(-1,-1,-1); //have a custom exception for eventHandler being null when the animal got a food/mate id
         }
         /// <summary>
         /// Informs <paramref name="receiverID"/> that it has died.

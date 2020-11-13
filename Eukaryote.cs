@@ -60,7 +60,7 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// The current location of the lifeform.
         /// </summary>
-        protected (float X, float Y) Location { get; set; }
+        protected Vector Location { get; set; }
         /// <summary>
         /// The amount of time before the lifeform will feel a need to reproduce in seconds.
         /// </summary>
@@ -103,7 +103,7 @@ namespace AnimalSimulationVersion2
         /// </summary>
         protected bool HasReproduced { get; set; } //find a better name
 
-        public Eukaryote(string species, (float X, float Y) location, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : this(helper, animalPublisher, drawPublisher, mapInformation)
+        public Eukaryote(string species, Vector location, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : this(helper, animalPublisher, drawPublisher, mapInformation)
         {
             Species = species;
             Location = location;
@@ -167,7 +167,7 @@ namespace AnimalSimulationVersion2
         { //delegate. Send back location, ID and species. 
             if (e.SenderID != ID)
             {
-                ((float X, float Y) PreyLocation, string PreyID, string PreySpeices) preyInformation = (Location, ID, Species);
+                (Vector PreyLocation, string PreyID, string PreySpeices) preyInformation = (Location, ID, Species);
                 e.AddPreyInformation(preyInformation);
             }
         }
@@ -227,7 +227,7 @@ namespace AnimalSimulationVersion2
         { //delegate. Transmit location, design and colour back.
             if (Design != null)
             {
-                (Point[] Design, (byte Red, byte Green, byte Blue), (float X, float Y) Location) drawInforamtion = (helper.DeepCopy(Design), Colour, Location); //(type,type) will ac
+                (Point[] Design, (byte Red, byte Green, byte Blue), Vector Location) drawInforamtion = (helper.DeepCopy(Design), Colour, Location); //(type,type) will ac
                 e.AddDrawInformation(drawInforamtion);
             }
         }

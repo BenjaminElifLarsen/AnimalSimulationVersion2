@@ -19,7 +19,7 @@ namespace AnimalSimulationVersion2
         public float SleepLength { get; }
         public bool Sleeping { get; set; }
 
-        public Wolf(string species, (float X, float Y) location, string[] foodSource, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, animalPublisher, drawPublisher, mapInformation)
+        public Wolf(string species, Vector location, string[] foodSource, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, animalPublisher, drawPublisher, mapInformation)
         {
             Territory = GenerateTerritory(); //values are not final
             AttackRange = 20; //order these into groups. 
@@ -120,7 +120,7 @@ namespace AnimalSimulationVersion2
 
                 void DefaultMovement()
                 {
-                    if (Location == MoveTo)
+                    if (Vector.Compare(Location, MoveTo))
                         MoveTo = GenerateRandomEndLocation();
                     CurrentMovementSpeed = MovementSpeed;
                     Move();
@@ -181,8 +181,8 @@ namespace AnimalSimulationVersion2
         /// </summary>
         public override void AttackPrey()
         {
-            (float X, float Y) preyLocation = animalPublisher.GetLocation(foodID);  //get location via event
-            float distance = Math.Abs(preyLocation.X - Location.X) + Math.Abs(preyLocation.Y - Location.Y);
+            Vector preyLocation = animalPublisher.GetLocation(foodID);  //get location via event
+            float distance = preyLocation.DistanceBetweenVectors(Location);
             if (distance == 0)
             {
                 Eat();//have two events for dead animals. One for a prey been eaten and one for an animal died 'normally'. For eaten it should returns the animal's nutrience value.
@@ -196,12 +196,13 @@ namespace AnimalSimulationVersion2
 
         public override void TrackPrey()  //move this and the others into a single class and give an instance to it 
         { //maybe it should try and predict the next location of the prey if it is not in attackRange.
-            (float X, float Y) preyLocation = animalPublisher.GetLocation(foodID);
+            base.TrackPrey();
+            Vector preyLocation = animalPublisher.GetLocation(foodID);
             float distance = Math.Abs(preyLocation.X - Location.X) + Math.Abs(preyLocation.Y - Location.Y);
             if (distance > AttackRange)
             {
                 (float X, float Y) differene = (preyLocation.X - PreyLastLocation.X, preyLocation.Y - PreyLastLocation.Y);
-                (float X, float Y) possibleNextLocation = (preyLocation.X + differene.X, preyLocation.Y + differene.Y);
+                Vector possibleNextLocation = new Vector(preyLocation.X + differene.X, preyLocation.Y + differene.Y,0);
                 MoveTo = possibleNextLocation;
                 CurrentMovementSpeed = MovementSpeed;
                 PreyLastLocation = preyLocation;
