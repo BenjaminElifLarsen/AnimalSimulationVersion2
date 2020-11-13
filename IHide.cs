@@ -12,6 +12,8 @@ namespace AnimalSimulationVersion2
         public bool IsHiding { get; set; }
         public float TimeThresholdForBeingHuntedAgain { get; set; }
         public (string ID, float TimeSinceEscape)[] LostPredators { get; set; }
+        public float CooldownBetweenHiding { get; set; }
+        public float MaxCooldownBetweenHiding { get; set; }
         public void HideFromPredator(); //maybe old/young animals got a harder time to hide.
         public void LostPredator();
 
