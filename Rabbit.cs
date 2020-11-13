@@ -11,6 +11,9 @@ namespace AnimalSimulationVersion2
         public float TimeHidden { get; set; }
         public float MaxHideTime { get; set; }
         public bool IsHiding { get; set; }
+        public float CooldownBetweenHiding { get; set; }
+        public float MaxCooldownBetweenHiding { get; set; }
+
         //public (float TimeSinceLost, string HunterID)[] LostPredators { get; set; }
 
         public Rabbit(string species, Vector location, string[] foodSource, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, animalPublisher, drawPublisher, mapInformation)
@@ -34,7 +37,7 @@ namespace AnimalSimulationVersion2
             MaxAge = 6;
             Health = MaxHealth;
 
-            StealthLevel = 10;
+            StealthLevel = 2;
             MaxHideTime = 3;
             TimeThresholdForBeingHuntedAgain = 4;
         }
@@ -51,9 +54,9 @@ namespace AnimalSimulationVersion2
                     if (HasReproduced)
                         if (periodInReproduction >= lengthOfReproduction)
                             Reproduce();
-                if (HuntedBy.Length > 0 && TimeHidden < MaxHideTime)
+                if (HuntedBy.Length > 0 && TimeHidden < MaxHideTime && CooldownBetweenHiding <= 0)
                     IsHiding = true;
-                else if (HuntedBy.Length == 0)
+                else if (TimeHidden > MaxHideTime)
                     IsHiding = false;
                 if (IsHiding)
                     HideFromPredator();
@@ -93,6 +96,8 @@ namespace AnimalSimulationVersion2
                 if (TimeHidden < 0) 
                     TimeHidden = 0;
             }
+            if (CooldownBetweenHiding > 0)
+                CooldownBetweenHiding -= timeSinceLastUpdate;
             if (LostPredators.Length > 0)
             {
                 for(int i = 0; i < LostPredators.Length; i++)
@@ -111,8 +116,8 @@ namespace AnimalSimulationVersion2
 
         public void HideFromPredator()
         {
-            int valueToRollOver = (int)(StealthLevel * 1.5 + 5 * HuntedBy.Length);
-            int rolledNUmber = helper.GenerateRandomNumber(0, valueToRollOver + StealthLevel);
+            int valueToRollOver = (int)(StealthLevel * 8 + 30 * HuntedBy.Length);
+            int rolledNUmber = helper.GenerateRandomNumber(0, valueToRollOver - StealthLevel);
             if (rolledNUmber > valueToRollOver)
                 LostPredator();
         }
@@ -126,6 +131,8 @@ namespace AnimalSimulationVersion2
             helper.Add(ref predators, (HuntedBy[0], 0));
             LostPredators = predators;
             HuntedBy = array;
+            CooldownBetweenHiding = MaxCooldownBetweenHiding;
+            IsHiding = false;
         }
 
         protected override void Reproduce()
