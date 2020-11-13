@@ -9,7 +9,11 @@ namespace AnimalSimulationVersion2
         public int StealthLevel { get; set; } 
         public float TimeHidden { get; set; }
         public float MaxHideTime { get; set; }
+        public bool IsHiding { get; set; }
+        public float TimeThresholdForBeingHuntedAgain { get; set; }
+        public (string ID, float TimeSinceEscape)[] LostPredators { get; set; }
         public void HideFromPredator(); //maybe old/young animals got a harder time to hide.
+        public void LostPredator();
 
     }
 }
