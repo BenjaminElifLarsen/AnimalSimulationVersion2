@@ -159,7 +159,7 @@ namespace AnimalSimulationVersion2
             RemoveSubscriptions();
         }
         /// <summary>
-        /// Is asked for information such that another animal can decided if this animal is food or not.
+        /// Is asked for information such that another lifeform can decided if this lifeform is food or not.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -172,7 +172,7 @@ namespace AnimalSimulationVersion2
             }
         }
         /// <summary>
-        /// Is informed that another animal is considering it food.
+        /// Is informed that another lifeform is considering it food.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -186,12 +186,12 @@ namespace AnimalSimulationVersion2
             }
         }
         /// <summary>
-        /// Its predator is dead or have lost this animal.
+        /// Its predator is dead or have lost this lifeform.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         protected virtual void RemovePredatorEventHandler(object sender, ControlEvents.RemovePreyEventArgs e)
-        { //delegate. The predator has died or is lost to this animal. 
+        { //delegate. The predator has died or is lost to this lifeform. 
             if (e.IDs.senderID != ID)
                 if (helper.Contains(HuntedBy, e.IDs.senderID))
                 {
@@ -214,12 +214,12 @@ namespace AnimalSimulationVersion2
             }
         }
         protected virtual void DeathEventHandler(object sender, ControlEvents.DeadEventArgs e)
-        { //delegate. This animal has died. E.g. fought to death.
+        { //delegate. This lifeform has died. E.g. fought to death.
             if (e.ReceiverID == ID)
                 Death();
         }
         /// <summary>
-        /// Asked to return information that permits the animal to be drawned.
+        /// Asked to return information that permits the lifeform to be drawned.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
