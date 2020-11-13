@@ -31,6 +31,7 @@ namespace AnimalSimulationVersion2
             Design = new Point[] { new Point(0, 0), new Point(10, 0), new Point(10, 10), new Point(0, 10) };
             Health = MaxHealth;
             MovementSpeed = 20;
+            CurrentMovementSpeed = MovementSpeed;
             MaxHunger = 100;
             Hunger = MaxHunger;
             MaxEnergyLevel = 140; //perhaps have things like energy level, hunger etc. be in seconds. 
@@ -196,21 +197,28 @@ namespace AnimalSimulationVersion2
 
         public override void TrackPrey()  //move this and the others into a single class and give an instance to it 
         { //maybe it should try and predict the next location of the prey if it is not in attackRange.
-            base.TrackPrey();
-            Vector preyLocation = animalPublisher.GetLocation(foodID);
-            float distance = Math.Abs(preyLocation.X - Location.X) + Math.Abs(preyLocation.Y - Location.Y);
-            if (distance > AttackRange)
+            if (PreyLastLocation == null)
             {
-                (float X, float Y) differene = (preyLocation.X - PreyLastLocation.X, preyLocation.Y - PreyLastLocation.Y);
-                Vector possibleNextLocation = new Vector(preyLocation.X + differene.X, preyLocation.Y + differene.Y,0);
-                MoveTo = possibleNextLocation;
-                CurrentMovementSpeed = MovementSpeed;
-                PreyLastLocation = preyLocation;
+                PreyLastLocation = animalPublisher.GetLocation(foodID);
+                MoveTo = PreyLastLocation;
             }
             else
             {
-                CurrentMovementSpeed = MovementSpeed * AttackSpeedMultiplier;
-                MoveTo = preyLocation;
+                Vector preyLocation = animalPublisher.GetLocation(foodID);
+                float distance = preyLocation.DistanceBetweenVectors(Location);
+                if (distance > AttackRange)
+                {
+                    (float X, float Y) differene = (preyLocation.X - PreyLastLocation.X, preyLocation.Y - PreyLastLocation.Y);
+                    Vector possibleNextLocation = new Vector(preyLocation.X + differene.X, preyLocation.Y + differene.Y, 0);
+                    MoveTo = possibleNextLocation;
+                    //CurrentMovementSpeed = MovementSpeed;
+                    PreyLastLocation = preyLocation;
+                }
+                else
+                {
+                    CurrentMovementSpeed = MovementSpeed * AttackSpeedMultiplier;
+                    MoveTo = preyLocation;
+                }
             }
         }
 
