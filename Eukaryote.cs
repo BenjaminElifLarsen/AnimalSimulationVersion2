@@ -82,6 +82,10 @@ namespace AnimalSimulationVersion2
         /// </summary>
         protected float Health { get; set; }
         /// <summary>
+        /// 
+        /// </summary>
+        protected float MaxHealth { get; set; }
+        /// <summary>
         /// Predatores of the lifeform.
         /// </summary>
         protected string[] HuntedBy { get; set; } //the IDs that are after it
@@ -104,6 +108,7 @@ namespace AnimalSimulationVersion2
             Species = species;
             Location = location;
             HuntedBy = new string[0];
+            MaxHealth = 100;
         }
 
         private Eukaryote(IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation)
@@ -149,7 +154,7 @@ namespace AnimalSimulationVersion2
             if (HuntedBy.Length != 0)
             {
                 foreach (string hunterID in HuntedBy)
-                    animalPublisher.InformPredatorOfDeath(ID, hunterID);
+                    animalPublisher.InformPredatorOfPreyDeath(ID, hunterID);
             }
             RemoveSubscriptions();
         }
@@ -189,7 +194,11 @@ namespace AnimalSimulationVersion2
         { //delegate. The predator has died or is lost to this animal. 
             if (e.IDs.senderID != ID)
                 if (helper.Contains(HuntedBy, e.IDs.senderID))
-                    helper.Remove(HuntedBy, e.IDs.senderID);
+                {
+                    string[] array = HuntedBy;
+                    helper.Remove(ref array, e.IDs.senderID);
+                    HuntedBy = array;
+                }
         }
         protected virtual void LocationEventHandler(object sender, ControlEvents.GetOtherLocationEventArgs e)
         { //delegate. Someone needs this one's location.
