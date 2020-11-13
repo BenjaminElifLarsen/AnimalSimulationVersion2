@@ -55,7 +55,7 @@ namespace AnimalSimulationVersion2
 
         public void Remove<T>(List<T> list, T value) => list.Remove(value);
 
-        public void Remove<T>(T[] array, T value)
+        public void Remove<T>(ref T[] array, T value)
         {
             List<T> list = array.ToList();
             list.Remove(value);
