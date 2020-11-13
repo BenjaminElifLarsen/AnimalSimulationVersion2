@@ -7,6 +7,12 @@ namespace AnimalSimulationVersion2
 {
     class Rabbit : Herbavore, IHide
     {
+        public int StealthLevel { get; set; }
+        public float TimeHidden { get; set; }
+        public float MaxHideTime { get; set; }
+        public bool IsHiding { get; set; }
+        //public (float TimeSinceLost, string HunterID)[] LostPredators { get; set; }
+
         public Rabbit(string species, (float X, float Y) location, string[] foodSource, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, animalPublisher, drawPublisher, mapInformation)
         {
             MovementSpeed = 10;
@@ -24,11 +30,15 @@ namespace AnimalSimulationVersion2
             MaxHunger = 100;
             Hunger = MaxHunger;
             HungerFoodSeekingLevel = 0.5f;
+
+            MaxAge = 6;
+            Health = MaxHealth;
+
+            StealthLevel = 10;
+            MaxHideTime = 3;
+            TimeThresholdForBeingHuntedAgain = 4;
         }
 
-        public int StealthLevel { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public float TimeHidden { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public float MaxHideTime { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         protected override void AI()
         {
@@ -41,7 +51,13 @@ namespace AnimalSimulationVersion2
                     if (HasReproduced)
                         if (periodInReproduction >= lengthOfReproduction)
                             Reproduce();
-                if (Age >= ReproductionAge && TimeToReproductionNeed <= 0)
+                if (HuntedBy.Length > 0 && TimeHidden < MaxHideTime)
+                    IsHiding = true;
+                else if (HuntedBy.Length == 0)
+                    IsHiding = false;
+                if (IsHiding)
+                    HideFromPredator();
+                else if (Age >= ReproductionAge && TimeToReproductionNeed <= 0)
                 {
                     if (mateID == null)
                         mateID = FindMate();
@@ -67,9 +83,49 @@ namespace AnimalSimulationVersion2
             }
         }
 
+        protected override void TimeUpdate()
+        {
+            if (HuntedBy.Length > 0 && TimeHidden < MaxHideTime)
+                TimeHidden += timeSinceLastUpdate;
+            if (HuntedBy.Length == 0 && TimeHidden > 0) //rewrite to look better and less code later
+            {
+                TimeHidden -= timeSinceLastUpdate;
+                if (TimeHidden < 0) 
+                    TimeHidden = 0;
+            }
+            if (LostPredators.Length > 0)
+            {
+                for(int i = 0; i < LostPredators.Length; i++)
+                {
+                    LostPredators[i].TimeSinceEscape += timeSinceLastUpdate;
+                    if(LostPredators[i].TimeSinceEscape >= TimeThresholdForBeingHuntedAgain)
+                    {
+                        (string ID, float TimeSinceEscape)[] predators = LostPredators;
+                        helper.Remove(ref predators, (LostPredators[i].ID, LostPredators[i].TimeSinceEscape));
+                        LostPredators = predators;
+                    }
+                }
+            }
+            base.TimeUpdate();
+        }
+
         public void HideFromPredator()
         {
-            throw new NotImplementedException();
+            int valueToRollOver = (int)(StealthLevel * 1.5 + 5 * HuntedBy.Length);
+            int rolledNUmber = helper.GenerateRandomNumber(0, valueToRollOver + StealthLevel);
+            if (rolledNUmber > valueToRollOver)
+                LostPredator();
+        }
+
+        public new void LostPredator()
+        {
+            animalPublisher.InformPredatorOfPreyDeath(ID, HuntedBy[0]); //perhaps later change it to remove the nearest one
+            string[] array = HuntedBy;
+            helper.Remove(ref array, HuntedBy[0]);
+            (string ID, float TimeSinceEscape)[] predators = LostPredators;
+            helper.Add(ref predators, (HuntedBy[0], 0));
+            LostPredators = predators;
+            HuntedBy = array;
         }
 
         protected override void Reproduce()
@@ -81,6 +137,22 @@ namespace AnimalSimulationVersion2
             HasReproduced = false;
         }
 
+        /// <summary>
+        /// Is asked for information such that another animal can decided if this animal is food or not.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected override void IsPossiblePreyEventHandler(object sender, ControlEvents.GetPossiblePreyEventArgs e)
+        { //delegate. Send back location, ID and species. 
+            string[] hunterIDs = new string[LostPredators.Length];
+            for (byte i = 0; i < LostPredators.Length; i++)
+                hunterIDs[i] = LostPredators[i].ID;
+            if (e.SenderID != ID && !helper.Contains(hunterIDs, e.SenderID))
+            {
+                ((float X, float Y) PreyLocation, string PreyID, string PreySpeices) preyInformation = (Location, ID, Species);
+                e.AddPreyInformation(preyInformation);
+            }
+        }
 
     }
 }
