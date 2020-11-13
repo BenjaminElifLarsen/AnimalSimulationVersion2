@@ -17,14 +17,7 @@ namespace AnimalSimulationVersion2
         }
 
         public abstract void AttackPrey();
-
-        public virtual void TrackPrey()
-        {
-            if (PreyLastLocation == null) 
-            {
-                PreyLastLocation = animalPublisher.GetLocation(foodID);
-            }
-        }
+        public abstract void TrackPrey();
     
     }
 }
