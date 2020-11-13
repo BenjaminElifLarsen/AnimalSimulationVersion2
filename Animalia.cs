@@ -282,7 +282,7 @@ namespace AnimalSimulationVersion2
             RemoveSubscriptions();
         }
         protected virtual void PreyHasDiedEventHandler(object sender, ControlEvents.InformPredatorOfPreyDeathEventArgs e)
-        { //delegate. The prey has died.
+        { //delegate. The prey has died. //rename this event handler since it is also used for losing a prey
             if (e.IDs.ReceiverID == ID)
                 foodID = null;
         }

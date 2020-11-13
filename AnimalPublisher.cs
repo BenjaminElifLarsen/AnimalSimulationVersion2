@@ -216,8 +216,8 @@ namespace AnimalSimulationVersion2
         /// </summary>
         /// <param name="senderID"></param>
         /// <param name="receiverID"></param>
-        public void InformPredatorOfDeath(string senderID, string receiverID)
-        {
+        public void InformPredatorOfPreyDeath(string senderID, string receiverID)
+        { //rename this and the controlevent so their names also make sense for losing a prey
             OnInformPredatorOfDeath(new ControlEvents.InformPredatorOfPreyDeathEventArgs(senderID, receiverID));
         }
         protected void OnInformPredatorOfDeath(ControlEvents.InformPredatorOfPreyDeathEventArgs e)
