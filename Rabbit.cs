@@ -19,6 +19,7 @@ namespace AnimalSimulationVersion2
         public Rabbit(string species, Vector location, string[] foodSource, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, animalPublisher, drawPublisher, mapInformation)
         {
             MovementSpeed = 10;
+            CurrentMovementSpeed = MovementSpeed;
             Colour = (0,120,120);
             Design = new Point[] { new Point(3,0), new Point(6, 6), new Point(0, 6) };
             NutrienValue = 100;
@@ -26,13 +27,13 @@ namespace AnimalSimulationVersion2
             genderInformation = new (char Gender, byte Weight)[] { ('f', 50), ('m', 50) };
             Gender = GenerateGender(genderInformation);
             reproductionCooldown = 20;
-            BirthAmount = (2, 5);
+            BirthAmount = (3, 5);
             ReproductionAge = 2;
             lengthOfReproduction = 6;
 
-            MaxHunger = 100;
+            MaxHunger = 80;
             Hunger = MaxHunger;
-            HungerFoodSeekingLevel = 0.5f;
+            HungerFoodSeekingLevel = 0.6f;
 
             MaxAge = 6;
             Health = MaxHealth;
@@ -60,6 +61,25 @@ namespace AnimalSimulationVersion2
                     IsHiding = false;
                 if (IsHiding)
                     HideFromPredator();
+                else if(Hunger < MaxHunger * HungerFoodSeekingLevel)
+                {
+                    if (mateID != null) 
+                    { 
+                        animalPublisher.RemoveMate(ID, mateID);
+                        mateID = null;
+                    }
+                    if (foodID == null)
+                        foodID = FindFood();
+                    if (foodID != null)
+                    {
+                        MoveTo = animalPublisher.GetLocation(foodID);
+                        Move();
+                        if (Vector.Compare(Location, MoveTo))
+                            Eat();
+                    }
+                    else
+                        DefaultMovement();
+                }
                 else if (Age >= ReproductionAge && TimeToReproductionNeed <= 0)
                 {
                     if (mateID == null)
