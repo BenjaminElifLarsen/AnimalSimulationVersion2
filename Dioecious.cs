@@ -11,17 +11,19 @@ namespace AnimalSimulationVersion2
         protected float reproductionExtraTime;
         protected float distanceDivider;
         protected char Gender { get; set; }
-        public Dioecious(string species, Vector location, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, helper, animalPublisher, drawPublisher, mapInformation)
+        public Dioecious(string species, Vector location, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation, char gender = (char)0) : base(species, location, helper, animalPublisher, drawPublisher, mapInformation)
         {
-            Gender = GenderGenerator();
+            if (gender == 0)
+                Gender = GenderGenerator();
+            else
+                Gender = gender;
             animalPublisher.RaisePossibleMatesEvent += CanMateEventHandler;
         }
 
         protected override void AI()
         {
             TimeUpdate();
-            if (Age >= MaxAge || Health <= 0)
-                Death();
+            base.AI();
             if (Gender == 'f')
                 if (HasReproduced && periodInReproduction >= lengthOfReproduction + reproductionExtraTime)
                     Reproduce();
@@ -37,6 +39,21 @@ namespace AnimalSimulationVersion2
                     mateID = null;
                 }
             }
+        }
+
+        protected override void Reproduce()
+        {
+            byte amountOfOffsprings = (byte)helper.GenerateRandomNumber(offspringAmount.Minimum, offspringAmount.Maximum);
+            object[] dataObject = new object[7];
+            dataObject[0] = Species;
+            dataObject[2] = helper;
+            dataObject[3] = animalPublisher;
+            dataObject[4] = drawPublisher;
+            dataObject[5] = mapInformation;
+            dataObject[6] = (char)0;
+            GenerateChildren(amountOfOffsprings, dataObject);
+            HasReproduced = false;
+
         }
 
         /// <summary>
