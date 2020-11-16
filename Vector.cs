@@ -16,6 +16,12 @@ namespace AnimalSimulationVersion2
             position[1] = Y;
             position[2] = Z;
         }
+        public Vector(MapInformation mapInformation, IHelper helper)
+        {
+            position[0] = helper.GenerateRandomNumber(0, mapInformation.mapSize.width - 1);
+            position[1] = helper.GenerateRandomNumber(0, mapInformation.mapSize.height - 1);
+            position[2] = 0;
+        }
         public float X { get => position[0]; set => position[0] = value; }
         public float Y { get => position[1]; set => position[1] = value; }
         public float Z { get => position[2]; set => position[2] = value; }
