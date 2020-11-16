@@ -8,8 +8,7 @@
         protected override void AI()
         {
             TimeUpdate();
-            if (Age >= MaxAge || Health <= 0)
-                Death();
+            base.AI();
             if (TimeToReproductionNeed <= 0)
                 Polinate();
             if (HasReproduced && periodInReproduction >= lengthOfReproduction)
@@ -21,7 +20,7 @@
         /// </summary>
         protected override void Polinate()
         {
-            TimeToReproductionNeed = reproductionCooldown + lengthOfReproduction;
+            TimeToReproductionNeed = reproductionCooldown;
             periodInReproduction = 0;
             HasReproduced = true;
         }
