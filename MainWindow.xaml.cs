@@ -43,12 +43,16 @@ namespace AnimalSimulationVersion2
             Output output = Output.Instance;
 
             output.PaintEvent += Output_UpdateVisualEvent;
-
+            //have a function to calculate a random start Vector
             output.Map = new Bitmap(mapInformation.GetSizeOfMap.width, mapInformation.GetSizeOfMap.height);
+            for(int i = 0; i < 6; i++)
+                new Wolf("Carnis Lupus", new Vector(mapInformation, Helper.Instance), new string[] { "Oryctolagus Cuniculus" }, Helper.Instance, Publisher.GetAnimalInstance, Publisher.GetDrawInstance, MapInformation.Instance); //here for testing and nothing else.
+            for(int i = 0; i < 30; i++)
+                new Rabbit("Oryctolagus Cuniculus", new Vector(mapInformation, Helper.Instance), new string[] {"Cucumis Melo", "Carica Papaya" }, Helper.Instance, Publisher.GetAnimalInstance, Publisher.GetDrawInstance, MapInformation.Instance);
+            for(int i = 0; i < 2; i++)
+                new MonoeciousPlant("Cucumis Melo", new Vector(mapInformation, Helper.Instance), Helper.Instance, Publisher.GetAnimalInstance, Publisher.GetDrawInstance, MapInformation.Instance);
             for(int i = 0; i < 10; i++)
-                new Wolf("Carnis Lupus", new Vector(0,0,0), new string[] { "Oryctolagus Cuniculus" }, Helper.Instance, Publisher.GetAnimalInstance, Publisher.GetDrawInstance, MapInformation.Instance); //here for testing and nothing else.
-            for(int i = 0; i < 20; i++)
-                new Rabbit("Oryctolagus Cuniculus", new Vector(100,100,0), null, Helper.Instance, Publisher.GetAnimalInstance, Publisher.GetDrawInstance, MapInformation.Instance);
+                new DioeciousPlant("Carica Papaya", new Vector(mapInformation, Helper.Instance), Helper.Instance, Publisher.GetAnimalInstance, Publisher.GetDrawInstance, MapInformation.Instance);
             output.RunVisualThread();
             output.RunAIThread();
 
