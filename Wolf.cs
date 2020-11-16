@@ -5,9 +5,10 @@ using System.Reflection.Emit;
 using System.Text;
 
 namespace AnimalSimulationVersion2
-{
+{ //maybe have two wolf classes, one there is territorial and one that moves in pack. Both inheriting from this one. This class could be renamed to TerrestrialCarnivore
+    //Wolf becomes abstract then and keeps ISleep (bird class could be called AvesCarnivore). This class could also be called SleepingCarnivore, since codewise the biggest different between a bird and non-bird would be Z. Then again bird could implement something like IDive
     class Wolf : Carnivore, ISleep, ITerritorial //have an interface for pack/herd behavior? Maybe two interfaces, since in pacts normally only alphas mate, while in herd it is all???
-    {
+    { 
 
         public override float AttackRange { get; set; }
         public string[] Targets { get; set; }
@@ -208,8 +209,8 @@ namespace AnimalSimulationVersion2
                 float distance = preyLocation.DistanceBetweenVectors(Location);
                 if (distance > AttackRange)
                 {
-                    (float X, float Y) differene = (preyLocation.X - PreyLastLocation.X, preyLocation.Y - PreyLastLocation.Y);
-                    Vector possibleNextLocation = new Vector(preyLocation.X + differene.X, preyLocation.Y + differene.Y, 0);
+                    (float X, float Y, float Z) differene = (preyLocation.X - PreyLastLocation.X, preyLocation.Y - PreyLastLocation.Y, preyLocation.Z - PreyLastLocation.Z);
+                    Vector possibleNextLocation = new Vector(preyLocation.X + differene.X, preyLocation.Y + differene.Y, differene.Z);
                     MoveTo = possibleNextLocation;
                     //CurrentMovementSpeed = MovementSpeed;
                     PreyLastLocation = preyLocation;
@@ -226,6 +227,8 @@ namespace AnimalSimulationVersion2
         {
             Sleeping = true;
             TimeSlept = 0;
-        }
+        } //(IPack.PackRelationship, string) test = ((IPack.PackRelationship)1, "");
     }
+
+
 }
