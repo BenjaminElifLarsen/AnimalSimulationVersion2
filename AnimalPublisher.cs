@@ -38,12 +38,19 @@ namespace AnimalSimulationVersion2
         public delegate void getLocationEventHandler(object sender, ControlEvents.GetOtherLocationEventArgs args);
         public event getLocationEventHandler RaiseGetLocation;
 
+        public delegate void getAllLocationsEventHandler(object sender, ControlEvents.GetAllLocationsEventArgs args);
+        public event getAllLocationsEventHandler RaiseGetAllLocations;
+
         //deaths
         public delegate void eatenEventHandler(object sender, ControlEvents.EatenEventArgs args);
         public event eatenEventHandler RaiseEaten;
 
         public delegate void diedEventHandler(object sender, ControlEvents.DeadEventArgs args);
         public event diedEventHandler RaiseDied;
+
+        //damage
+        public delegate void damageEventHandler(object sender, ControlEvents.DoHealthDamageEventArgs args);
+        public event damageEventHandler RaiseDamage;
 
         /// <summary>
         /// Gets the location, ID and species of every single subscriber.
@@ -225,6 +232,31 @@ namespace AnimalSimulationVersion2
             informPredatorOfPreyDeathEventHandler eventHandler = RaiseInformHunterOfPreyDeath;
             if (eventHandler != null)
                 eventHandler.Invoke(this, e);
+        }
+
+        public void DamageLifeform(string senderID, string receiverID, byte damage)
+        {
+            OnDamageLifeform(new ControlEvents.DoHealthDamageEventArgs(senderID, receiverID, damage));
+        }
+        protected void OnDamageLifeform(ControlEvents.DoHealthDamageEventArgs e)
+        {
+            damageEventHandler eventHandler = RaiseDamage;
+            if (eventHandler != null)
+                eventHandler.Invoke(this, e);
+        }
+        public void GetAllLocations(string senderID)
+        {
+            OnGetAllLocations(new ControlEvents.GetAllLocationsEventArgs(senderID));
+        }
+        protected List<(Vector Location, string ID)> OnGetAllLocations(ControlEvents.GetAllLocationsEventArgs e)
+        {
+            getAllLocationsEventHandler eventHandler = RaiseGetAllLocations;
+            if(eventHandler != null)
+            {
+                eventHandler.Invoke(this, e);
+                return e.GetInformation;
+            }
+            return null;
         }
     }
 }

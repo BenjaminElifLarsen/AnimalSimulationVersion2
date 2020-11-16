@@ -108,7 +108,7 @@ namespace AnimalSimulationVersion2
             public float TimeSinceLastUpdate { get; }
             public AIEventArgs(float timeSinceLastUpdate)
             {
-                this.TimeSinceLastUpdate = timeSinceLastUpdate;
+                TimeSinceLastUpdate = timeSinceLastUpdate;
             }
         }
         public class EatenEventArgs
@@ -147,6 +147,28 @@ namespace AnimalSimulationVersion2
             {
                 IDs = (senderID,receiverID);
             }
+        }
+        public class DoHealthDamageEventArgs
+        {
+            public (string SenderID, string ReceiverID) IDs { get; set; }
+            public byte Damage { get; set; }
+            public DoHealthDamageEventArgs(string senderID, string receiverID, byte damage)
+            {
+                IDs = (senderID, receiverID);
+                Damage = damage;
+            }
+        }
+        public class GetAllLocationsEventArgs
+        {
+
+            private List<(Vector Location, string ID)> locationsAndIDs;
+            public string SenderID { get; }
+            public GetAllLocationsEventArgs(string senderID)
+            {
+                SenderID = senderID;
+            }
+            public void Add(Vector location, string id) => locationsAndIDs.Add((location, id));
+            public List<(Vector Location, string ID)> GetInformation => locationsAndIDs;
         }
     }
 }
