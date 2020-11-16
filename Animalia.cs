@@ -191,15 +191,8 @@ namespace AnimalSimulationVersion2
             {
                 periodInReproduction = 0;
                 if (Gender == 'f')
-                {
                     HasReproduced = true;
-                    TimeToReproductionNeed = reproductionCooldown - periodInReproduction;
-                }
-                else
-                {
-                    TimeToReproductionNeed = reproductionCooldown;
-                }
-                mateID = null;
+                TimeToReproductionNeed = reproductionCooldown;
             }
         }
 
@@ -281,7 +274,6 @@ namespace AnimalSimulationVersion2
                 animalPublisher.RemovePrey(ID, foodID);
             }
             base.Death();
-            RemoveSubscriptions();
         }
         protected virtual void PreyHasDiedEventHandler(object sender, ControlEvents.InformPredatorOfPreyDeathEventArgs e)
         { //delegate. The prey has died. //rename this event handler since it is also used for losing a prey

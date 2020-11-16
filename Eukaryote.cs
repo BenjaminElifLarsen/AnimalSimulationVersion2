@@ -253,5 +253,10 @@ namespace AnimalSimulationVersion2
 
             drawPublisher.RaiseDrawEvent -= DrawEventHandler;
         }
+
+        //~Eukaryote() //only here to ensure that all references to the object has been removed.
+        //{
+        //    System.Diagnostics.Debug.WriteLine($"{ID} of {Species} has been removed");
+        //}
     }
 }

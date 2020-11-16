@@ -86,6 +86,13 @@ namespace AnimalSimulationVersion2
             }
         }
 
+        protected override void Mate()
+        {
+            base.Mate();
+                if (Vector.Compare(Location, MateLocation))
+                    mateID = null;
+        }
+
         protected override void TimeUpdate()
         {
             if (HuntedBy.Length > 0 && TimeHidden < MaxHideTime)
