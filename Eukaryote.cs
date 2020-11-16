@@ -128,6 +128,8 @@ namespace AnimalSimulationVersion2
             animalPublisher.RaiseDied += DeathEventHandler;
             animalPublisher.RaiseEaten += EatenEventHandler;
             animalPublisher.RaiseGetLocation += LocationEventHandler;
+            animalPublisher.RaiseDamage += DamageEventHandler;
+            animalPublisher.RaiseGetAllLocations += GetAllLocationsEventHandler;
 
             drawPublisher.RaiseDrawEvent += DrawEventHandler;
         }
@@ -135,6 +137,9 @@ namespace AnimalSimulationVersion2
         /// The 'AI' of the lifeform.
         /// </summary>
         protected abstract void AI();
+        /// <summary>
+        /// Updates the variables and properties that depends on time.
+        /// </summary>
         protected virtual void TimeUpdate()
         {
             timeAlive += timeSinceLastUpdate;
@@ -142,6 +147,8 @@ namespace AnimalSimulationVersion2
             TimeToReproductionNeed -= timeSinceLastUpdate;
             if (periodInReproduction < lengthOfReproduction && HasReproduced)
                 periodInReproduction += timeSinceLastUpdate;
+            if (Health < MaxHealth)
+                Health = Health + timeSinceLastUpdate > MaxHealth ? MaxHealth : Health + timeSinceLastUpdate;
         }
         /// <summary>
         /// Lifeform produces offsprings.
@@ -200,23 +207,58 @@ namespace AnimalSimulationVersion2
                     HuntedBy = array;
                 }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected virtual void LocationEventHandler(object sender, ControlEvents.GetOtherLocationEventArgs e)
         { //delegate. Someone needs this one's location.
             if (e.ReceiverID == ID)
                 e.Location = Location;
         }
+        protected virtual void GetAllLocationsEventHandler(object sender, ControlEvents.GetAllLocationsEventArgs e)
+        { //delegate. Someone needs this one's location.
+            if (e.SenderID != ID)
+                e.Add(Location, ID);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected virtual void EatenEventHandler(object sender, ControlEvents.EatenEventArgs e)
-        { //delegate. This animal has been eaten.
+        { //delegate. This lifeform has been eaten.
             if (e.ReceiverID == ID)
             {
                 e.SetNutrience(NutrienValue);
                 Death();
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected virtual void DeathEventHandler(object sender, ControlEvents.DeadEventArgs e)
         { //delegate. This lifeform has died. E.g. fought to death.
             if (e.ReceiverID == ID)
                 Death();
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks><paramref name="e"/> contains the ID of the sender, of the receiver and the amount of damage.</remarks>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected virtual void DamageEventHandler(object sender, ControlEvents.DoHealthDamageEventArgs e)
+        { //delegate. This lifeform has taken damage.
+            if(e.IDs.ReceiverID == ID)
+            {
+                Health -= e.Damage;
+                if (Health <= 0)
+                    Death();
+            }
         }
         /// <summary>
         /// Asked to return information that permits the lifeform to be drawned.
@@ -250,11 +292,13 @@ namespace AnimalSimulationVersion2
             animalPublisher.RaiseDied -= DeathEventHandler;
             animalPublisher.RaiseEaten -= EatenEventHandler;
             animalPublisher.RaiseGetLocation -= LocationEventHandler;
+            animalPublisher.RaiseDamage -= DamageEventHandler;
+            animalPublisher.RaiseGetAllLocations -= GetAllLocationsEventHandler;
 
             drawPublisher.RaiseDrawEvent -= DrawEventHandler;
         }
 
-        //~Eukaryote() //only here to ensure that all references to the object has been removed.
+        //~Eukaryote() //only here to ensure that all references to the object have been removed.
         //{
         //    System.Diagnostics.Debug.WriteLine($"{ID} of {Species} has been removed");
         //}
