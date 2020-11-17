@@ -132,6 +132,7 @@ namespace AnimalSimulationVersion2
             animalPublisher.RaiseGetAllLocations += GetAllLocationsEventHandler;
 
             drawPublisher.RaiseDrawEvent += DrawEventHandler;
+            drawPublisher.RaiseSpeciesAndAmountEvent += SpeciesAmountEventhandler;
         }
         /// <summary>
         /// The 'AI' of the lifeform.
@@ -154,7 +155,9 @@ namespace AnimalSimulationVersion2
         /// Lifeform produces offsprings.
         /// </summary>
         protected abstract void Reproduce();
-
+        /// <summary>
+        /// Death of the lifeform.
+        /// </summary>
         protected virtual void Death()
         { 
 
@@ -274,6 +277,15 @@ namespace AnimalSimulationVersion2
             }
         }
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected virtual void SpeciesAmountEventhandler(object sender, ControlEvents.SpeciesAndAmountEventArgs e)
+        {
+            e.Add(Species);
+        }
+        /// <summary>
         /// Asked to run a sequence of its AI.
         /// </summary>
         /// <param name="sender"></param>
@@ -283,6 +295,9 @@ namespace AnimalSimulationVersion2
             timeSinceLastUpdate = e.TimeSinceLastUpdate;
             AI();
         }
+        /// <summary>
+        /// Removes all subscriptions. This needs to be called when the lifeform dies else the instance will not be collected by the garbage collector.
+        /// </summary>
         protected virtual void RemoveSubscriptions()
         {
             animalPublisher.RaiseFindPreyEvent -= IsPossiblePreyEventHandler;
@@ -296,6 +311,7 @@ namespace AnimalSimulationVersion2
             animalPublisher.RaiseGetAllLocations -= GetAllLocationsEventHandler;
 
             drawPublisher.RaiseDrawEvent -= DrawEventHandler;
+            drawPublisher.RaiseSpeciesAndAmountEvent -= SpeciesAmountEventhandler;
         }
 
         //~Eukaryote() //only here to ensure that all references to the object have been removed.
