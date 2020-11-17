@@ -17,7 +17,7 @@ namespace AnimalSimulationVersion2
         protected (byte Minimum, byte Maximum) offspringAmount;
 
         public Plantae(string species, Vector location, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, helper, animalPublisher, drawPublisher, mapInformation)
-        {
+        { //could properly overwrite IsPossiblePreyEvnethandler to make (some specific) sure plants that are to old cannot be eated, e.g. a big tree
         }
 
         protected override void AI()
