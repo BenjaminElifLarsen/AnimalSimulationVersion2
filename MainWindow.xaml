@@ -5,9 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AnimalSimulationVersion2"
         mc:Ignorable="d"
-        Title="MainWindow" Height="460" Width="826">
+        Title="MainWindow" Height="460" Width="1000">
     <Grid>
         <Image x:Name="ImageBox"  HorizontalAlignment="Left" Height="407" Margin="10,10,0,0" VerticalAlignment="Top" Width="783" Source="/AnimalSimulation Class Diagram.png"/>
+        <TextBlock x:Name="LifeformInformation" HorizontalAlignment="Left" Margin="806,10,0,0" Text="TextBlock" TextWrapping="Wrap" VerticalAlignment="Top" Height="407" Width="184"/>
 
     </Grid>
 </Window>
