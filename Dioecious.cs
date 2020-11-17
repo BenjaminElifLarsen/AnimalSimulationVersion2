@@ -99,7 +99,7 @@ namespace AnimalSimulationVersion2
             float distance = Single.MaxValue;
             List<(string mateID, Vector Location)> possibleMates = animalPublisher.PossibleMates(Species, Gender, ID);
             foreach ((string Mate, Vector Location) information in possibleMates)
-            {
+            { //need to catch null
                 float distanceTo = information.Location.DistanceBetweenVectors(Location);//Math.Abs((information.Location.X - Location.X)) + Math.Abs((information.Location.Y - Location.Y));
                 if (distanceTo < distance)
                 {
