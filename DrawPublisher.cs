@@ -10,6 +10,9 @@ namespace AnimalSimulationVersion2
         public delegate void drawEventHandler(object sender, ControlEvents.DrawEventArgs args);
         public event drawEventHandler RaiseDrawEvent;
 
+        public delegate void speciesAndAmountEventHandler(object sender, ControlEvents.SpeciesAndAmountEventArgs args);
+        public event speciesAndAmountEventHandler RaiseSpeciesAndAmountEvent;
+
         public List<(Point[] Design, (byte Red, byte Green, byte Blue) Colour, Vector Location)> Draw()
         { 
             return OnDraw(new ControlEvents.DrawEventArgs());
@@ -21,6 +24,21 @@ namespace AnimalSimulationVersion2
             {
                 eventHandler.Invoke(this, e);
                 return e.DrawInformation();
+            }
+            return null;
+        }
+        public List<(string Species, ushort Amount)> SpeciesAndAmount()
+        {
+            return OnSpeciesAndAmount(new ControlEvents.SpeciesAndAmountEventArgs());
+        }
+
+        protected List<(string Species, ushort Amount)> OnSpeciesAndAmount(ControlEvents.SpeciesAndAmountEventArgs e)
+        {
+            speciesAndAmountEventHandler eventHandler = RaiseSpeciesAndAmountEvent;
+            if(eventHandler != null)
+            {
+                eventHandler.Invoke(this, e);
+                return e.GetList;
             }
             return null;
         }
