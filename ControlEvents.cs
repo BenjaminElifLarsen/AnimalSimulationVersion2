@@ -161,7 +161,7 @@ namespace AnimalSimulationVersion2
         public class GetAllLocationsEventArgs
         {
 
-            private List<(Vector Location, string ID)> locationsAndIDs;
+            private List<(Vector Location, string ID)> locationsAndIDs = new List<(Vector Location, string ID)>();
             public string SenderID { get; }
             public GetAllLocationsEventArgs(string senderID)
             {
@@ -169,6 +169,30 @@ namespace AnimalSimulationVersion2
             }
             public void Add(Vector location, string id) => locationsAndIDs.Add((location, id));
             public List<(Vector Location, string ID)> GetInformation => locationsAndIDs;
+        }
+        public class SpeciesAndAmountEventArgs
+        {
+            private List<(string Species, ushort Amount)> information = new List<(string, ushort)>();
+            public List<(string Species, ushort Amount)> GetList => information;
+            public SpeciesAndAmountEventArgs()
+            {
+            }
+            public void Add(string species)
+            {
+                for (int i = 0; i <= information.Count; i++)
+                {
+                    if (i == information.Count)
+                    {
+                        information.Add((species, 1));
+                        break;
+                    }
+                    else if (information[i].Species == species)
+                    {
+                        information[i] = (species, (ushort)(information[i].Amount + 1));
+                        break;
+                    }
+                }
+            }
         }
     }
 }
