@@ -14,8 +14,11 @@ namespace AnimalSimulationVersion2
     { //draws out to the map image and displays it
 
 
-        public delegate void paintEvent(object sender, ImageEventArgs eva);
+        public delegate void paintEvent(object sender, ImageEventArgs args);
         public event paintEvent PaintEvent;
+
+        public delegate void textEvent(object sender, TextEventArgs args);
+        public event textEvent TextEvent;
 
         public Bitmap Map { get; set; }
         public BitmapImage MapImage { get; set; }
@@ -68,8 +71,10 @@ namespace AnimalSimulationVersion2
                 {
                     lastTime = DateTime.Now;
                     List<(Point[] Design, (byte Red, byte Green, byte Blue) Colour, Vector Location)> drawInforamtion = DrawPublisher.Draw();
+                    List<(string Species, ushort Amount)> speciesInformation = DrawPublisher.SpeciesAndAmount();
                     Map = Draw(Map, drawInforamtion);
                     PaintEvent?.Invoke(this, new ImageEventArgs { BitMapImage = Map });
+                    TextEvent?.Invoke(this, new TextEventArgs { ListInformation = speciesInformation });
                 }
             }
         }
@@ -103,5 +108,9 @@ namespace AnimalSimulationVersion2
     public class ImageEventArgs : EventArgs
     {
         public Bitmap BitMapImage { get; set; }
+    }
+    public class TextEventArgs : EventArgs
+    {
+        public List<(string Species, ushort Amount)> ListInformation { get; set; }
     }
 }
