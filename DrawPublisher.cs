@@ -23,7 +23,7 @@ namespace AnimalSimulationVersion2
             if (eventHandler != null)
             {
                 eventHandler.Invoke(this, e);
-                return e.DrawInformation();
+                return e.DrawInformation;
             }
             return null;
         }

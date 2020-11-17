@@ -27,14 +27,14 @@ namespace AnimalSimulationVersion2
             if (Gender == 'f')
                 if (HasReproduced && periodInReproduction >= lengthOfReproduction + reproductionExtraTime)
                     Reproduce();
-            if(TimeToReproductionNeed <= 0 && !HasReproduced)
+            if(Age >= ReproductionAge && TimeToReproductionNeed <= 0 && !HasReproduced)
             {
                 if (mateID == null)
                     mateID = FindMate();
                 if(mateID != null)
                 {
                     mateLocation = GetMateLocation(mateID);
-                    reproductionExtraTime = DistanceTime(mateLocation);
+                    reproductionExtraTime = DistanceTime(/*mateLocation*/);
                     Polinate();
                     mateID = null;
                 }
@@ -51,16 +51,16 @@ namespace AnimalSimulationVersion2
             dataObject[4] = drawPublisher;
             dataObject[5] = mapInformation;
             dataObject[6] = (char)0;
-            GenerateChildren(amountOfOffsprings, dataObject);
+            GenerateOffspring(amountOfOffsprings, dataObject);
             HasReproduced = false;
 
         }
 
         /// <summary>
-        /// 
+        /// Get the location of the lifeform with the ID of <paramref name="mateID"/>
         /// </summary>
-        /// <param name="mateID"></param>
-        /// <returns></returns>
+        /// <param name="mateID">The ID of the mate.</param>
+        /// <returns>A Vector with the posistion values of the mate.</returns>
         protected virtual Vector GetMateLocation(string mateID)
         {
             return animalPublisher.GetLocation(mateID);
@@ -83,6 +83,11 @@ namespace AnimalSimulationVersion2
             TimeToReproductionNeed = reproductionCooldown + reproductionExtraTime;
         }
 
+        /// <summary>
+        /// Generates a gender for the tree, male or female. 
+        /// </summary>
+        /// <remarks>Can only return 'f' and 'm'.</remarks>
+        /// <returns>A char that indicates the gender.</returns>
         protected virtual char GenderGenerator()
         {
             byte result = (byte)helper.GenerateRandomNumber(0, 100);
@@ -109,17 +114,18 @@ namespace AnimalSimulationVersion2
             }
             if (nearestMate != null)
                 animalPublisher.SetMate(ID, nearestMate);
+            mateDistance = distance;
             return nearestMate;
         }
         /// <summary>
         /// Calculates the time increasement for reproduction based upon distance.
         /// </summary>
         /// <returns></returns>
-        protected virtual float DistanceTime(Vector locationOfMate)
+        protected virtual float DistanceTime(/*Vector locationOfMate*/)
         {
-            float distance = (float)Math.Sqrt(Math.Pow(Math.Abs(Location.X - locationOfMate.X),2) + Math.Pow(Math.Abs(Location.Y - locationOfMate.Y), 2));
+            //float distance = (float)Math.Sqrt(Math.Pow(Math.Abs(Location.X - locationOfMate.X),2) + Math.Pow(Math.Abs(Location.Y - locationOfMate.Y), 2));
 
-            return distance / distanceDivider;
+            return mateDistance / distanceDivider;
         }
 
         /// <summary>
@@ -132,9 +138,10 @@ namespace AnimalSimulationVersion2
             if (e.SenderID != ID)
                 if (mateID == null)
                     if (e.Information.Species == Species)
-                        if (TimeToReproductionNeed <= 0)
-                            if (Age >= ReproductionAge)
-                                e.AddMateInformation((ID, Location));
+                        if (e.Information.Gender != Gender)
+                            if (TimeToReproductionNeed <= 0)
+                                if (Age >= ReproductionAge)
+                                    e.AddMateInformation((ID, Location));
         }
 
         protected override void RemoveSubscriptions()

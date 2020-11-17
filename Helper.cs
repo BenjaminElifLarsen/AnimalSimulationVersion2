@@ -23,7 +23,9 @@ namespace AnimalSimulationVersion2
         private Helper() { }
 
         public T[] DeepCopy<T>(T[] array)
-        { //can give null reference exception. If called with a null array, throw an exception or return null?
+        {
+            if (array == null)
+                return null;
             T[] newArray = new T[array.Length];
             for (int i = 0; i < newArray.Length; i++)
                 newArray[i] = array[i];
@@ -32,6 +34,8 @@ namespace AnimalSimulationVersion2
 
         public List<T> DeepCopy<T>(List<T> list)
         {
+            if (list == null)
+                return null;
             List<T> newList = new List<T>();
             for (int i = 0; i < list.Count; i++)
                 newList.Add(list[i]);
@@ -39,13 +43,15 @@ namespace AnimalSimulationVersion2
         }
         public void Add<T>(ref T[] array, T value)
         {
-            
-            List<T> list = array.ToList();
-            list.Add(value);
-            array = list.ToArray();
+            if (array != null)
+            {
+                List<T> list = array.ToList();
+                list.Add(value);
+                array = list.ToArray();
+            }
         }
 
-        public void Add<T>(List<T> list, T value) => list.Add(value);
+        public void Add<T>(List<T> list, T value) => list?.Add(value);
         
         public string GenerateID()
         {
@@ -53,17 +59,22 @@ namespace AnimalSimulationVersion2
             return idNumber.ToString();
         }
 
-        public void Remove<T>(List<T> list, T value) => list.Remove(value);
+        public void Remove<T>(List<T> list, T value) => list?.Remove(value);
 
         public void Remove<T>(ref T[] array, T value)
         {
-            List<T> list = array.ToList();
-            list.Remove(value);
-            array = list.ToArray();
+            if (array != null)
+            {
+                List<T> list = array.ToList();
+                list.Remove(value);
+                array = list.ToArray();
+            }
         }
 
         public bool Contains<T>(List<T> list, T value) //https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.equalitycomparer-1.default?view=netcore-3.1
         {
+            if (list == null)
+                return false;
             foreach (T val in list)
                 if (EqualityComparer<T>.Default.Equals(val,value))
                     return true;
@@ -72,10 +83,10 @@ namespace AnimalSimulationVersion2
 
         public bool Contains<T>(T[] array, T value)
         {
-            if (array == null) //later change this to throw a null reference exception.
+            if (array == null)
                 return false;
             foreach (T val in array)
-                if (EqualityComparer<T>.Default.Equals(val, value)) //needs testing, so set up unit testing stuff.
+                if (EqualityComparer<T>.Default.Equals(val, value))
                     return true;
             return false;
         }

@@ -2,14 +2,17 @@
 
 namespace AnimalSimulationVersion2
 {
+    /// <summary>
+    /// The superclass for all lifeforms. The domain of life. 
+    /// </summary>
     abstract class Eukaryote
-    { //consider having a vector or posistion class rather than using (X,Y). E.g. a class with 3 floats, X, Y, Z
+    { 
         /// <summary>
-        /// 
+        /// The amount of seconds this lifeform has been alive.
         /// </summary>
         protected float timeAlive;
         /// <summary>
-        /// 
+        /// The amount of time since last update in seconds. Used together with time sensitive variables and properties.
         /// </summary>
         protected float timeSinceLastUpdate;
         /// <summary>
@@ -25,19 +28,19 @@ namespace AnimalSimulationVersion2
         /// </summary>
         protected float periodInReproduction;
         /// <summary>
-        /// 
+        /// An instance of MapInformation.
         /// </summary>
         protected MapInformation mapInformation; //maybe have all variables as abstract, except those that is set in this class, properties so other will know to set them.
         /// <summary>
-        /// 
+        /// An instance of IHelper.
         /// </summary>
         protected IHelper helper;
         /// <summary>
-        /// 
+        /// An instance of AnimalPublisher.
         /// </summary>
         protected AnimalPublisher animalPublisher;
         /// <summary>
-        /// 
+        /// An instance of DrawPublisher.
         /// </summary>
         protected DrawPublisher drawPublisher;
 
@@ -82,7 +85,7 @@ namespace AnimalSimulationVersion2
         /// </summary>
         protected float Health { get; set; }
         /// <summary>
-        /// 
+        /// The maximum possible health of this lifeform.
         /// </summary>
         protected float MaxHealth { get; set; }
         /// <summary>
@@ -94,7 +97,7 @@ namespace AnimalSimulationVersion2
         /// </summary>
         protected float NutrienValue { get; set; }
         /// <summary>
-        /// 
+        /// The amount of seconds that makes up a single 'year'.
         /// </summary>
         protected float OneAgeInSeconds { get; set; }
 
@@ -103,6 +106,15 @@ namespace AnimalSimulationVersion2
         /// </summary>
         protected bool HasReproduced { get; set; } //find a better name
 
+        /// <summary>
+        /// Sets the Species and Location and call another constructor. //rewrite
+        /// </summary>
+        /// <param name="species"></param>
+        /// <param name="location"></param>
+        /// <param name="helper"></param>
+        /// <param name="animalPublisher"></param>
+        /// <param name="drawPublisher"></param>
+        /// <param name="mapInformation"></param>
         public Eukaryote(string species, Vector location, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : this(helper, animalPublisher, drawPublisher, mapInformation)
         {
             Species = species;
@@ -110,7 +122,13 @@ namespace AnimalSimulationVersion2
             HuntedBy = new string[0];
             MaxHealth = 100;
         }
-
+        /// <summary>
+        /// Sets all instances of classes and interfaces, sets properties that depends on these and subscribes the event handlers to the events.
+        /// </summary>
+        /// <param name="helper">The instance of IHelper.</param>
+        /// <param name="animalPublisher">The instance of AnimalPublisher.</param>
+        /// <param name="drawPublisher">The instance of DrawPublisher.</param>
+        /// <param name="mapInformation">The instance of MapInformation.</param>
         private Eukaryote(IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation)
         {
             this.helper = helper;
@@ -203,7 +221,7 @@ namespace AnimalSimulationVersion2
         protected virtual void RemovePredatorEventHandler(object sender, ControlEvents.RemovePreyEventArgs e)
         { //delegate. The predator has died or is lost to this lifeform. 
             if (e.IDs.senderID != ID)
-                if (helper.Contains(HuntedBy, e.IDs.senderID))
+                if (helper.Contains(HuntedBy, e.IDs.senderID)) //this should always be true. If it is not, then something has gone wrong.
                 {
                     string[] array = HuntedBy;
                     helper.Remove(ref array, e.IDs.senderID);
@@ -211,7 +229,7 @@ namespace AnimalSimulationVersion2
                 }
         }
         /// <summary>
-        /// 
+        /// Transmit the location back of this lifeform if <paramref name="e"/> contains the ID of this lifeform.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -220,13 +238,18 @@ namespace AnimalSimulationVersion2
             if (e.ReceiverID == ID)
                 e.Location = Location;
         }
+        /// <summary>
+        /// Transmit back the location and ID of this lifeform.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected virtual void GetAllLocationsEventHandler(object sender, ControlEvents.GetAllLocationsEventArgs e)
         { //delegate. Someone needs this one's location.
             if (e.SenderID != ID)
                 e.Add(Location, ID);
         }
         /// <summary>
-        /// 
+        /// This lifeform has been eaten if <paramref name="e"/> contains its ID.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -234,12 +257,12 @@ namespace AnimalSimulationVersion2
         { //delegate. This lifeform has been eaten.
             if (e.ReceiverID == ID)
             {
-                e.SetNutrience(NutrienValue);
+                e.SetNutrient(NutrienValue);
                 Death();
             }
         }
         /// <summary>
-        /// 
+        /// This lifeform has died if <paramref name="e"/> contains its ID.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -249,7 +272,7 @@ namespace AnimalSimulationVersion2
                 Death();
         }
         /// <summary>
-        /// 
+        /// The lifeform has taken damage.
         /// </summary>
         /// <remarks><paramref name="e"/> contains the ID of the sender, of the receiver and the amount of damage.</remarks>
         /// <param name="sender"></param>
@@ -277,12 +300,12 @@ namespace AnimalSimulationVersion2
             }
         }
         /// <summary>
-        /// 
+        /// Adds it species to a list in <paramref name="e"/>.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">Contains an Add(string:Species) method...</param>
         protected virtual void SpeciesAmountEventhandler(object sender, ControlEvents.SpeciesAndAmountEventArgs e)
-        {
+        { //delegate. Transmit species back.
             e.Add(Species);
         }
         /// <summary>

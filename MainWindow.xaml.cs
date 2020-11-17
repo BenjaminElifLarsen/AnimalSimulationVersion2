@@ -32,7 +32,12 @@ namespace AnimalSimulationVersion2
             DataContext = this;
             Loaded += OnWindowLoaded;
         }
-
+        /// <summary>
+        /// Runs code that depends on the UI components have been initialised.
+        /// Also starts two threads up, one for updating the UI and one for running the AI.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnWindowLoaded(object sender, RoutedEventArgs e)
         {
             MapInformation mapInformation = MapInformation.Instance;
@@ -55,6 +60,11 @@ namespace AnimalSimulationVersion2
             output.RunAIThread();
 
         }
+        /// <summary>
+        /// Evnethandler for updating the text UI.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Output_UpdateInformationEvent(object sender, TextEventArgs e)
         {
             string text = "";
@@ -62,6 +72,11 @@ namespace AnimalSimulationVersion2
                 text += species + ": " + amount + Environment.NewLine;
             UpdateInformation(text);
         }
+
+        /// <summary>
+        /// Updates the text visual part of the UI.
+        /// </summary>
+        /// <param name="text">The text to display.</param>
         public void UpdateInformation(string text)
         {
             if(LifeformInformation != null)
@@ -70,7 +85,11 @@ namespace AnimalSimulationVersion2
                     LifeformInformation.Text = text;
                 });
         }
-
+        /// <summary>
+        /// Eventhandler for updating the visual UI.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Output_UpdateVisualEvent(object sender, ImageEventArgs e)
         {
             BitmapSource MapImage = ConvertBitmapToBitmapImage(e.BitMapImage);
@@ -78,6 +97,10 @@ namespace AnimalSimulationVersion2
             UpdateVisualImage(MapImage);
         }
 
+        /// <summary>
+        /// Updates the image visual part of the UI.
+        /// </summary>
+        /// <param name="bitmapImage">The image to display.</param>
         public void UpdateVisualImage(BitmapSource bitmapImage) 
         {
             if(ImageBox != null)
@@ -88,6 +111,11 @@ namespace AnimalSimulationVersion2
                 });
         }
 
+        /// <summary>
+        /// Converts <paramref name="bitmap"/> to a BitmapImage.
+        /// </summary>
+        /// <param name="bitmap">The bitmap to convert.</param>
+        /// <returns>Returns a BitmapImage of <paramref name="bitmap"/>.</returns>
         private static BitmapImage ConvertBitmapToBitmapImage(Bitmap bitmap)
         {
             BitmapImage bitmapImage = new BitmapImage();

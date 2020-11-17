@@ -8,7 +8,6 @@ namespace AnimalSimulationVersion2
 {
     abstract class Animalia : Eukaryote
     {      
-        
         /// <summary>
         /// The ID of the food that is hunted.
         /// </summary>
@@ -18,7 +17,7 @@ namespace AnimalSimulationVersion2
         /// </summary>
         protected string mateID;
         /// <summary>
-        /// The possible genders of the animal and the change for a specific gender.
+        /// The possible genders of the animal with weights.
         /// </summary>
         protected (char Gender, byte Weight)[] genderInformation;
 
@@ -65,13 +64,13 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// Default constructor
         /// </summary>
-        /// <param name="species"></param>
-        /// <param name="location"></param>
-        /// <param name="foodSource"></param>
-        /// <param name="helper"></param>
-        /// <param name="animalPublisher"></param>
-        /// <param name="drawPublisher"></param>
-        /// <param name="mapInformation"></param>
+        /// <param name="species">The species of this animal.</param>
+        /// <param name="location">The start location of this animal.</param>
+        /// <param name="foodSource">The food source of this animal.</param>
+        /// <param name="helper">An instance of IHelper.</param>
+        /// <param name="animalPublisher">An instance of AnimalPublisher.</param>
+        /// <param name="drawPublisher">An instance of DrawPublisher.</param>
+        /// <param name="mapInformation">An instance of MapInformation.</param>
         public Animalia(string species, Vector location, string[] foodSource, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : this(species, location,helper, animalPublisher, drawPublisher, mapInformation)
         {
             MateLocation = Vector.Copy(location);
@@ -82,8 +81,8 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// Extra constructor that sets all Animalia eventhandlers //rewrite
         /// </summary>
-        /// <param name="species"></param>
-        /// <param name="location"></param>
+        /// <param name="species">The species of this animal.</param>
+        /// <param name="location">The start location of this animal.</param>
         /// <param name="helper">An instance of IHelper.</param>
         /// <param name="animalPublisher">An instance of AnimalPublisher.</param>
         /// <param name="drawPublisher">An instance of DrawPublisher.</param>
@@ -94,7 +93,6 @@ namespace AnimalSimulationVersion2
             animalPublisher.RaiseSetMateEvent += GetMateEventHandler;
             animalPublisher.RaiseRemoveMateEvent += RemoveMateEventHandler;
             animalPublisher.RaiseInformHunterOfPreyDeath += PreyHasDiedEventHandler;
-
         }
 
         /// <summary>
@@ -195,9 +193,6 @@ namespace AnimalSimulationVersion2
                 TimeToReproductionNeed = reproductionCooldown;
             }
         }
-
-
-
 
         /// <summary>
         /// Generates a gender for the animal  out from the data in <paramref name="genderInfo"/>.

@@ -53,11 +53,13 @@ namespace AnimalSimulationVersion2
                 Death();
             else
             {
+                #region Female Reproduction
                 if (Gender == 'f')
                     if (HasReproduced)
                         if (periodInReproduction >= lengthOfReproduction)
                             Reproduce();
-                #region
+                #endregion
+                #region Hiding
                 if (HuntedBy.Length > 0 && TimeHidden < MaxHideTime && CooldownBetweenHiding <= 0)
                     IsHiding = true;
                 else if (TimeHidden > MaxHideTime)
@@ -65,6 +67,7 @@ namespace AnimalSimulationVersion2
                 if (IsHiding)
                     HideFromPredator();
                 #endregion
+                #region Hunger
                 else if (Hunger < MaxHunger * HungerFoodSeekingLevel)
                 {
                     if (mateID != null) 
@@ -84,6 +87,8 @@ namespace AnimalSimulationVersion2
                     else
                         DefaultMovement();
                 }
+                #endregion
+                #region Mating
                 else if (Age >= ReproductionAge && TimeToReproductionNeed <= 0)
                 {
                     if (mateID == null)
@@ -98,9 +103,13 @@ namespace AnimalSimulationVersion2
                     else
                         DefaultMovement();
                 }
+                #endregion
+                #region Default Movement
                 else
                     DefaultMovement();
+                #endregion
             }
+
             void DefaultMovement()
             {
                 if (Vector.Compare(Location,MoveTo))

@@ -50,6 +50,9 @@ namespace AnimalSimulationVersion2
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Overridden version that updates properties of ISleep.
+        /// </summary>
         protected override void TimeUpdate()
         {
             base.TimeUpdate();
@@ -58,6 +61,9 @@ namespace AnimalSimulationVersion2
                 TimeSlept += timeSinceLastUpdate;
         }
 
+        /// <summary>
+        /// Overridden version that uses ISleep and IHunt.
+        /// </summary>
         protected override void AI() //maybe move the code in this over to Carnivore or even Animalia.
         {
             TimeUpdate();
@@ -145,7 +151,11 @@ namespace AnimalSimulationVersion2
         {
             throw new NotImplementedException();
         }
-        public (ushort X, ushort Y)[] GenerateTerritory()
+        /// <summary>
+        /// Generates a territory with four corners. 
+        /// </summary>
+        /// <returns></returns>
+        public (ushort X, ushort Y)[] GenerateTerritory() //Maybe return Vector[] instead of
         {
             byte maxLength = 200;
             (ushort X, ushort Y)[] corners = new (ushort X, ushort Y)[4];
@@ -161,25 +171,22 @@ namespace AnimalSimulationVersion2
             return corners;
         }
 
-
-
+        /// <summary>
+        /// Animal produces one or multiple offsprings at the same location as it.
+        /// Sets HasReproduced to false. 
+        /// </summary>
         protected override void Reproduce()
         {
-            //if (Gender == 'f') //later on, alter the FindMate() to check if the wolf is alpha, if a pack wolf, and only mate with the other alpha. 
-            //{ //maybe have both parents stay together for a while while the female wolf is pregnant. Check up if both parents stay with their children, also if they mate is for life
-                 //split this if-statment into another method so the female wolf can give birth even when hungry
-                 //generate a random number, need to depedency inject a random generator to ensure the values are not the same for each call if multiple calls happen quickly. Also needed for random movement.
-                    byte childAmount = (byte)helper.GenerateRandomNumber(BirthAmount.Minimum, BirthAmount.Maximum); //seems like wolves mate for life, but if losing a mate, they will quickly find another one.
-                    for (int i = 0; i < childAmount; i++) //perhaps use the Activator.CreateInstance(...) and this method takes a Type argument, then this implementation could be moved up to Animalia
-                        new Wolf(Species, Location, FoodSource, helper, animalPublisher, drawPublisher, mapInformation);
-                    HasReproduced = false;
-                
-            //}
+            byte childAmount = (byte)helper.GenerateRandomNumber(BirthAmount.Minimum, BirthAmount.Maximum); //seems like wolves mate for life, but if losing a mate, they will quickly find another one.
+            for (int i = 0; i < childAmount; i++) //perhaps use the Activator.CreateInstance(...) and this method takes a Type argument, then this implementation could be moved up to Animalia
+                new Wolf(Species, Location, FoodSource, helper, animalPublisher, drawPublisher, mapInformation);
+            HasReproduced = false;
         }
         
 
         /// <summary>
-        /// Wolf attacking prey. 
+        /// Predator attacks prey if possible. 
+        /// If the distance between the predator and the prey is zero, the predator eats the prey and returns to a normal movementspeed.
         /// </summary>
         public override void AttackPrey()
         {
@@ -196,6 +203,11 @@ namespace AnimalSimulationVersion2
             //} 
         }
 
+        /// <summary>
+        /// Tracks a prey. Gets the location of the prey. If the distance is same or closer than attack range, increae movementspeed.
+        /// Else it will calculate the possible next location out from the current and last location. 
+        /// Both cases MoveTo is set to a new Vector.
+        /// </summary>
         public override void TrackPrey()  //move this and the others into a single class and give an instance to it 
         { //maybe it should try and predict the next location of the prey if it is not in attackRange.
             if (PreyLastLocation == null)
@@ -223,6 +235,9 @@ namespace AnimalSimulationVersion2
             }
         }
 
+        /// <summary>
+        /// Sets Sleeping to true and TimeSlept to 0.
+        /// </summary>
         public void Sleep()
         {
             Sleeping = true;

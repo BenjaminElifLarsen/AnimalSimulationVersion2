@@ -125,8 +125,8 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// Informs <paramref name="receiverID"/> that it is mate to <paramref name="senderID"/>.
         /// </summary>
-        /// <param name="senderID"></param>
-        /// <param name="receiverID"></param>
+        /// <param name="senderID">The ID of the caller.</param>
+        /// <param name="receiverID">The ID of the prey</param>
         public void SetMate(string senderID, string receiverID)
         {
             OnSetMate(new ControlEvents.SetMateEventArgs(senderID, receiverID));
@@ -140,8 +140,8 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// Informs <paramref name="receiverID"/> that it is no longer mate to <paramref name="senderID"/>.
         /// </summary>
-        /// <param name="senderID"></param>
-        /// <param name="receiverID"></param>
+        /// <param name="senderID">The ID of the caller.</param>
+        /// <param name="receiverID">The ID of the prey</param>
         public void RemoveMate(string senderID, string receiverID)
         {
             OnRemoveMate(new ControlEvents.RemoveMateEventArgs(senderID, receiverID));
@@ -155,7 +155,7 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// Runs the AI and transmit <paramref name="timeSinceLastUpdate"/> with it for any code that needs to time interval between this call and the last call.
         /// </summary>
-        /// <param name="timeSinceLastUpdate"></param>
+        /// <param name="timeSinceLastUpdate">The amount of time that has passed since the last time the AI was called.</param>
         public void AI(float timeSinceLastUpdate)
         {
             OnAI(new ControlEvents.AIEventArgs(timeSinceLastUpdate));
@@ -214,7 +214,7 @@ namespace AnimalSimulationVersion2
             if(eventHandler != null)
             {
                 eventHandler.Invoke(this, e);
-                return e.GetNutrience();
+                return e.GetNutrient;
             }
             return -1;
         }

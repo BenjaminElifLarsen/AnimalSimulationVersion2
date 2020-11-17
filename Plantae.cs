@@ -13,13 +13,23 @@ namespace AnimalSimulationVersion2
     /// </remarks>
     abstract class Plantae : Eukaryote
     {
+        /// <summary>
+        /// The spread range of the plant. Used to minimize the likelihood of offspring spaawning on the same posistion.
+        /// </summary>
         protected float spreadRange;
-        protected (byte Minimum, byte Maximum) offspringAmount;
+        /// <summary>
+        /// The minimum and maximum amount of offsprings.
+        /// </summary>
+        protected (byte Minimum, byte Maximum) offspringAmount; //maybe move this up to Eukaryote.
 
         public Plantae(string species, Vector location, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, helper, animalPublisher, drawPublisher, mapInformation)
         { //could properly overwrite IsPossiblePreyEvnethandler to make (some specific) sure plants that are to old cannot be eated, e.g. a big tree
         }
 
+        /// <summary>
+        /// The basic AI of any plants. Will only check if Health is below or equal 0 or if Age is above or equal max health.
+        /// If either is true it will run Death().
+        /// </summary>
         protected override void AI()
         {
             if (Age >= MaxAge || Health <= 0)
@@ -27,13 +37,13 @@ namespace AnimalSimulationVersion2
         }
 
         /// <summary>
-        /// Baisc implementation of polinating the plant.
+        /// Polinating the plant.
         /// </summary>
         protected abstract void Polinate();
         /// <summary>
         /// Basic implementation of reproduction
         /// </summary>
-        protected override void Reproduce() //needs testing
+        protected override void Reproduce() 
         {
             byte amountOfOffsprings = (byte)helper.GenerateRandomNumber(offspringAmount.Minimum, offspringAmount.Maximum);
             object[] dataObject = new object[6];
@@ -42,10 +52,15 @@ namespace AnimalSimulationVersion2
             dataObject[3] = animalPublisher;
             dataObject[4] = drawPublisher;
             dataObject[5] = mapInformation;
-            GenerateChildren(amountOfOffsprings, dataObject);
+            GenerateOffspring(amountOfOffsprings, dataObject);
             HasReproduced = false;
         }
-        protected void GenerateChildren(int amountOfOffsprings, object[] objArray)
+        /// <summary>
+        /// Generates the spawn location of each offspring and creates a new instance of the object that is calling the function.
+        /// </summary>
+        /// <param name="amountOfOffsprings">The amount of offsprings.</param>
+        /// <param name="objArray">An array of objects that mirror, the parameter types, of a constructor of the class to create an instance of with values in each index set, but index 1.</param>
+        protected void GenerateOffspring(int amountOfOffsprings, object[] objArray)
         {
             for (byte i = 0; i < amountOfOffsprings; i++)
             {
