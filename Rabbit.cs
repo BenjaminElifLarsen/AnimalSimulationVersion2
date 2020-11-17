@@ -43,7 +43,9 @@ namespace AnimalSimulationVersion2
             TimeThresholdForBeingHuntedAgain = 4;
         }
 
-
+        /// <summary>
+        /// Overridden AI that implements IHide.
+        /// </summary>
         protected override void AI()
         {
             TimeUpdate();
@@ -55,13 +57,15 @@ namespace AnimalSimulationVersion2
                     if (HasReproduced)
                         if (periodInReproduction >= lengthOfReproduction)
                             Reproduce();
+                #region
                 if (HuntedBy.Length > 0 && TimeHidden < MaxHideTime && CooldownBetweenHiding <= 0)
                     IsHiding = true;
                 else if (TimeHidden > MaxHideTime)
                     IsHiding = false;
                 if (IsHiding)
                     HideFromPredator();
-                else if(Hunger < MaxHunger * HungerFoodSeekingLevel)
+                #endregion
+                else if (Hunger < MaxHunger * HungerFoodSeekingLevel)
                 {
                     if (mateID != null) 
                     { 
@@ -105,12 +109,14 @@ namespace AnimalSimulationVersion2
                 Move();
             }
         }
-
+        /// <summary>
+        /// overrides Mate(). Calls the base and contains an extra check to if mateID should be set to null.
+        /// </summary>
         protected override void Mate()
         {
             base.Mate();
-                if (Vector.Compare(Location, MateLocation))
-                    mateID = null;
+            if (Vector.Compare(Location, MateLocation))
+                mateID = null;
         }
 
         protected override void TimeUpdate()
@@ -141,6 +147,9 @@ namespace AnimalSimulationVersion2
             base.TimeUpdate();
         }
 
+        /// <summary>
+        /// The prey will try and hide for a predator. The more predators the harder it is.
+        /// </summary>
         public void HideFromPredator()
         {
             int valueToRollOver = (int)(StealthLevel * 8 + 30 * HuntedBy.Length);
@@ -148,7 +157,9 @@ namespace AnimalSimulationVersion2
             if (rolledNUmber > valueToRollOver)
                 LostPredator();
         }
-
+        /// <summary>
+        /// The prey will lose the first predator that is after it.
+        /// </summary>
         public new void LostPredator()
         {
             animalPublisher.InformPredatorOfPreyDeath(ID, HuntedBy[0]); //perhaps later change it to remove the nearest one
@@ -167,12 +178,12 @@ namespace AnimalSimulationVersion2
             byte childAmount = (byte)helper.GenerateRandomNumber(BirthAmount.Minimum, BirthAmount.Maximum); 
             for (int i = 0; i < childAmount; i++)
                 new Rabbit(Species, Location, FoodSource, helper, animalPublisher, drawPublisher, mapInformation);
-            //TimeToReproductionNeed = reproductionCooldown - periodInPregnacy; 
             HasReproduced = false;
         }
 
         /// <summary>
         /// Is asked for information such that another animal can decided if this animal is food or not.
+        /// Overridden to ensure that predators that were lost not to long ago cannot select this prey again for a while.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
