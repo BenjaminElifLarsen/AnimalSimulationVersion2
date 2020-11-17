@@ -26,24 +26,22 @@ namespace AnimalSimulationVersion2
     /// </summary>
     public partial class MainWindow : Window
     {
-        
-        private Image image;
         public MainWindow()
         {
             InitializeComponent();
             DataContext = this;
-            image = ImageBox;
             Loaded += OnWindowLoaded;
         }
 
         private void OnWindowLoaded(object sender, RoutedEventArgs e)
         {
             MapInformation mapInformation = MapInformation.Instance;
-            mapInformation.SetSizeOfMap = ((ushort)image.Width, (ushort)image.Height);
+            mapInformation.SetSizeOfMap = ((ushort)ImageBox.Width, (ushort)ImageBox.Height);
             Output output = Output.Instance;
 
             output.PaintEvent += Output_UpdateVisualEvent;
-            //have a function to calculate a random start Vector
+            output.TextEvent += Output_UpdateInformationEvent;
+
             output.Map = new Bitmap(mapInformation.GetSizeOfMap.width, mapInformation.GetSizeOfMap.height);
             for(int i = 0; i < 6; i++)
                 new Wolf("Carnis Lupus", new Vector(mapInformation, Helper.Instance), new string[] { "Oryctolagus Cuniculus" }, Helper.Instance, Publisher.GetAnimalInstance, Publisher.GetDrawInstance, MapInformation.Instance); //here for testing and nothing else.
@@ -57,21 +55,37 @@ namespace AnimalSimulationVersion2
             output.RunAIThread();
 
         }
-
-        private void Output_UpdateVisualEvent(object sender, ImageEventArgs eva)
+        private void Output_UpdateInformationEvent(object sender, TextEventArgs e)
         {
-            BitmapSource MapImage = ConvertBitmapToBitmapImage(eva.BitMapImage);
+            string text = "";
+            foreach ((string species, ushort amount) in e.ListInformation)
+                text += species + ": " + amount + Environment.NewLine;
+            UpdateInformation(text);
+        }
+        public void UpdateInformation(string text)
+        {
+            if(LifeformInformation != null)
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    LifeformInformation.Text = text;
+                });
+        }
+
+        private void Output_UpdateVisualEvent(object sender, ImageEventArgs e)
+        {
+            BitmapSource MapImage = ConvertBitmapToBitmapImage(e.BitMapImage);
             MapImage.Freeze();
             UpdateVisualImage(MapImage);
         }
 
         public void UpdateVisualImage(BitmapSource bitmapImage) 
         {
-            Application.Current.Dispatcher.Invoke(() => //can cause an exception if closing down the window.
-            {
-                ImageBox.Source.Freeze();
-                ImageBox.Source = bitmapImage;
-            });
+            if(ImageBox != null)
+                Application.Current.Dispatcher.Invoke(() => //can cause an exception if closing down the window.
+                {
+                    ImageBox.Source.Freeze();
+                    ImageBox.Source = bitmapImage;
+                });
         }
 
         private static BitmapImage ConvertBitmapToBitmapImage(Bitmap bitmap)
