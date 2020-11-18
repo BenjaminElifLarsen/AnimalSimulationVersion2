@@ -8,7 +8,7 @@ namespace AnimalSimulationVersion2
     /// 
     /// </summary>
     public interface IHelper
-    {
+    { 
         /// <summary>
         /// Returns a deep copy of <paramref name="list"/>.
         /// </summary>
@@ -51,14 +51,30 @@ namespace AnimalSimulationVersion2
         /// <typeparam name="T">The type of the array.</typeparam>
         /// <param name="array">The array to remove from.</param>
         /// <param name="value">The value to remove.</param>
-        public void Remove<T>(ref T[] array, T value);
+        public void Remove<T>(ref T[] array, T value); 
+        /// <summary>
+        /// Replaces <paramref name="oldValue"/> with <paramref name="newValue"/> in <paramref name="list"/> if <paramref name="oldValue"/> is present in <paramref name="list"/>.
+        /// </summary>
+        /// <typeparam name="T">The type.</typeparam>
+        /// <param name="list">The list of data.</param>
+        /// <param name="oldValue">The old value to replace.</param>
+        /// <param name="newValue">The new value to replace.</param>
+        public void Replace<T>(List<T> list, T oldValue, T newValue);
+        /// <summary>
+        /// Replaces <paramref name="oldValue"/> with <paramref name="newValue"/> in <paramref name="array"/> if <paramref name="oldValue"/> is present in <paramref name="array"/>.
+        /// </summary>
+        /// <typeparam name="T">The type.</typeparam>
+        /// <param name="array">The array of data.</param>
+        /// <param name="oldValue">The old value to replace.</param>
+        /// <param name="newValue">The new value to replace.</param>
+        public void Replace<T>(T[] array, T oldValue, T newValue);
         /// <summary>
         /// Checks if <paramref name="value"/> is present in <paramref name="list"/> and returns true if it does.
         /// </summary>
         /// <typeparam name="T">The type of the list.</typeparam>
         /// <param name="list">The list to check.</param>
         /// <param name="value">The value to check for.</param>
-        /// <returns>Returns true if <paramref name="value"/> is present in <paramref name="list"/> else false.</returns>
+        /// <returns>Returns true if <paramref name="value"/> is present in <paramref name="list"/> else false.</returns>  
         public bool Contains<T>(List<T> list, T value);
         /// <summary>
         /// Checks if <paramref name="value"/> is present in <paramref name="array"/> and returns true if it does.

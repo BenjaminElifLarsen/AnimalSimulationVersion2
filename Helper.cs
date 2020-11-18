@@ -102,5 +102,24 @@ namespace AnimalSimulationVersion2
             return (value1, value2);
         }
 
+        public void Replace<T>(List<T> list, T oldValue, T newValue)
+        {
+            for (int i = 0; i < list.Count; i++)
+                if (EqualityComparer<T>.Default.Equals(list[i], oldValue))
+                {
+                    list[i] = newValue;
+                    break;
+                }
+        }
+
+        public void Replace<T>(T[] array, T oldValue, T newValue)
+        {
+            for (int i = 0; i < array.Length; i++)
+                if (EqualityComparer<T>.Default.Equals(array[i], oldValue))
+                {
+                    array[i] = newValue;
+                    break;
+                }
+        }
     }
 }
