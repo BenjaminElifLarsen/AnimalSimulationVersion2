@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AnimalSimulationVersion2
 {
-    class AnimalPublisher
+    class LifeformPublisher
     {
         //prey
         public delegate void getPossiblePreyEventHandler(object sender, ControlEvents.GetPossiblePreyEventArgs args);
@@ -51,6 +51,16 @@ namespace AnimalSimulationVersion2
         //damage
         public delegate void damageEventHandler(object sender, ControlEvents.DoHealthDamageEventArgs args);
         public event damageEventHandler RaiseDamage;
+
+        //relationship
+        public delegate void transmitDataEventHandler(object sender, ControlEvents.TransmitDataEventArgs args);
+        public event transmitDataEventHandler RaiseTransmitData;
+
+        public delegate void possibleRelationshipJoinerEvnetHandler(object sender, ControlEvents.RelationshipCandidatesEventArgs args);
+        public event possibleRelationshipJoinerEvnetHandler RaisePossibleRelationshipJoiner;
+
+
+
 
         /// <summary>
         /// Gets the location, ID and species of every single subscriber.
@@ -169,8 +179,8 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// Gets the location of <paramref name="receiverID"/>.
         /// </summary>
-        /// <param name="receiverID"></param>
-        /// <returns></returns>
+        /// <param name="receiverID">The ID of the lifeform whoes location is wanted.</param>
+        /// <returns>A Vector with the location of <paramref name="receiverID"/>.</returns>
         public Vector GetLocation(string receiverID)
         {
             return OnGetLocation(new ControlEvents.GetOtherLocationEventArgs(receiverID));
@@ -188,7 +198,7 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// Informs <paramref name="receiverID"/> that it has died.
         /// </summary>
-        /// <param name="receiverID"></param>
+        /// <param name="receiverID">The ID of the lifeform that have died.</param>
         public void Death(string receiverID)
         {
             OnDeath(new ControlEvents.DeadEventArgs(receiverID));
@@ -202,8 +212,8 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// Informs <paramref name="receiverID"/> that it has been eaten.
         /// </summary>
-        /// <param name="receiverID"></param>
-        /// <returns></returns>
+        /// <param name="receiverID">The ID of the lifeform that has been eaten</param>
+        /// <returns>The nutrient value of <paramref name="receiverID"/>.</returns>
         public float Eat(string receiverID)
         {
             return OnEat(new ControlEvents.EatenEventArgs(receiverID));
@@ -221,8 +231,8 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// Informs <paramref name="receiverID"/> of the death of its prey <paramref name="senderID"/>.
         /// </summary>
-        /// <param name="senderID"></param>
-        /// <param name="receiverID"></param>
+        /// <param name="senderID">The ID of the prey.</param>
+        /// <param name="receiverID">The ID of the predator.</param>
         public void InformPredatorOfPreyDeath(string senderID, string receiverID)
         { //rename this and the controlevent so their names also make sense for losing a prey
             OnInformPredatorOfDeath(new ControlEvents.InformPredatorOfPreyDeathEventArgs(senderID, receiverID));
@@ -233,7 +243,12 @@ namespace AnimalSimulationVersion2
             if (eventHandler != null)
                 eventHandler.Invoke(this, e);
         }
-
+        /// <summary>
+        /// Informs <paramref name="receiverID"/> that <paramref name="senderID"/> attacked it for <paramref name="damage"/>.
+        /// </summary>
+        /// <param name="senderID">The ID of the attacker.</param>
+        /// <param name="receiverID">The ID of the attacked.</param>
+        /// <param name="damage">The amount of damage done.</param>
         public void DamageLifeform(string senderID, string receiverID, byte damage)
         {
             OnDamageLifeform(new ControlEvents.DoHealthDamageEventArgs(senderID, receiverID, damage));
@@ -244,6 +259,10 @@ namespace AnimalSimulationVersion2
             if (eventHandler != null)
                 eventHandler.Invoke(this, e);
         }
+        /// <summary>
+        /// Gets the location of every lifeform.
+        /// </summary>
+        /// <param name="senderID">The ID of the sender, used to ensure the sender does not react to the event.</param>
         public void GetAllLocations(string senderID)
         {
             OnGetAllLocations(new ControlEvents.GetAllLocationsEventArgs(senderID));
@@ -255,6 +274,44 @@ namespace AnimalSimulationVersion2
             {
                 eventHandler.Invoke(this, e);
                 return e.GetInformation;
+            }
+            return null;
+        }
+        /// <summary>
+        /// Transmit <paramref name="data"/> from <paramref name="senderID"/> to <paramref name="receivierID"/>.
+        /// </summary>
+        /// <remarks>This event can be used to tranmit any form of data from one lifeform to another as long time the receiver knows how to handle the data.</remarks>
+        /// <param name="senderID">The ID of the data sender.</param>
+        /// <param name="receivierID">The ID of the receiver of the data.</param>
+        /// <param name="data">An object of data.</param>
+        public void TransmitData(string senderID, string receivierID, object data)
+        {
+            OnTransmitData(new ControlEvents.TransmitDataEventArgs(senderID, receivierID, data));
+        }
+        protected void OnTransmitData(ControlEvents.TransmitDataEventArgs e)
+        {
+            transmitDataEventHandler eventHandler = RaiseTransmitData;
+            if (eventHandler != null)
+                eventHandler.Invoke(this, e);
+        }
+        /// <summary>
+        /// Allows a lifefrom to contact other lifeforms if they implement an interface of type <paramref name="type"/>. The receiver(s) can look at <paramref name="species"/> to help decide if they should response.
+        /// </summary>
+        /// <param name="senderID">The sender of this event, used to prevent them reacting to the event.</param>
+        /// <param name="species">The species of <paramref name="senderID"/>.</param>
+        /// <param name="type">A Type, should be used to check for interface implementation.</param>
+        /// <returns>A list of possible candidates for a pack.</returns>
+        public List<(Vector Location, string ID, char Gender)> PossibleRelationshipJoiner(string senderID, string species, Type type)
+        {
+            return OnPossibleRelationshipJoiner(new ControlEvents.RelationshipCandidatesEventArgs(senderID, species, type));
+        }
+        protected List<(Vector Location, string ID, char Gender)> OnPossibleRelationshipJoiner(ControlEvents.RelationshipCandidatesEventArgs e)
+        {
+            possibleRelationshipJoinerEvnetHandler evnetHandler = RaisePossibleRelationshipJoiner;
+            if(evnetHandler != null)
+            {
+                evnetHandler.Invoke(this, e);
+                return e.GetList;
             }
             return null;
         }
