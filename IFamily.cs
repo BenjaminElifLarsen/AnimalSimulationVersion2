@@ -13,7 +13,7 @@ namespace AnimalSimulationVersion2
         /// Contains the roles a lifeform can have toward another lifeform.
         /// </summary>
         public enum FamilyRelationship
-        { //polar bear males and hunt their children, yet a female will not.
+        { //polar bear males and hunt their children, yet a female will not. Can always do a gender check
             Parent = 1,
             Sibling = 2,
             Child = 3,
@@ -47,5 +47,11 @@ namespace AnimalSimulationVersion2
         /// True if the lifeform can mate with its children.
         /// </summary>
         public abstract bool CanMateChildren { get; set; }
+        /// <summary>
+        /// Used to receiver data for Family.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e">Contains IDs and Data.</param>
+        public abstract void RelationshipEventHandler(object sender, ControlEvents.TransmitDataEventArgs e);
     }
 }
