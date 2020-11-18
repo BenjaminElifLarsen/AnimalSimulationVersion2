@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AnimalSimulationVersion2
 {
-    class Rabbit : Herbavore, IHide
+    class HidingHerbavore : Herbavore, IHide
     {
         public int StealthLevel { get; set; }
         public float TimeHidden { get; set; }
@@ -16,13 +16,13 @@ namespace AnimalSimulationVersion2
 
         //public (float TimeSinceLost, string HunterID)[] LostPredators { get; set; }
 
-        public Rabbit(string species, Vector location, string[] foodSource, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, animalPublisher, drawPublisher, mapInformation)
+        public HidingHerbavore(string species, Vector location, string[] foodSource, IHelper helper, LifeformPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, animalPublisher, drawPublisher, mapInformation)
         {
             MovementSpeed = 10;
             CurrentMovementSpeed = MovementSpeed;
             Colour = (0,120,120);
             Design = new Point[] { new Point(3,0), new Point(6, 6), new Point(0, 6) };
-            NutrienValue = 100;
+            NutrientValue = 100;
 
             genderInformation = new (char Gender, byte Weight)[] { ('f', 50), ('m', 50) };
             Gender = GenerateGender(genderInformation);
@@ -72,14 +72,14 @@ namespace AnimalSimulationVersion2
                 {
                     if (mateID != null) 
                     { 
-                        animalPublisher.RemoveMate(ID, mateID);
+                        lifeformPublisher.RemoveMate(ID, mateID);
                         mateID = null;
                     }
                     if (foodID == null)
                         foodID = FindFood();
                     if (foodID != null)
                     {
-                        MoveTo = animalPublisher.GetLocation(foodID);
+                        MoveTo = lifeformPublisher.GetLocation(foodID);
                         Move();
                         if (Vector.Compare(Location, MoveTo))
                             Eat();
@@ -96,7 +96,7 @@ namespace AnimalSimulationVersion2
                     if (mateID != null)
                     {
                         CurrentMovementSpeed = MovementSpeed;
-                        MoveTo = MateLocation = GetMateLocation(mateID);
+                        MoveTo = MateLocation = GetLifeformLocation(mateID);
                         Move();
                         Mate();
                     }
@@ -171,7 +171,7 @@ namespace AnimalSimulationVersion2
         /// </summary>
         public new void LostPredator()
         {
-            animalPublisher.InformPredatorOfPreyDeath(ID, HuntedBy[0]); //perhaps later change it to remove the nearest one
+            lifeformPublisher.InformPredatorOfPreyDeath(ID, HuntedBy[0]); //perhaps later change it to remove the nearest one
             string[] array = HuntedBy;
             helper.Remove(ref array, HuntedBy[0]);
             (string ID, float TimeSinceEscape)[] predators = LostPredators;
@@ -182,13 +182,13 @@ namespace AnimalSimulationVersion2
             IsHiding = false;
         }
 
-        protected override void Reproduce()
-        {
-            byte childAmount = (byte)helper.GenerateRandomNumber(BirthAmount.Minimum, BirthAmount.Maximum); 
-            for (int i = 0; i < childAmount; i++)
-                new Rabbit(Species, Location, FoodSource, helper, animalPublisher, drawPublisher, mapInformation);
-            HasReproduced = false;
-        }
+        //protected override void Reproduce()
+        //{
+        //    byte childAmount = (byte)helper.GenerateRandomNumber(BirthAmount.Minimum, BirthAmount.Maximum); 
+        //    for (int i = 0; i < childAmount; i++)
+        //        new HidingHerbavore(Species, Location, FoodSource, helper, animalPublisher, drawPublisher, mapInformation);
+        //    HasReproduced = false;
+        //}
 
         /// <summary>
         /// Is asked for information such that another animal can decided if this animal is food or not.
