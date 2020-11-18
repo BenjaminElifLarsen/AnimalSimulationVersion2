@@ -391,5 +391,69 @@ namespace AnimalSimulationVersion2
                 }
             }
         }
+        /// <summary>
+        /// Class that holds event data for transmitting an object to a lifeform.
+        /// </summary>
+        public class TransmitDataEventArgs//figure out a better name
+        {
+            /// <summary>
+            /// A Tuple holding both IDs.
+            /// </summary>
+            public (string SenderID, string ReceiverID) IDs { get; }
+            /// <summary>
+            /// An object of data.
+            /// </summary>
+            public object Data { get; }
+            /// <summary>
+            /// Basic constructor.
+            /// </summary>
+            /// <param name="senderID">The ID of the sender.</param>
+            /// <param name="receiverID">The ID of the receiver.</param>
+            /// <param name="data">The data to be transmitted.</param>
+            public TransmitDataEventArgs(string senderID, string receiverID, object data)
+            {
+                IDs = (senderID, receiverID);
+                Data = data;
+            }
+        }
+        /// <summary>
+        /// Class that holds event data for finding possible relationship candidates. 
+        /// </summary>
+        public class RelationshipCandidatesEventArgs
+        {
+            private List<(Vector Location, string ID, char Gender)> information = new List<(Vector Location, string ID, char Gender)>();
+            /// <summary>
+            /// The ID of the sender.
+            /// </summary>
+            public string SenderID { get; }
+            /// <summary>
+            /// THe species of the sender.
+            /// </summary>
+            public string Species { get; }
+            public Type RelationshipType { get; }
+            /// <summary>
+            /// Basic constructor.
+            /// </summary>
+            /// <param name="senderID">The ID of the sender.</param>
+            /// <param name="species">The species of the sender.</param>
+            /// <param name="relationshipType">The type of the relationship interface.</param>
+            public RelationshipCandidatesEventArgs(string senderID, string species, Type relationshipType)
+            {
+                SenderID = senderID;
+                Species = species;
+                RelationshipType = relationshipType;
+            }
+            /// <summary>
+            /// Gets a list of possible relationship candidates.
+            /// </summary>
+            public List<(Vector Location, string ID, char Gender)> GetList => information;
+            /// <summary>
+            /// Adds the lifeform as a possible candicate.
+            /// </summary>
+            /// <param name="location">The location of the lifeform.</param>
+            /// <param name="ID">The ID of the lifeform.</param>
+            /// <param name="gender">The gender of the lifeform.</param>
+            public void Add(Vector location, string ID, char gender) => information.Add((location, ID, gender));
+        }
     }
 }
