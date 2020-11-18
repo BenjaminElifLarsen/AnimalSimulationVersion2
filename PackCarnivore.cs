@@ -39,6 +39,7 @@ namespace AnimalSimulationVersion2
         { 
             base.AI();
             GeneratePack();
+            Fight();
         }
 
         protected override void TimeUpdate()
@@ -48,17 +49,26 @@ namespace AnimalSimulationVersion2
                 TimeSinceLastFight -= timeSinceLastUpdate;
         }
 
-        public void Fight(string ID)
+        public void Fight()
         { //maybe allow damage to be in range, but then the damage event needs to use float instead of. Maybe damage should also be calculated as a per second (could go wrong with bad slowdowns)
             if(CanFightForAlpha) //in both cases the animals need to be close enough to each other.
                 if(Relationship != IPack.PackRelationship.Alpha)
                 {
                     if(TimeSinceLastFight <= 0)
                     { //can attack the alpha
-
+                        if(TimeToReproductionNeed <= -100)
+                        { //it is something... it is something
+                            foreach((IPack.PackRelationship relationship, string id, char gender) in PackMembers)
+                                if(relationship == IPack.PackRelationship.Alpha && gender == Gender)
+                                {
+                                    byte damage = (byte)helper.GenerateRandomNumber(0, 16);
+                                    lifeformPublisher.DamageLifeform(id, id, damage);
+                                    break;
+                                }
+                        }
                     }
                 }
-                else if (AttackedBy != null)
+                else if (AttackedBy != null) //AttackedBy needs to be set to null at some point and also there might be multiple attackers rather than 1
                 { //is alpha and being attacked. 
                     byte damage = (byte)helper.GenerateRandomNumber(0, 16);
                     lifeformPublisher.DamageLifeform(ID, AttackedBy, damage);

@@ -50,7 +50,7 @@ namespace AnimalSimulationVersion2
         /// Allows a pack member to fight another pack member.
         /// </summary>
         /// <param name="ID">The ID of the target</param>
-        public abstract void Fight(string ID); //transmit delegate. 
+        public abstract void Fight(); //transmit delegate. 
         /// <summary>
         /// Generates a pack.
         /// </summary>
