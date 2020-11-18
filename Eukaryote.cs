@@ -38,7 +38,7 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// An instance of AnimalPublisher.
         /// </summary>
-        protected AnimalPublisher animalPublisher;
+        protected LifeformPublisher lifeformPublisher;
         /// <summary>
         /// An instance of DrawPublisher.
         /// </summary>
@@ -95,7 +95,7 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// The nutrience value of the lifeform.
         /// </summary>
-        protected float NutrienValue { get; set; }
+        protected float NutrientValue { get; set; }
         /// <summary>
         /// The amount of seconds that makes up a single 'year'.
         /// </summary>
@@ -115,7 +115,7 @@ namespace AnimalSimulationVersion2
         /// <param name="animalPublisher"></param>
         /// <param name="drawPublisher"></param>
         /// <param name="mapInformation"></param>
-        public Eukaryote(string species, Vector location, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : this(helper, animalPublisher, drawPublisher, mapInformation)
+        public Eukaryote(string species, Vector location, IHelper helper, LifeformPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : this(helper, animalPublisher, drawPublisher, mapInformation)
         {
             Species = species;
             Location = location;
@@ -126,31 +126,31 @@ namespace AnimalSimulationVersion2
         /// Sets all instances of classes and interfaces, sets properties that depends on these and subscribes the event handlers to the events.
         /// </summary>
         /// <param name="helper">The instance of IHelper.</param>
-        /// <param name="animalPublisher">The instance of AnimalPublisher.</param>
+        /// <param name="lifeformPublisher">The instance of AnimalPublisher.</param>
         /// <param name="drawPublisher">The instance of DrawPublisher.</param>
         /// <param name="mapInformation">The instance of MapInformation.</param>
-        private Eukaryote(IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation)
+        private Eukaryote(IHelper helper, LifeformPublisher lifeformPublisher, DrawPublisher drawPublisher, MapInformation mapInformation)
         {
             this.helper = helper;
-            this.animalPublisher = animalPublisher;
+            this.lifeformPublisher = lifeformPublisher;
             this.drawPublisher = drawPublisher;
             this.mapInformation = mapInformation;
 
             OneAgeInSeconds = mapInformation.OneAgeInSeconds;
             ID = helper.GenerateID();
 
-            animalPublisher.RaiseFindPreyEvent += IsPossiblePreyEventHandler;
-            animalPublisher.RaiseSetPreyEvent += IsPreyEventHandler;
-            animalPublisher.RaiseRemovePreyEvent += RemovePredatorEventHandler;
-            animalPublisher.RaiseAIEvent += ControlEventHandler;
-            animalPublisher.RaiseDied += DeathEventHandler;
-            animalPublisher.RaiseEaten += EatenEventHandler;
-            animalPublisher.RaiseGetLocation += LocationEventHandler;
-            animalPublisher.RaiseDamage += DamageEventHandler;
-            animalPublisher.RaiseGetAllLocations += GetAllLocationsEventHandler;
+            this.lifeformPublisher.RaiseFindPreyEvent += IsPossiblePreyEventHandler;
+            this.lifeformPublisher.RaiseSetPreyEvent += IsPreyEventHandler;
+            this.lifeformPublisher.RaiseRemovePreyEvent += RemovePredatorEventHandler;
+            this.lifeformPublisher.RaiseAIEvent += ControlEventHandler;
+            this.lifeformPublisher.RaiseDied += DeathEventHandler;
+            this.lifeformPublisher.RaiseEaten += EatenEventHandler;
+            this.lifeformPublisher.RaiseGetLocation += LocationEventHandler;
+            this.lifeformPublisher.RaiseDamage += DamageEventHandler;
+            this.lifeformPublisher.RaiseGetAllLocations += GetAllLocationsEventHandler;
 
-            drawPublisher.RaiseDrawEvent += DrawEventHandler;
-            drawPublisher.RaiseSpeciesAndAmountEvent += SpeciesAmountEventhandler;
+            this.drawPublisher.RaiseDrawEvent += DrawEventHandler;
+            this.drawPublisher.RaiseSpeciesAndAmountEvent += SpeciesAmountEventhandler;
         }
         /// <summary>
         /// The 'AI' of the lifeform.
@@ -182,7 +182,7 @@ namespace AnimalSimulationVersion2
             if (HuntedBy.Length != 0)
             {
                 foreach (string hunterID in HuntedBy)
-                    animalPublisher.InformPredatorOfPreyDeath(ID, hunterID);
+                    lifeformPublisher.InformPredatorOfPreyDeath(ID, hunterID);
             }
             RemoveSubscriptions();
         }
@@ -236,7 +236,7 @@ namespace AnimalSimulationVersion2
         protected virtual void LocationEventHandler(object sender, ControlEvents.GetOtherLocationEventArgs e)
         { //delegate. Someone needs this one's location.
             if (e.ReceiverID == ID)
-                e.Location = Location;
+                e.Location = Vector.Copy(Location);
         }
         /// <summary>
         /// Transmit back the location and ID of this lifeform.
@@ -257,7 +257,7 @@ namespace AnimalSimulationVersion2
         { //delegate. This lifeform has been eaten.
             if (e.ReceiverID == ID)
             {
-                e.SetNutrient(NutrienValue);
+                e.SetNutrient(NutrientValue);
                 Death();
             }
         }
@@ -323,15 +323,15 @@ namespace AnimalSimulationVersion2
         /// </summary>
         protected virtual void RemoveSubscriptions()
         {
-            animalPublisher.RaiseFindPreyEvent -= IsPossiblePreyEventHandler;
-            animalPublisher.RaiseSetPreyEvent -= IsPreyEventHandler;
-            animalPublisher.RaiseRemovePreyEvent -= RemovePredatorEventHandler;
-            animalPublisher.RaiseAIEvent -= ControlEventHandler;
-            animalPublisher.RaiseDied -= DeathEventHandler;
-            animalPublisher.RaiseEaten -= EatenEventHandler;
-            animalPublisher.RaiseGetLocation -= LocationEventHandler;
-            animalPublisher.RaiseDamage -= DamageEventHandler;
-            animalPublisher.RaiseGetAllLocations -= GetAllLocationsEventHandler;
+            lifeformPublisher.RaiseFindPreyEvent -= IsPossiblePreyEventHandler;
+            lifeformPublisher.RaiseSetPreyEvent -= IsPreyEventHandler;
+            lifeformPublisher.RaiseRemovePreyEvent -= RemovePredatorEventHandler;
+            lifeformPublisher.RaiseAIEvent -= ControlEventHandler;
+            lifeformPublisher.RaiseDied -= DeathEventHandler;
+            lifeformPublisher.RaiseEaten -= EatenEventHandler;
+            lifeformPublisher.RaiseGetLocation -= LocationEventHandler;
+            lifeformPublisher.RaiseDamage -= DamageEventHandler;
+            lifeformPublisher.RaiseGetAllLocations -= GetAllLocationsEventHandler;
 
             drawPublisher.RaiseDrawEvent -= DrawEventHandler;
             drawPublisher.RaiseSpeciesAndAmountEvent -= SpeciesAmountEventhandler;

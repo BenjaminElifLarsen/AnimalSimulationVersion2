@@ -12,7 +12,7 @@ namespace AnimalSimulationVersion2
         public abstract float AttackSpeedMultiplier { get; set; }
         public Vector PreyLastLocation { get; set; }
 
-        public Carnivore(string species, Vector location, string[] foodSource, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, animalPublisher, drawPublisher, mapInformation)
+        public Carnivore(string species, Vector location, string[] foodSource, IHelper helper, LifeformPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, animalPublisher, drawPublisher, mapInformation)
         {
         }
 

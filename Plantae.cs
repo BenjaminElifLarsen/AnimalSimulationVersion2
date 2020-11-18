@@ -22,7 +22,7 @@ namespace AnimalSimulationVersion2
         /// </summary>
         protected (byte Minimum, byte Maximum) offspringAmount; //maybe move this up to Eukaryote.
 
-        public Plantae(string species, Vector location, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, helper, animalPublisher, drawPublisher, mapInformation)
+        public Plantae(string species, Vector location, IHelper helper, LifeformPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, helper, animalPublisher, drawPublisher, mapInformation)
         { //could properly overwrite IsPossiblePreyEvnethandler to make (some specific) sure plants that are to old cannot be eated, e.g. a big tree
         }
 
@@ -49,7 +49,7 @@ namespace AnimalSimulationVersion2
             object[] dataObject = new object[6];
             dataObject[0] = Species;
             dataObject[2] = helper;
-            dataObject[3] = animalPublisher;
+            dataObject[3] = lifeformPublisher;
             dataObject[4] = drawPublisher;
             dataObject[5] = mapInformation;
             GenerateOffspring(amountOfOffsprings, dataObject);

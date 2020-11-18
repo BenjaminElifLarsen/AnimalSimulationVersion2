@@ -7,7 +7,7 @@ namespace AnimalSimulationVersion2
 {
     sealed class DioeciousPlant : Dioecious
     {
-        public DioeciousPlant(string species, Vector location, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation, char gender = (char)0) : base(species, location, helper, animalPublisher, drawPublisher, mapInformation, gender)
+        public DioeciousPlant(string species, Vector location, IHelper helper, LifeformPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation, char gender = (char)0) : base(species, location, helper, animalPublisher, drawPublisher, mapInformation, gender)
         {
             spreadRange = 240;
             offspringAmount = (2, 3);
@@ -15,7 +15,7 @@ namespace AnimalSimulationVersion2
             lengthOfReproduction = 8;
             reproductionCooldown = OneAgeInSeconds * 3;
 
-            NutrienValue = 40;
+            NutrientValue = 40;
 
             MaxHealth = 100;
             Health = MaxHealth;

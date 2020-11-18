@@ -68,10 +68,10 @@ namespace AnimalSimulationVersion2
         /// <param name="location">The start location of this animal.</param>
         /// <param name="foodSource">The food source of this animal.</param>
         /// <param name="helper">An instance of IHelper.</param>
-        /// <param name="animalPublisher">An instance of AnimalPublisher.</param>
+        /// <param name="lifeformPublisher">An instance of AnimalPublisher.</param>
         /// <param name="drawPublisher">An instance of DrawPublisher.</param>
         /// <param name="mapInformation">An instance of MapInformation.</param>
-        public Animalia(string species, Vector location, string[] foodSource, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : this(species, location,helper, animalPublisher, drawPublisher, mapInformation)
+        public Animalia(string species, Vector location, string[] foodSource, IHelper helper, LifeformPublisher lifeformPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : this(species, location,helper, lifeformPublisher, drawPublisher, mapInformation)
         {
             MateLocation = Vector.Copy(location);
             MoveTo = GenerateRandomEndLocation();
@@ -84,15 +84,15 @@ namespace AnimalSimulationVersion2
         /// <param name="species">The species of this animal.</param>
         /// <param name="location">The start location of this animal.</param>
         /// <param name="helper">An instance of IHelper.</param>
-        /// <param name="animalPublisher">An instance of AnimalPublisher.</param>
+        /// <param name="lifeformPublisher">An instance of AnimalPublisher.</param>
         /// <param name="drawPublisher">An instance of DrawPublisher.</param>
         /// <param name="mapInformation">An instance of MapInformation.</param>
-        protected Animalia(string species, Vector location, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, helper, animalPublisher, drawPublisher, mapInformation)
+        protected Animalia(string species, Vector location, IHelper helper, LifeformPublisher lifeformPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, helper, lifeformPublisher, drawPublisher, mapInformation)
         {
-            animalPublisher.RaisePossibleMatesEvent += CanMateEventHandler;
-            animalPublisher.RaiseSetMateEvent += GetMateEventHandler;
-            animalPublisher.RaiseRemoveMateEvent += RemoveMateEventHandler;
-            animalPublisher.RaiseInformHunterOfPreyDeath += PreyHasDiedEventHandler;
+            this.lifeformPublisher.RaisePossibleMatesEvent += CanMateEventHandler;
+            this.lifeformPublisher.RaiseSetMateEvent += GetMateEventHandler;
+            this.lifeformPublisher.RaiseRemoveMateEvent += RemoveMateEventHandler;
+            this.lifeformPublisher.RaiseInformHunterOfPreyDeath += PreyHasDiedEventHandler;
         }
 
         /// <summary>
@@ -141,6 +141,20 @@ namespace AnimalSimulationVersion2
                 Health -= timeSinceLastUpdate;
         }
         /// <summary>
+        /// Animal produces offsprings at the same location as it.
+        /// Sets HasReproduced to false. 
+        /// </summary>
+        ///<remarks>If any class that inhiret from Animalia got a different constructor, this method needs to be overwritten.</remarks>
+        protected override void Reproduce()
+        {
+            object[] dataObject = new object[] { Species, Location, FoodSource, helper, lifeformPublisher, drawPublisher, mapInformation };
+
+            byte childAmount = (byte)helper.GenerateRandomNumber(BirthAmount.Minimum, BirthAmount.Maximum); //seems like wolves mate for life, but if losing a mate, they will quickly find another one.
+            for (int i = 0; i < childAmount; i++) //perhaps use the Activator.CreateInstance(...) and this method takes a Type argument, then this implementation could be moved up to Animalia
+                Activator.CreateInstance(GetType(), dataObject);//new SleepingCarnivore(Species, Location, FoodSource, helper, animalPublisher, drawPublisher, mapInformation);
+            HasReproduced = false;
+        }
+        /// <summary>
         /// Generates a random end location on the map. X and Y will each be between 0 and the maximum value of their respective maximum possible distance.
         /// </summary>
         /// <returns>Returns a new X and Y coordinate for the animal to move too.</returns>
@@ -157,7 +171,7 @@ namespace AnimalSimulationVersion2
         {
             string nearestMate = null;
             float distance = Single.MaxValue;
-            List<(string mateID, Vector Location)> possibleMates = animalPublisher.PossibleMates(Species, Gender, ID);
+            List<(string mateID, Vector Location)> possibleMates = lifeformPublisher.PossibleMates(Species, Gender, ID);
             foreach ((string Mate, Vector Location) information in possibleMates)
             {
                 float distanceTo = Math.Abs((information.Location.X - Location.X)) + Math.Abs((information.Location.Y - Location.Y));
@@ -168,17 +182,17 @@ namespace AnimalSimulationVersion2
                 }
             }
             if(nearestMate != null)
-            animalPublisher.SetMate(ID, nearestMate);
+            lifeformPublisher.SetMate(ID, nearestMate);
             return nearestMate; 
         }
         /// <summary>
-        /// Gets the current location of the Mate.
+        /// Gets the current location of the lifeform with ID of <paramref name="lifeformID"/>.
         /// </summary>
-        /// <param name="mateID">The ID of the mate.</param>
-        /// <returns>Returns the location of the mate.</returns>
-        protected virtual Vector GetMateLocation(string mateID)
+        /// <param name="lifeformID">The ID of the lifeform.</param>
+        /// <returns>Returns the location of the lifeform.</returns>
+        protected virtual Vector GetLifeformLocation(string lifeformID)
         {
-            return animalPublisher.GetLocation(mateID);
+            return lifeformPublisher.GetLocation(lifeformID);
         }
         /// <summary>
         /// Animal mates.
@@ -230,7 +244,7 @@ namespace AnimalSimulationVersion2
         {
             string nearestFood = null;
             float distance = Single.MaxValue;
-            List<(Vector PreyLocation, string PreyID, string PreySpecies)> possiblePreys = animalPublisher.GetPossiblePreys(ID);
+            List<(Vector PreyLocation, string PreyID, string PreySpecies)> possiblePreys = lifeformPublisher.GetPossiblePreys(ID);
             foreach ((Vector Location, string PreyID, string Species) information in possiblePreys)
             {
                 float distanceTo = information.Location.DistanceBetweenVectors(Location);//Math.Abs((information.Location.X - Location.X)) + Math.Abs((information.Location.Y - Location.Y));
@@ -242,7 +256,7 @@ namespace AnimalSimulationVersion2
                     }
             }
             if(nearestFood != null)
-                animalPublisher.SetPrey(ID, nearestFood);
+                lifeformPublisher.SetPrey(ID, nearestFood);
             return nearestFood;
         }
         /// <summary>
@@ -250,7 +264,7 @@ namespace AnimalSimulationVersion2
         /// </summary>
         protected virtual void Eat()
         {
-            Hunger += animalPublisher.Eat(foodID);
+            Hunger += lifeformPublisher.Eat(foodID);
             if (Hunger > MaxHunger)
                 Hunger = MaxHunger;
         }
@@ -262,11 +276,11 @@ namespace AnimalSimulationVersion2
         {
             if (mateID != null)
             {
-                animalPublisher.RemoveMate(ID, mateID);
+                lifeformPublisher.RemoveMate(ID, mateID);
             }
             if (foodID != null)
             {
-                animalPublisher.RemovePrey(ID, foodID);
+                lifeformPublisher.RemovePrey(ID, foodID);
             }
             base.Death();
         }
@@ -317,10 +331,10 @@ namespace AnimalSimulationVersion2
         protected override void RemoveSubscriptions() //consider renaming some of the methods to have names that make more sense
         {
             base.RemoveSubscriptions();
-            animalPublisher.RaisePossibleMatesEvent -= CanMateEventHandler;
-            animalPublisher.RaiseSetMateEvent -= GetMateEventHandler;
-            animalPublisher.RaiseRemoveMateEvent -= RemoveMateEventHandler;
-            animalPublisher.RaiseInformHunterOfPreyDeath -= PreyHasDiedEventHandler;
+            lifeformPublisher.RaisePossibleMatesEvent -= CanMateEventHandler;
+            lifeformPublisher.RaiseSetMateEvent -= GetMateEventHandler;
+            lifeformPublisher.RaiseRemoveMateEvent -= RemoveMateEventHandler;
+            lifeformPublisher.RaiseInformHunterOfPreyDeath -= PreyHasDiedEventHandler;
         }
 
     }

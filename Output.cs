@@ -25,7 +25,7 @@ namespace AnimalSimulationVersion2
         public float FramesPerSecond { get; set; }
         private float TimeInSecondsBetweenFrames { get; set; }
         private DrawPublisher DrawPublisher { get; set; }
-        private AnimalPublisher AnimalPublisher { get; set; }
+        private LifeformPublisher AnimalPublisher { get; set; }
         public static Output Instance { get; }
 
         static Output()

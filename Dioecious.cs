@@ -11,13 +11,13 @@ namespace AnimalSimulationVersion2
         protected float reproductionExtraTime;
         protected float distanceDivider;
         protected char Gender { get; set; }
-        public Dioecious(string species, Vector location, IHelper helper, AnimalPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation, char gender = (char)0) : base(species, location, helper, animalPublisher, drawPublisher, mapInformation)
+        public Dioecious(string species, Vector location, IHelper helper, LifeformPublisher lifeformPublisher, DrawPublisher drawPublisher, MapInformation mapInformation, char gender = (char)0) : base(species, location, helper, lifeformPublisher, drawPublisher, mapInformation)
         {
             if (gender == 0)
                 Gender = GenderGenerator();
             else
                 Gender = gender;
-            animalPublisher.RaisePossibleMatesEvent += CanMateEventHandler;
+            this.lifeformPublisher.RaisePossibleMatesEvent += CanMateEventHandler;
         }
 
         protected override void AI()
@@ -47,7 +47,7 @@ namespace AnimalSimulationVersion2
             object[] dataObject = new object[7];
             dataObject[0] = Species;
             dataObject[2] = helper;
-            dataObject[3] = animalPublisher;
+            dataObject[3] = lifeformPublisher;
             dataObject[4] = drawPublisher;
             dataObject[5] = mapInformation;
             dataObject[6] = (char)0;
@@ -63,7 +63,7 @@ namespace AnimalSimulationVersion2
         /// <returns>A Vector with the posistion values of the mate.</returns>
         protected virtual Vector GetMateLocation(string mateID)
         {
-            return animalPublisher.GetLocation(mateID);
+            return lifeformPublisher.GetLocation(mateID);
         }
 
         protected override void TimeUpdate()
@@ -102,7 +102,7 @@ namespace AnimalSimulationVersion2
         {
             string nearestMate = null;
             float distance = Single.MaxValue;
-            List<(string mateID, Vector Location)> possibleMates = animalPublisher.PossibleMates(Species, Gender, ID);
+            List<(string mateID, Vector Location)> possibleMates = lifeformPublisher.PossibleMates(Species, Gender, ID);
             foreach ((string Mate, Vector Location) information in possibleMates)
             { //need to catch null
                 float distanceTo = information.Location.DistanceBetweenVectors(Location);//Math.Abs((information.Location.X - Location.X)) + Math.Abs((information.Location.Y - Location.Y));
@@ -113,7 +113,7 @@ namespace AnimalSimulationVersion2
                 }
             }
             if (nearestMate != null)
-                animalPublisher.SetMate(ID, nearestMate);
+                lifeformPublisher.SetMate(ID, nearestMate);
             mateDistance = distance;
             return nearestMate;
         }
@@ -146,7 +146,7 @@ namespace AnimalSimulationVersion2
 
         protected override void RemoveSubscriptions()
         {
-            animalPublisher.RaisePossibleMatesEvent -= CanMateEventHandler;
+            lifeformPublisher.RaisePossibleMatesEvent -= CanMateEventHandler;
             base.RemoveSubscriptions();
         }
     }
