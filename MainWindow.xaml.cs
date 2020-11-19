@@ -48,16 +48,18 @@ namespace AnimalSimulationVersion2
             output.TextEvent += Output_UpdateInformationEvent;
 
             output.Map = new Bitmap(mapInformation.GetSizeOfMap.width, mapInformation.GetSizeOfMap.height);
-            for(int i = 0; i < 1; i++)
-                new SleepingCarnivore("Carnis Lupus", new Vector(mapInformation, Helper.Instance), new string[] { "Oryctolagus Cuniculus" }, Helper.Instance, Publisher.GetAnimalInstance, Publisher.GetDrawInstance, MapInformation.Instance); //here for testing and nothing else.
-            for(int i = 0; i < 1; i++)
+            for(int i = 0; i < 6; i++)
+                new SleepingCarnivore("Carnis Lupus", new Vector(mapInformation, Helper.Instance), new string[] { "Oryctolagus Cuniculus", "Antidorcas Marsupialis" }, Helper.Instance, Publisher.GetAnimalInstance, Publisher.GetDrawInstance, MapInformation.Instance); //here for testing and nothing else.
+            for(int i = 0; i < 20; i++)
                 new HidingHerbavore("Oryctolagus Cuniculus", new Vector(mapInformation, Helper.Instance), new string[] {"Cucumis Melo", "Carica Papaya" }, Helper.Instance, Publisher.GetAnimalInstance, Publisher.GetDrawInstance, MapInformation.Instance);
-            /*for(int i = 0; i < 2; i++)
+            for (int i = 0; i < 20; i++) //find a species that makes more sense
+                new SleepingHerbavore("Antidorcas Marsupialis", new Vector(mapInformation, Helper.Instance), new string[] { "Cucumis Melo", "Carica Papaya" }, Helper.Instance, Publisher.GetAnimalInstance, Publisher.GetDrawInstance, MapInformation.Instance);
+            for (int i = 0; i < 2; i++)
                 new MonoeciousPlant("Cucumis Melo", new Vector(mapInformation, Helper.Instance), Helper.Instance, Publisher.GetAnimalInstance, Publisher.GetDrawInstance, MapInformation.Instance);
-            */for(int i = 0; i < 20; i++)
+            for(int i = 0; i < 30; i++)
                 new DioeciousPlant("Carica Papaya", new Vector(mapInformation, Helper.Instance), Helper.Instance, Publisher.GetAnimalInstance, Publisher.GetDrawInstance, MapInformation.Instance);
-            //for (int i = 0; i < 6; i++)
-            //    new PackCarnivore("Crocuta Crocuta", new Vector(mapInformation, Helper.Instance), new string[] { "Oryctolagus Cuniculus" }, Helper.Instance, Publisher.GetAnimalInstance, Publisher.GetDrawInstance, MapInformation.Instance);
+            for (int i = 0; i < 6; i++)
+                new PackCarnivore("Crocuta Crocuta", new Vector(mapInformation, Helper.Instance), new string[] { "Oryctolagus Cuniculus", "Antidorcas Marsupialis" }, Helper.Instance, Publisher.GetAnimalInstance, Publisher.GetDrawInstance, MapInformation.Instance);
             output.RunVisualThread();
             output.RunAIThread();
 
