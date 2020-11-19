@@ -26,6 +26,9 @@ namespace AnimalSimulationVersion2
         /// The maximum energy level.
         /// </summary>
         public abstract float MaxEnergyLevel { get;}
+        /// <summary>
+        /// Checks if the lifeform has fallen asleep.
+        /// </summary>
         public void Sleep();
         //maybe have a wake up method
     }
