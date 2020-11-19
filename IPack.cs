@@ -24,7 +24,7 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// Contains an array that makes up the relationships and IDs for each specific lifeform. 
         /// </summary>
-        public abstract (PackRelationship Relationship, string ID, char Gender)[] PackMembers { get; set; }
+        public (PackRelationship Relationship, string ID, char Gender)[] PackMembers { get; set; }
         /// <summary>
         /// The amount of lifeforms in the pack
         /// </summary>
@@ -32,46 +32,46 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// The maximum amount of lifeforms that can be in pack.
         /// </summary>
-        public abstract byte MaxPackSize { get; set; }
+        public byte MaxPackSize { get; set; }
         /// <summary>
         /// The amount of time that has passed since the last fight.
         /// </summary>
-        public abstract float TimeSinceLastFight { get; set; } //update uml
+        public float TimeSinceLastFight { get; set; } //update uml
         /// <summary>
         /// The amount of time, in seconds, that has to be between each fight.
         /// </summary>
-        public abstract float FightCooldown { get; set; }
+        public float FightCooldown { get; set; }
         /// <summary>
         /// True if the pack can fight for alpha posistion.
         /// </summary>
-        public abstract bool CanFightForAlpha { get; set; } //how to ensure the animals do not fight all the time and also figure out why one animal would fight another for alpha
-        public abstract string AttackedBy { get; set; }
+        public bool CanFightForAlpha { get; set; } //how to ensure the animals do not fight all the time and also figure out why one animal would fight another for alpha
+        public string[] AttackedBy { get; set; }
         /// <summary>
         /// Allows a pack member to fight another pack member.
         /// </summary>
         /// <param name="ID">The ID of the target</param>
-        public abstract void Fight(); //transmit delegate. 
+        public void Fight(); //transmit delegate. 
         /// <summary>
         /// Generates a pack.
         /// </summary>
         /// <returns>The pack array.</returns>
-        public abstract (PackRelationship Relationship, string ID, char Gender)[] GeneratePack();
+        public void GeneratePack();
         /// <summary>
         /// 
         /// </summary>
         /// <param name="receiverID"></param>
-        public abstract void TransmitPack(string receiverID);
+        public void TransmitPack(string receiverID);
         /// <summary>
         /// Used to receiver data for Pack.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e">Contains IDs and Data.</param>
-        public abstract void RelationshipEventHandler(object sender, ControlEvents.TransmitDataEventArgs e);
+        public void RelationshipEventHandler(object sender, ControlEvents.TransmitDataEventArgs e);
         /// <summary>
         /// 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public abstract void PossibleRelationshipJoinerEventHandler(object sender, ControlEvents.RelationshipCandidatesEventArgs e);
+        public void RelationshipCandidateEventHandler(object sender, ControlEvents.RelationshipCandidatesEventArgs e);
     }
 }

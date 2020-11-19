@@ -31,7 +31,7 @@ namespace AnimalSimulationVersion2
             MovementSpeed = 20;
             CurrentMovementSpeed = MovementSpeed;
             MaxHunger = 100;
-            Hunger = MaxHunger;
+            Hunger = 0;//MaxHunger;
             MaxEnergyLevel = 140; //perhaps have things like energy level, hunger etc. be in seconds. 
             EnergyLevel = MaxEnergyLevel;
             SleepLength = 10; 

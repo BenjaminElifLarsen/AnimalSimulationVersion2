@@ -150,7 +150,7 @@ namespace AnimalSimulationVersion2
             this.lifeformPublisher.RaiseGetAllLocations += GetAllLocationsEventHandler;
 
             this.drawPublisher.RaiseDrawEvent += DrawEventHandler;
-            this.drawPublisher.RaiseSpeciesAndAmountEvent += SpeciesAmountEventhandler;
+            this.drawPublisher.RaiseSpeciesAndAmountEvent += SpeciesAmountEventHandler;
         }
         /// <summary>
         /// The 'AI' of the lifeform.
@@ -304,7 +304,7 @@ namespace AnimalSimulationVersion2
         /// </summary>
         /// <param name="sender">The sender of the event.</param>
         /// <param name="e">Contains an Add(string:Species) method...</param>
-        protected virtual void SpeciesAmountEventhandler(object sender, ControlEvents.SpeciesAndAmountEventArgs e)
+        protected virtual void SpeciesAmountEventHandler(object sender, ControlEvents.SpeciesAndAmountEventArgs e)
         { //delegate. Transmit species back.
             e.Add(Species);
         }
@@ -334,7 +334,7 @@ namespace AnimalSimulationVersion2
             lifeformPublisher.RaiseGetAllLocations -= GetAllLocationsEventHandler;
 
             drawPublisher.RaiseDrawEvent -= DrawEventHandler;
-            drawPublisher.RaiseSpeciesAndAmountEvent -= SpeciesAmountEventhandler;
+            drawPublisher.RaiseSpeciesAndAmountEvent -= SpeciesAmountEventHandler;
         }
 
         //~Eukaryote() //only here to ensure that all references to the object have been removed.

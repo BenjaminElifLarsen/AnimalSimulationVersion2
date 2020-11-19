@@ -14,7 +14,7 @@ namespace AnimalSimulationVersion2
         public bool CanFightForAlpha { get; set; }
         public IPack.PackRelationship Relationship { get; set; }
         public bool AlphaMatingOnly { get; set; }
-        public string AttackedBy { get; set; }
+        public string[] AttackedBy { get; set; }
 
         public PackCarnivore(string species, Vector location, string[] foodSource, IHelper helper, LifeformPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, animalPublisher, drawPublisher, mapInformation)
         {
@@ -32,7 +32,7 @@ namespace AnimalSimulationVersion2
             AlphaMatingOnly = true;
 
             lifeformPublisher.RaiseTransmitData += RelationshipEventHandler;
-            lifeformPublisher.RaisePossibleRelationshipJoiner += PossibleRelationshipJoinerEventHandler;
+            lifeformPublisher.RaisePossibleRelationshipJoiner += RelationshipCandidateEventHandler;
         }
 
         protected override void AI() 
@@ -71,7 +71,7 @@ namespace AnimalSimulationVersion2
                 else if (AttackedBy != null) //AttackedBy needs to be set to null at some point and also there might be multiple attackers rather than 1
                 { //is alpha and being attacked. 
                     byte damage = (byte)helper.GenerateRandomNumber(0, 16);
-                    lifeformPublisher.DamageLifeform(ID, AttackedBy, damage);
+                    lifeformPublisher.DamageLifeform(ID, AttackedBy[0], damage);
                 }
         }
 
@@ -180,7 +180,7 @@ namespace AnimalSimulationVersion2
             lifeformPublisher.TransmitData(ID, receiverID, data);
         }
 
-        public (IPack.PackRelationship Relationship, string ID, char Gender)[] GeneratePack() //right now this could just be a void
+        public void GeneratePack() //right now this could just be a void
         {
             if(PackMembers == null || PackMembers.Length <= 1)
             {
@@ -209,7 +209,6 @@ namespace AnimalSimulationVersion2
                     Relationship = IPack.PackRelationship.Alpha;
                 }
             }
-            return new (IPack.PackRelationship Relationship, string ID, char Gender)[0];
         }
 
         public void RelationshipEventHandler(object sender, ControlEvents.TransmitDataEventArgs e)
@@ -227,7 +226,7 @@ namespace AnimalSimulationVersion2
             }
         }
 
-        public void PossibleRelationshipJoinerEventHandler(object sender, ControlEvents.RelationshipCandidatesEventArgs e)
+        public void RelationshipCandidateEventHandler(object sender, ControlEvents.RelationshipCandidatesEventArgs e)
         {
             if (e.RelationshipType.IsAssignableFrom(GetType())) //true if the instance implements e.RelationshipType. //reflection, costly. Trying to use 'IS' did not work because of no constance
                 if(PackMembers == null || PackMembers.Length <= 1)
@@ -254,7 +253,9 @@ namespace AnimalSimulationVersion2
         { //delegate. This lifeform has taken damage.
             if (e.IDs.ReceiverID == ID)
             {
-                AttackedBy = e.IDs.SenderID;
+                string[] attacks = AttackedBy;
+                helper.Add(ref attacks, e.IDs.ReceiverID);
+                AttackedBy = attacks;
                 Health -= e.Damage;
                 if (Health <= 0)
                     Death();
@@ -264,7 +265,7 @@ namespace AnimalSimulationVersion2
         protected override void RemoveSubscriptions()
         {
             lifeformPublisher.RaiseTransmitData -= RelationshipEventHandler;
-            lifeformPublisher.RaisePossibleRelationshipJoiner -= PossibleRelationshipJoinerEventHandler;
+            lifeformPublisher.RaisePossibleRelationshipJoiner -= RelationshipCandidateEventHandler;
             base.RemoveSubscriptions();
         }
     }

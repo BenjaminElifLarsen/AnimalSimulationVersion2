@@ -131,7 +131,7 @@ namespace AnimalSimulationVersion2
         /// </summary>
         /// <remarks>
         /// By default this is: 
-        /// timeAlive, Age Hunger and TimeToProductionNeed
+        /// timeAlive, Age, Hunger and TimeToProductionNeed
         /// </remarks>
         protected override void TimeUpdate()
         {

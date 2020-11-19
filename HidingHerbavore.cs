@@ -35,7 +35,7 @@ namespace AnimalSimulationVersion2
             Hunger = MaxHunger;
             HungerFoodSeekingLevel = 0.6f;
 
-            MaxAge = 6;
+            MaxAge = 16;
             Health = MaxHealth;
 
             StealthLevel = 2;
@@ -46,7 +46,7 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// Overridden AI that implements IHide.
         /// </summary>
-        protected override void AI()
+        /*protected override void AI()
         {
             TimeUpdate();
             if (Age >= MaxAge || Health <= 0)
@@ -60,7 +60,7 @@ namespace AnimalSimulationVersion2
                             Reproduce();
                 #endregion
                 #region Hiding
-                if (HuntedBy.Length > 0 && TimeHidden < MaxHideTime && CooldownBetweenHiding <= 0)
+                if (!IsHiding && HuntedBy.Length > 0 && TimeHidden < MaxHideTime && CooldownBetweenHiding <= 0)
                     IsHiding = true;
                 else if (TimeHidden > MaxHideTime)
                     IsHiding = false;
@@ -117,7 +117,7 @@ namespace AnimalSimulationVersion2
                 CurrentMovementSpeed = MovementSpeed;
                 Move();
             }
-        }
+        }*/
         /// <summary>
         /// overrides Mate(). Calls the base and contains an extra check to if mateID should be set to null.
         /// </summary>
@@ -140,19 +140,19 @@ namespace AnimalSimulationVersion2
             }
             if (CooldownBetweenHiding > 0)
                 CooldownBetweenHiding -= timeSinceLastUpdate;
-            if (LostPredators.Length > 0)
-            {
-                for(int i = 0; i < LostPredators.Length; i++)
-                {
-                    LostPredators[i].TimeSinceEscape += timeSinceLastUpdate;
-                    if(LostPredators[i].TimeSinceEscape >= TimeThresholdForBeingHuntedAgain)
-                    {
-                        (string ID, float TimeSinceEscape)[] predators = LostPredators;
-                        helper.Remove(ref predators, (LostPredators[i].ID, LostPredators[i].TimeSinceEscape));
-                        LostPredators = predators;
-                    }
-                }
-            }
+            //if (LostPredators.Length > 0)
+            //{
+            //    for(int i = 0; i < LostPredators.Length; i++)
+            //    {
+            //        LostPredators[i].TimeSinceEscape += timeSinceLastUpdate;
+            //        if(LostPredators[i].TimeSinceEscape >= TimeThresholdForBeingHuntedAgain)
+            //        {
+            //            (string ID, float TimeSinceEscape)[] predators = LostPredators;
+            //            helper.Remove(ref predators, (LostPredators[i].ID, LostPredators[i].TimeSinceEscape));
+            //            LostPredators = predators;
+            //        }
+            //    }
+            //}
             base.TimeUpdate();
         }
 
@@ -169,7 +169,7 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// The prey will lose the first predator that is after it.
         /// </summary>
-        public new void LostPredator()
+        public void LostPredator()
         {
             lifeformPublisher.InformPredatorOfPreyDeath(ID, HuntedBy[0]); //perhaps later change it to remove the nearest one
             string[] array = HuntedBy;
@@ -180,32 +180,6 @@ namespace AnimalSimulationVersion2
             HuntedBy = array;
             CooldownBetweenHiding = MaxCooldownBetweenHiding;
             IsHiding = false;
-        }
-
-        //protected override void Reproduce()
-        //{
-        //    byte childAmount = (byte)helper.GenerateRandomNumber(BirthAmount.Minimum, BirthAmount.Maximum); 
-        //    for (int i = 0; i < childAmount; i++)
-        //        new HidingHerbavore(Species, Location, FoodSource, helper, animalPublisher, drawPublisher, mapInformation);
-        //    HasReproduced = false;
-        //}
-
-        /// <summary>
-        /// Is asked for information such that another animal can decided if this animal is food or not.
-        /// Overridden to ensure that predators that were lost not to long ago cannot select this prey again for a while.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected override void IsPossiblePreyEventHandler(object sender, ControlEvents.GetPossiblePreyEventArgs e)
-        { //delegate. Send back location, ID and species. 
-            string[] hunterIDs = new string[LostPredators.Length];
-            for (byte i = 0; i < LostPredators.Length; i++)
-                hunterIDs[i] = LostPredators[i].ID;
-            if (e.SenderID != ID && !helper.Contains(hunterIDs, e.SenderID))
-            {
-                (Vector PreyLocation, string PreyID, string PreySpeices) preyInformation = (Location, ID, Species);
-                e.AddPreyInformation(preyInformation);
-            }
         }
 
     }

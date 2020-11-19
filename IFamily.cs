@@ -22,36 +22,36 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// Contains an array that makes up the relationships and IDs for each specific lifeform. 
         /// </summary>
-        public abstract (FamilyRelationship Relationship, string ID)[] Family { get; set; }
+        public (FamilyRelationship Relationship, string ID)[] Family { get; set; }
         /// <summary>
         /// True if the lifeform can hurt its parents.
         /// </summary>
-        public abstract bool CanHuntParents { get; set; }
+        public bool CanHuntParents { get; set; }
         /// <summary>
         /// True if the lifeform can hurt its siblings
         /// </summary>
-        public abstract bool CanHuntSiblings { get; set; }
+        public bool CanHuntSiblings { get; set; }
         /// <summary>
         /// True if the lifeform can hurt its children
         /// </summary>
-        public abstract bool CanHuntChildren { get; set; }
+        public bool CanHuntChildren { get; set; }
         /// <summary>
         /// True if the lifeform can mate with its parents
         /// </summary>
-        public abstract bool CanMateParents { get; set; }
+        public bool CanMateParents { get; set; }
         /// <summary>
         /// True if the lifeform can mate with its siblings
         /// </summary>
-        public abstract bool CanMateSublings { get; set; }
+        public bool CanMateSublings { get; set; }
         /// <summary>
         /// True if the lifeform can mate with its children.
         /// </summary>
-        public abstract bool CanMateChildren { get; set; }
+        public bool CanMateChildren { get; set; }
         /// <summary>
         /// Used to receiver data for Family.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e">Contains IDs and Data.</param>
-        public abstract void RelationshipEventHandler(object sender, ControlEvents.TransmitDataEventArgs e);
+        public void RelationshipEventHandler(object sender, ControlEvents.TransmitDataEventArgs e);
     }
 }
