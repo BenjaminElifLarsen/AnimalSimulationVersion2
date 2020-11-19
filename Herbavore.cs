@@ -45,7 +45,7 @@ namespace AnimalSimulationVersion2
                 TimeSprinted -= timeSinceLastUpdate;
             if (HasRolled)
                 TimeSinceLastRoll += timeSinceLastUpdate;
-            else if (TimeSinceLastRoll >= TimeBetweenRolls)
+            if (TimeSinceLastRoll >= TimeBetweenRolls)
             {
                 TimeSinceLastRoll = 0;
                 HasRolled = false;
