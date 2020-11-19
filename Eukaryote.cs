@@ -121,6 +121,12 @@ namespace AnimalSimulationVersion2
             Location = location;
             HuntedBy = new string[0];
             MaxHealth = 100;
+            Health = MaxHealth;
+            MaxAge = 10;
+            NutrientValue = 50;
+
+            Colour = (122,122,122);
+            Design = new Point[] { new Point(0, 0), new Point(4, 0), new Point(4, 4), new Point(0, 4) };
         }
         /// <summary>
         /// Sets all instances of classes and interfaces, sets properties that depends on these and subscribes the event handlers to the events.

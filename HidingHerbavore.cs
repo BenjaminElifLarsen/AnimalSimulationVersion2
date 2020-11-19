@@ -21,7 +21,6 @@ namespace AnimalSimulationVersion2
             MovementSpeed = 10;
             CurrentMovementSpeed = MovementSpeed;
             Colour = (0,120,120);
-            Design = new Point[] { new Point(3,0), new Point(6, 6), new Point(0, 6) };
             NutrientValue = 100;
 
             genderInformation = new (char Gender, byte Weight)[] { ('f', 50), ('m', 50) };
@@ -35,7 +34,7 @@ namespace AnimalSimulationVersion2
             Hunger = MaxHunger;
             HungerFoodSeekingLevel = 0.6f;
 
-            MaxAge = 16;
+            MaxAge = 6;
             Health = MaxHealth;
 
             StealthLevel = 2;
@@ -46,7 +45,7 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// Overridden AI that implements IHide.
         /// </summary>
-        /*protected override void AI()
+        protected override void AI()
         {
             TimeUpdate();
             if (Age >= MaxAge || Health <= 0)
@@ -61,7 +60,7 @@ namespace AnimalSimulationVersion2
                 #endregion
                 #region Hiding
                 if (!IsHiding && HuntedBy.Length > 0 && TimeHidden < MaxHideTime && CooldownBetweenHiding <= 0)
-                    IsHiding = true;
+                    IsHiding = true; //maybe make it such that if there are to many predators after it, it will run instead of hiding.
                 else if (TimeHidden > MaxHideTime)
                     IsHiding = false;
                 if (IsHiding)
@@ -117,7 +116,7 @@ namespace AnimalSimulationVersion2
                 CurrentMovementSpeed = MovementSpeed;
                 Move();
             }
-        }*/
+        }
         /// <summary>
         /// overrides Mate(). Calls the base and contains an extra check to if mateID should be set to null.
         /// </summary>

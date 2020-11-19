@@ -26,12 +26,11 @@ namespace AnimalSimulationVersion2
             genderInformation = new (char Gender, byte Weight)[] { ('f', 50), ('m', 50) };
             reproductionCooldown = 20;
             Colour = (200, 10, 10);
-            Design = new Point[] { new Point(0, 0), new Point(10, 0), new Point(10, 10), new Point(0, 10) };
             Health = MaxHealth;
             MovementSpeed = 20;
             CurrentMovementSpeed = MovementSpeed;
             MaxHunger = 100;
-            Hunger = 0;//MaxHunger;
+            Hunger = MaxHunger;
             MaxEnergyLevel = 140; //perhaps have things like energy level, hunger etc. be in seconds. 
             EnergyLevel = MaxEnergyLevel;
             SleepLength = 10; 
@@ -40,11 +39,6 @@ namespace AnimalSimulationVersion2
             ReproductionAge = 4;
             HungerFoodSeekingLevel = 0.5f;
             Gender = GenerateGender(genderInformation); //would be better if this could be called in the base, but genderInformation is first set after... maybe move it up the variable
-        }
-
-        public void AttackOther(string ID)
-        { //transmit out a delegate
-            throw new NotImplementedException();
         }
 
         /// <summary>

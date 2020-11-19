@@ -62,7 +62,7 @@ namespace AnimalSimulationVersion2
                                 if(relationship == IPack.PackRelationship.Alpha && gender == Gender)
                                 {
                                     byte damage = (byte)helper.GenerateRandomNumber(0, 16);
-                                    lifeformPublisher.DamageLifeform(id, id, damage);
+                                    lifeformPublisher.DamageLifeform(ID, id, damage);
                                     break;
                                 }
                         }
@@ -215,10 +215,10 @@ namespace AnimalSimulationVersion2
         {
             if(e.IDs.ReceiverID == ID)
             {
-                if(e.Data is (IPack.PackRelationship, string, char)[])
+                if(e.Data is (IPack.PackRelationship, string, char)[] data)
                 {
                     TimeSinceLastFight = FightCooldown; //this means that any update to the pack will prevent a fight, even birth
-                    PackMembers = ((IPack.PackRelationship,string,char)[])e.Data;
+                    PackMembers = data;
                     foreach ((IPack.PackRelationship relationship, string id, _) in PackMembers)
                         if (ID == id)
                             Relationship = relationship;

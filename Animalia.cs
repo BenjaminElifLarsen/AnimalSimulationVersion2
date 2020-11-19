@@ -62,7 +62,7 @@ namespace AnimalSimulationVersion2
         /// </summary>
         protected float HungerFoodSeekingLevel { get; set; }
         /// <summary>
-        /// Default constructor
+        /// Default constructor. Initialises properites and variables to 'default' values.
         /// </summary>
         /// <param name="species">The species of this animal.</param>
         /// <param name="location">The start location of this animal.</param>
@@ -77,6 +77,20 @@ namespace AnimalSimulationVersion2
             MoveTo = GenerateRandomEndLocation();
             FoodSource = foodSource;
             MoveTo = GenerateRandomEndLocation();
+            
+            MovementSpeed = 10;
+
+            MaxHunger = 80;
+            HungerFoodSeekingLevel = 0.5f;
+            Hunger = MaxHunger;
+
+            ReproductionAge = MaxAge * 0.25f;
+            lengthOfReproduction = 9;
+            reproductionCooldown = 20;
+            BirthAmount = (1, 3);
+            genderInformation = new (char Gender, byte Weight)[] { ('f', 50), ('m', 50) };
+            Gender = GenerateGender(genderInformation);
+
         }
         /// <summary>
         /// Extra constructor that sets all Animalia eventhandlers //rewrite

@@ -19,12 +19,13 @@ namespace AnimalSimulationVersion2
         public float EscapeDistance { get; set; }
         public bool IsRunning { get; set; }
         public float TimeBetweenRolls { get; }
-
         public float TimeSinceLastRoll { get; set; }
         public bool HasRolled { get; set; }
 
         public Herbavore(string species, Vector location, string[] foodSource, IHelper helper, LifeformPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, animalPublisher, drawPublisher, mapInformation)
         {
+            Design = new Point[] { new Point(3, 0), new Point(6, 6), new Point(0, 6) };
+
             LostPredators = new (string ID, float TimeSinceEscape)[0];
             EscapeSpeedMultiplier = 1.4f;
             DiscoverChance = 10;
@@ -236,7 +237,7 @@ namespace AnimalSimulationVersion2
         public bool TryLosePredator(string predatorID)
         {
             float distance = Location.DistanceBetweenVectors(GetLifeformLocation(predatorID));
-            float rollOver =  distance / (EscapeDistance*0.8f); //the further away the prey gets the higher the change of ecaping
+            float rollOver =  distance / (EscapeDistance*0.2f); //the further away the prey gets the higher the change of ecaping
             float roll = (float)(helper.GenerateRandomNumber(0, (int)EscapeDistance) / EscapeDistance);
             return roll >= rollOver;
         }
