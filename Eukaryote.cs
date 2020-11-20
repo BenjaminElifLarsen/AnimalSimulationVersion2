@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿#undef DEBUG
+using System.Drawing;
 
 namespace AnimalSimulationVersion2
 {
@@ -6,7 +7,11 @@ namespace AnimalSimulationVersion2
     /// The superclass for all lifeforms. The domain of life. 
     /// </summary>
     abstract class Eukaryote
-    { 
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        protected bool isDead = false; 
         /// <summary>
         /// The amount of seconds this lifeform has been alive.
         /// </summary>
@@ -183,8 +188,8 @@ namespace AnimalSimulationVersion2
         /// Death of the lifeform.
         /// </summary>
         protected virtual void Death()
-        { 
-
+        {
+            isDead = true;
             if (HuntedBy.Length != 0)
             {
                 foreach (string hunterID in HuntedBy)
@@ -343,9 +348,11 @@ namespace AnimalSimulationVersion2
             drawPublisher.RaiseSpeciesAndAmountEvent -= SpeciesAmountEventHandler;
         }
 
-        //~Eukaryote() //only here to ensure that all references to the object have been removed.
-        //{
-        //    System.Diagnostics.Debug.WriteLine($"{ID} of {Species} has been removed");
-        //}
+        ~Eukaryote() //only here to ensure that all references to the object have been removed.
+        {
+            #if DEBUG
+            System.Diagnostics.Debug.WriteLine($"{ID} of {Species} has been removed");
+            #endif
+        }
     }
 }

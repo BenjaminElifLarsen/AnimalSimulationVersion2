@@ -303,6 +303,7 @@ namespace AnimalSimulationVersion2
         /// </summary>
         public class DoHealthDamageEventArgs
         {
+            private bool died;
             /// <summary>
             /// A Tuple holding both IDs.
             /// </summary>
@@ -322,6 +323,14 @@ namespace AnimalSimulationVersion2
                 IDs = (senderID, receiverID);
                 Damage = damage;
             }
+            /// <summary>
+            /// 
+            /// </summary>
+            public bool Died { set => died = value; }
+            /// <summary>
+            /// 
+            /// </summary>
+            public bool Killed => died;
         }
         /// <summary>
         /// Class that holds event data regarding getting the location and ID of all lifeforms. 

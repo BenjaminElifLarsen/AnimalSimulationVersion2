@@ -249,15 +249,19 @@ namespace AnimalSimulationVersion2
         /// <param name="senderID">The ID of the attacker.</param>
         /// <param name="receiverID">The ID of the attacked.</param>
         /// <param name="damage">The amount of damage done.</param>
-        public void DamageLifeform(string senderID, string receiverID, byte damage)
+        public bool DamageLifeform(string senderID, string receiverID, byte damage)
         {
-            OnDamageLifeform(new ControlEvents.DoHealthDamageEventArgs(senderID, receiverID, damage));
+            return OnDamageLifeform(new ControlEvents.DoHealthDamageEventArgs(senderID, receiverID, damage));
         }
-        protected void OnDamageLifeform(ControlEvents.DoHealthDamageEventArgs e)
+        protected bool OnDamageLifeform(ControlEvents.DoHealthDamageEventArgs e)
         {
             damageEventHandler eventHandler = RaiseDamage;
             if (eventHandler != null)
+            {
                 eventHandler.Invoke(this, e);
+                return e.Killed;
+            }
+            return false;
         }
         /// <summary>
         /// Gets the location of every lifeform.

@@ -16,6 +16,12 @@ namespace AnimalSimulationVersion2
         public bool AlphaMatingOnly { get; set; }
         public string[] AttackedBy { get; set; }
 
+        public float StrikeRange { get; }
+
+        public float AttackSpeed { get; }
+
+        public float AttackCooldown { get; set; }
+
         public PackCarnivore(string species, Vector location, string[] foodSource, IHelper helper, LifeformPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, animalPublisher, drawPublisher, mapInformation)
         {
             AttackRange = 40;
@@ -30,6 +36,10 @@ namespace AnimalSimulationVersion2
             FightCooldown = 10;
             CanFightForAlpha = true;
             AlphaMatingOnly = true;
+            AttackedBy = new string[0];
+            Relationship = IPack.PackRelationship.NonMember;
+            AttackSpeed = 1.4f;
+            StrikeRange = 10;
 
             lifeformPublisher.RaiseTransmitData += RelationshipEventHandler;
             lifeformPublisher.RaisePossibleRelationshipJoiner += RelationshipCandidateEventHandler;
@@ -37,9 +47,13 @@ namespace AnimalSimulationVersion2
 
         protected override void AI() 
         { 
-            base.AI();
-            GeneratePack();
-            Fight();
+            if(!isDead)
+                base.AI();
+            if (!isDead)
+            {
+                GeneratePack();
+                Fight(); //outcommented while debugging some other bugs.
+            }
         }
 
         protected override void TimeUpdate()
@@ -47,6 +61,8 @@ namespace AnimalSimulationVersion2
             base.TimeUpdate();
             if (TimeSinceLastFight > 0)
                 TimeSinceLastFight -= timeSinceLastUpdate;
+            if (AttackCooldown > 0)
+                AttackCooldown -= timeSinceLastUpdate;
         }
 
         public void Fight()
@@ -56,22 +72,49 @@ namespace AnimalSimulationVersion2
                 {
                     if(TimeSinceLastFight <= 0)
                     { //can attack the alpha
-                        if(TimeToReproductionNeed <= -100)
+                        if(TimeToReproductionNeed <= -100 && AttackCooldown <= 0)
                         { //it is something... it is something
                             foreach((IPack.PackRelationship relationship, string id, char gender) in PackMembers)
                                 if(relationship == IPack.PackRelationship.Alpha && gender == Gender)
                                 {
-                                    byte damage = (byte)helper.GenerateRandomNumber(0, 16);
-                                    lifeformPublisher.DamageLifeform(ID, id, damage);
+                                    float distance = Location.DistanceBetweenVectors(GetLifeformLocation(id));
+                                    if (distance <= StrikeRange)
+                                    {
+                                        AttackCooldown = AttackSpeed;
+                                        byte damage = (byte)helper.GenerateRandomNumber(0, 16);
+                                        bool killed = lifeformPublisher.DamageLifeform(ID, id, damage);
+                                        if (killed)
+                                        { //update the relationship to alpha and transmit the pack to each member
+                                            string[] attacks = AttackedBy;
+                                            helper.Remove(ref attacks, id);
+                                            AttackedBy = attacks;
+                                            helper.Replace(PackMembers, (Relationship, ID, Gender), (IPack.PackRelationship.Alpha, ID, Gender));
+                                            Relationship = IPack.PackRelationship.Alpha;
+                                            foreach ((_, string id_, _) in PackMembers)
+                                                if (id_ != ID)
+                                                    TransmitPack(id_);
+                                        }
+                                    }
                                     break;
                                 }
                         }
                     }
                 }
-                else if (AttackedBy != null) //AttackedBy needs to be set to null at some point and also there might be multiple attackers rather than 1
+                else if (AttackedBy.Length > 0 && AttackCooldown <= 0) //AttackedBy needs to be set to null at some point and also there might be multiple attackers rather than 1
                 { //is alpha and being attacked. 
-                    byte damage = (byte)helper.GenerateRandomNumber(0, 16);
-                    lifeformPublisher.DamageLifeform(ID, AttackedBy[0], damage);
+                    AttackCooldown = AttackSpeed;
+                    float distance = Location.DistanceBetweenVectors(GetLifeformLocation(AttackedBy[0]));
+                    if (distance <= StrikeRange)
+                    {
+                        byte damage = (byte)helper.GenerateRandomNumber(0, 16);
+                        bool killed = lifeformPublisher.DamageLifeform(ID, AttackedBy[0], damage);
+                        if (killed)
+                        { //at some point, move the code in this scope into the methods in Helper that needs these to work.
+                            string[] attacks = AttackedBy;
+                            helper.Remove(ref attacks, AttackedBy[0]);
+                            AttackedBy = attacks;
+                        }
+                    }
                 }
         }
 
@@ -102,7 +145,7 @@ namespace AnimalSimulationVersion2
 
         protected override void Death()
         {
-            if(Relationship == IPack.PackRelationship.Alpha)
+            if (Relationship == IPack.PackRelationship.Alpha)
             {
                 bool newAlpha = false;
                 (IPack.PackRelationship relationship, string id, char gender)[] pack = PackMembers;
@@ -129,6 +172,14 @@ namespace AnimalSimulationVersion2
                         TransmitPack(id);
                 }
             }
+            else if(Relationship == IPack.PackRelationship.Member)
+            {
+                (IPack.PackRelationship relationship, string id, char gender)[] pack = PackMembers;
+                helper.Remove(ref pack, (Relationship, ID, Gender));
+                PackMembers = pack;
+                foreach ((_, string id, _) in PackMembers)
+                    TransmitPack(id);
+            }
             base.Death();
         }
 
@@ -141,8 +192,8 @@ namespace AnimalSimulationVersion2
 
         protected override Vector GenerateRandomEndLocation()
         {
-            if (PackMembers == null)
-                return Vector.Copy(Location);
+            if (PackMembers == null || PackMembers.Length == 1)
+                return base.GenerateRandomEndLocation();
             if (Relationship == IPack.PackRelationship.Alpha && Gender == 'f')
                 return base.GenerateRandomEndLocation();
             else
@@ -175,7 +226,7 @@ namespace AnimalSimulationVersion2
         }
 
         public void TransmitPack(string receiverID)
-        {
+        { //all but one call to this method is in a forloop scope and the one there is not, is in GeneratePack().
             object data = PackMembers;
             lifeformPublisher.TransmitData(ID, receiverID, data);
         }
@@ -185,28 +236,31 @@ namespace AnimalSimulationVersion2
             if(PackMembers == null || PackMembers.Length <= 1)
             {
                 List<(Vector location, string id, char gender)> possiblePackMembers = lifeformPublisher.PossibleRelationshipJoiner(ID, Species, typeof(IPack));
-                float distance = float.MaxValue;
-                (string id, char? gender) nearestPackMember = (null,null);
-                foreach((Vector location, string id, char gender) in possiblePackMembers)
-                {
-                    if(gender != Gender) 
-                    { 
-                        float tempDistance = Location.DistanceBetweenVectors(location);
-                        if(tempDistance < distance)
-                        {
-                            nearestPackMember = (id, gender);
-                            distance = tempDistance;
+                if(possiblePackMembers != null)
+                { 
+                    float distance = float.MaxValue;
+                    (string id, char? gender) nearestPackMember = (null,null);
+                    foreach((Vector location, string id, char gender) in possiblePackMembers)
+                    {
+                        if(gender != Gender) 
+                        { 
+                            float tempDistance = Location.DistanceBetweenVectors(location);
+                            if(tempDistance < distance)
+                            {
+                                nearestPackMember = (id, gender);
+                                distance = tempDistance;
+                            }
                         }
                     }
-                }
-                if(nearestPackMember.id != null)
-                {
-                    (IPack.PackRelationship Relationship, string ID, char Gender)[] pack = PackMembers;
-                    helper.Add(ref pack, (IPack.PackRelationship.Alpha, ID, Gender));
-                    helper.Add(ref pack, (IPack.PackRelationship.Alpha, nearestPackMember.id, (char)nearestPackMember.gender));
-                    PackMembers = pack;
-                    TransmitPack(nearestPackMember.id);
-                    Relationship = IPack.PackRelationship.Alpha;
+                    if(nearestPackMember.id != null)
+                    {
+                        (IPack.PackRelationship Relationship, string ID, char Gender)[] pack = PackMembers;
+                        helper.Add(ref pack, (IPack.PackRelationship.Alpha, ID, Gender));
+                        helper.Add(ref pack, (IPack.PackRelationship.Alpha, nearestPackMember.id, (char)nearestPackMember.gender));
+                        PackMembers = pack;
+                        TransmitPack(nearestPackMember.id);
+                        Relationship = IPack.PackRelationship.Alpha;
+                    }
                 }
             }
         }
@@ -219,9 +273,14 @@ namespace AnimalSimulationVersion2
                 {
                     TimeSinceLastFight = FightCooldown; //this means that any update to the pack will prevent a fight, even birth
                     PackMembers = data;
+                    if(PackMembers.Length == 0)
+                        Relationship = IPack.PackRelationship.NonMember;
                     foreach ((IPack.PackRelationship relationship, string id, _) in PackMembers)
                         if (ID == id)
+                        {
                             Relationship = relationship;
+                            break;
+                        }
                 }
             }
         }
@@ -254,11 +313,16 @@ namespace AnimalSimulationVersion2
             if (e.IDs.ReceiverID == ID)
             {
                 string[] attacks = AttackedBy;
-                helper.Add(ref attacks, e.IDs.ReceiverID);
+                helper.Add(ref attacks, e.IDs.SenderID);
                 AttackedBy = attacks;
                 Health -= e.Damage;
                 if (Health <= 0)
+                {
                     Death();
+                    e.Died = true;
+                }
+                else
+                    e.Died = false;
             }
         }
 

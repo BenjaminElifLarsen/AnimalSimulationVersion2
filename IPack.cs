@@ -45,7 +45,22 @@ namespace AnimalSimulationVersion2
         /// True if the pack can fight for alpha posistion.
         /// </summary>
         public bool CanFightForAlpha { get; set; } //how to ensure the animals do not fight all the time and also figure out why one animal would fight another for alpha
+        /// <summary>
+        /// 
+        /// </summary>
         public string[] AttackedBy { get; set; }
+        /// <summary>
+        /// The range which the lifeform can strike another lifeform.
+        /// </summary>
+        public float StrikeRange { get; }
+        /// <summary>
+        /// The attack speed in seconds.
+        /// </summary>
+        public float AttackSpeed { get; }
+        /// <summary>
+        /// The cooldown between attacks in seconds.
+        /// </summary>
+        public float AttackCooldown { get; set; }
         /// <summary>
         /// Allows a pack member to fight another pack member.
         /// </summary>
@@ -57,7 +72,7 @@ namespace AnimalSimulationVersion2
         /// <returns>The pack array.</returns>
         public void GeneratePack();
         /// <summary>
-        /// 
+        /// Makes use of RelationshipCandidateEventHandler to create a new pack.
         /// </summary>
         /// <param name="receiverID"></param>
         public void TransmitPack(string receiverID);
