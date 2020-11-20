@@ -72,7 +72,7 @@ namespace AnimalSimulationVersion2
         private void Output_UpdateInformationEvent(object sender, TextEventArgs e)
         {
             string text = "";
-            foreach ((string species, ushort amount) in e.ListInformation)
+            foreach ((string species, ushort amount) in e.ListInformation) //will fail if e.ListInformation is null
                 text += species + ": " + amount + Environment.NewLine;
             UpdateInformation(text);
         }
