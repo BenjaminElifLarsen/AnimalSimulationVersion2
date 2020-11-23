@@ -73,6 +73,10 @@ namespace AnimalSimulationVersion2
         /// <returns>If both vectors' posistion values are the same it returns true, else false.</returns>
         public static bool Compare(Vector vector1, Vector vector2)
         {
+            if ((vector1 == null && vector2 != null) || (vector1 != null && vector2 == null))
+                return false;
+            if (vector1 == null && vector2 == null)
+                return true;
             if (vector1.X == vector2.X && vector1.Y == vector2.Y && vector1.Z == vector2.Z)
                 return true;
             return false;
