@@ -122,7 +122,7 @@ namespace AnimalSimulationVersion2
         /// </summary>
         /// <returns></returns>
         protected virtual float DistanceTime(/*Vector locationOfMate*/)
-        {
+        { //if this class end up using the new pregnacy event, if it is the receiver it should also get the location of the mate and then call this method.
             //float distance = (float)Math.Sqrt(Math.Pow(Math.Abs(Location.X - locationOfMate.X),2) + Math.Pow(Math.Abs(Location.Y - locationOfMate.Y), 2));
 
             return mateDistance / distanceDivider;
