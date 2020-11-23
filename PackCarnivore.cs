@@ -6,7 +6,7 @@ namespace AnimalSimulationVersion2
 {
     class PackCarnivore : SleepingCarnivore, IPack
     {
-
+        private bool isKilled;
         public (IPack.PackRelationship Relationship, string ID, char Gender)[] PackMembers { get; set; }
         public byte MaxPackSize { get; set; }
         public float TimeSinceLastFight { get; set; }
@@ -145,7 +145,7 @@ namespace AnimalSimulationVersion2
 
         protected override void Death()
         {
-            if (Relationship == IPack.PackRelationship.Alpha)
+            if (Relationship == IPack.PackRelationship.Alpha && !isKilled)
             {
                 bool newAlpha = false;
                 (IPack.PackRelationship relationship, string id, char gender)[] pack = PackMembers;
@@ -171,6 +171,14 @@ namespace AnimalSimulationVersion2
                     foreach((_, string id, _) in PackMembers)
                         TransmitPack(id);
                 }
+            }
+            else if(Relationship == IPack.PackRelationship.Alpha)
+            {
+                (IPack.PackRelationship relationship, string id, char gender)[] pack = PackMembers;
+                helper.Remove(ref pack, (Relationship, ID, Gender));
+                PackMembers = pack;
+                foreach ((_, string id, _) in PackMembers)
+                    TransmitPack(id);
             }
             else if(Relationship == IPack.PackRelationship.Member)
             {
@@ -272,6 +280,7 @@ namespace AnimalSimulationVersion2
                 if(e.Data is (IPack.PackRelationship, string, char)[] data)
                 {
                     TimeSinceLastFight = FightCooldown; //this means that any update to the pack will prevent a fight, even birth
+                    string[] attackers = new string[0];
                     PackMembers = data;
                     if(PackMembers.Length == 0)
                         Relationship = IPack.PackRelationship.NonMember;
@@ -279,8 +288,15 @@ namespace AnimalSimulationVersion2
                         if (ID == id)
                         {
                             Relationship = relationship;
-                            break;
                         }
+                        else
+                        {
+                            if (helper.Contains(AttackedBy, id))
+                            {
+                                helper.Add(ref attackers, id);
+                            }
+                        }
+                    AttackedBy = attackers;
                 }
             }
         }
@@ -312,12 +328,16 @@ namespace AnimalSimulationVersion2
         { //delegate. This lifeform has taken damage.
             if (e.IDs.ReceiverID == ID)
             {
-                string[] attacks = AttackedBy;
-                helper.Add(ref attacks, e.IDs.SenderID);
-                AttackedBy = attacks;
+                if (!helper.Contains(AttackedBy, e.IDs.SenderID))
+                {
+                    string[] attacks = AttackedBy;
+                    helper.Add(ref attacks, e.IDs.SenderID);
+                    AttackedBy = attacks;
+                }
                 Health -= e.Damage;
                 if (Health <= 0)
                 {
+                    isKilled = true;
                     Death();
                     e.Died = true;
                 }

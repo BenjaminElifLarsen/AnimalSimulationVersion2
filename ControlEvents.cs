@@ -303,7 +303,7 @@ namespace AnimalSimulationVersion2
         /// </summary>
         public class DoHealthDamageEventArgs
         {
-            private bool died;
+            private bool died = false;
             /// <summary>
             /// A Tuple holding both IDs.
             /// </summary>
