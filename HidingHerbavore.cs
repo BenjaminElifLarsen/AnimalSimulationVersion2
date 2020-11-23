@@ -67,7 +67,7 @@ namespace AnimalSimulationVersion2
                     HideFromPredator();
                 #endregion
                 #region Hunger
-                else if (Hunger < MaxHunger * HungerFoodSeekingLevel)
+                else if (Hunger < MaxHunger * HungerFoodSeekingLevel) //consider splitting the parts of the AI into methods that can overriden and reused.
                 {
                     if (mateID != null) 
                     { 

@@ -1,4 +1,6 @@
-﻿using Microsoft.Windows.Themes;
+﻿#define DEBUG
+
+using Microsoft.Windows.Themes;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -243,14 +245,15 @@ namespace AnimalSimulationVersion2
             return lifeformPublisher.GetLocation(lifeformID);
         }
         /// <summary>
-        /// Animal mates.
+        /// Animal mates if they are on the same posistion. By default the method assumes the child caring member got the gender of 'f'.
+        /// 
         /// </summary>
         protected virtual void Mate()
         {
             if (Vector.Compare(Location, MateLocation) && !HasReproduced)
             {
-                periodInReproduction = 0;
-                if (Gender == 'f')
+                periodInReproduction = 0; //perhaps have event for mating, so instead of both animals mating in turn, only one has to do it and then inform the other of it.
+                if (Gender == 'f') //senderID:string, receiverID:string, getPregnant:bool
                     HasReproduced = true;
                 TimeToReproductionNeed = reproductionCooldown;
             }
@@ -385,5 +388,11 @@ namespace AnimalSimulationVersion2
             lifeformPublisher.RaiseInformHunterOfPreyDeath -= PreyHasDiedEventHandler;
         }
 
+        ~Animalia()
+        {
+            #if DEBUG
+            System.Diagnostics.Debug.WriteLine($"{ID} of {Species} had mate {mateID} and food {foodID}");
+            #endif
+        }
     }
 }

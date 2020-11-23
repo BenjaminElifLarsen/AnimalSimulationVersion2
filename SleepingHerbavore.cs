@@ -96,7 +96,7 @@ namespace AnimalSimulationVersion2
                 #region Hunger
                 else if (Hunger < MaxHunger * HungerFoodSeekingLevel)
                 {
-                    if (mateID != null)
+                    if (mateID != null) //can have a property that decided if an animal mates for life or not.
                     {
                         lifeformPublisher.RemoveMate(ID, mateID);
                         mateID = null;
