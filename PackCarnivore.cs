@@ -85,9 +85,9 @@ namespace AnimalSimulationVersion2
                                         bool killed = lifeformPublisher.DamageLifeform(ID, id, damage);
                                         if (killed)
                                         { //update the relationship to alpha and transmit the pack to each member
-                                            string[] attacks = AttackedBy;
-                                            helper.Remove(ref attacks, id);
-                                            AttackedBy = attacks;
+                                            //string[] attacks = AttackedBy;
+                                            //helper.Remove(ref attacks, id);
+                                            //AttackedBy = attacks;
                                             helper.Replace(PackMembers, (Relationship, ID, Gender), (IPack.PackRelationship.Alpha, ID, Gender));
                                             Relationship = IPack.PackRelationship.Alpha;
                                             foreach ((_, string id_, _) in PackMembers)
@@ -108,12 +108,12 @@ namespace AnimalSimulationVersion2
                     {
                         byte damage = (byte)helper.GenerateRandomNumber(0, 16);
                         bool killed = lifeformPublisher.DamageLifeform(ID, AttackedBy[0], damage);
-                        if (killed)
-                        { //at some point, move the code in this scope into the methods in Helper that needs these to work.
-                            string[] attacks = AttackedBy;
-                            helper.Remove(ref attacks, AttackedBy[0]);
-                            AttackedBy = attacks;
-                        }
+                        //if (killed)
+                        //{ //at some point, move the code in this scope into the methods in Helper that needs these to work.
+                        //    string[] attacks = AttackedBy;
+                        //    helper.Remove(ref attacks, AttackedBy[0]);
+                        //    AttackedBy = attacks;
+                        //}
                     }
                 }
         }
@@ -172,7 +172,7 @@ namespace AnimalSimulationVersion2
                         TransmitPack(id);
                 }
             }
-            else if(Relationship == IPack.PackRelationship.Alpha)
+            else if(Relationship == IPack.PackRelationship.Alpha) // != IPack.PackRelationship.NonMember
             {
                 (IPack.PackRelationship relationship, string id, char gender)[] pack = PackMembers;
                 helper.Remove(ref pack, (Relationship, ID, Gender));
