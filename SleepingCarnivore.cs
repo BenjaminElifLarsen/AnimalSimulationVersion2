@@ -25,7 +25,7 @@ namespace AnimalSimulationVersion2
             lengthOfReproduction = 9;
             genderInformation = new (char Gender, byte Weight)[] { ('f', 50), ('m', 50) };
             reproductionCooldown = 20;
-            Colour = (200, 10, 10);
+            Colour = new Colour(200, 10, 10);
             Health = MaxHealth;
             MovementSpeed = 20;
             CurrentMovementSpeed = MovementSpeed;

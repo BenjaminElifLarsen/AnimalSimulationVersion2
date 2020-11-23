@@ -80,7 +80,7 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// The RGB colour of the lifeform.
         /// </summary>
-        protected (byte Red, byte Green, byte Blue) Colour { get; set; }
+        protected Colour Colour { get; set; }
         /// <summary>
         /// The unique ID of the lifeform.
         /// </summary>
@@ -130,7 +130,7 @@ namespace AnimalSimulationVersion2
             MaxAge = 10;
             NutrientValue = 50;
 
-            Colour = (122,122,122);
+            Colour = new Colour(122,122,122);
             Design = new Point[] { new Point(0, 0), new Point(4, 0), new Point(4, 4), new Point(0, 4) };
         }
         /// <summary>
@@ -306,7 +306,7 @@ namespace AnimalSimulationVersion2
         { //delegate. Transmit location, design and colour back.
             if (Design != null)
             {
-                (Point[] Design, (byte Red, byte Green, byte Blue), Vector Location) drawInforamtion = (helper.DeepCopy(Design), Colour, Location); //(type,type) will ac
+                (Point[] Design, Colour Colour, Vector Location) drawInforamtion = (helper.DeepCopy(Design), Colour, Location); //(type,type) will ac
                 e.AddDrawInformation(drawInforamtion);
             }
         }

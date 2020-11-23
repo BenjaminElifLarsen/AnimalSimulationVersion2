@@ -20,7 +20,7 @@ namespace AnimalSimulationVersion2
         {
             MovementSpeed = 10;
             CurrentMovementSpeed = MovementSpeed;
-            Colour = (0,120,120);
+            Colour = new Colour(0,120,120);
             NutrientValue = 100;
 
             genderInformation = new (char Gender, byte Weight)[] { ('f', 50), ('m', 50) };

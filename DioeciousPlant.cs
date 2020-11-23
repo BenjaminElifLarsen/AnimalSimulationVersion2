@@ -23,7 +23,7 @@ namespace AnimalSimulationVersion2
             ReproductionAge = 3;
             distanceDivider = 25;
 
-            Colour = (200, 100, 0);
+            Colour = new Colour(200, 100, 0);
             Design = new Point[] { new Point(3, 0), new Point(6, 3), new Point(3, 6), new Point(0, 3) };
 
         }

@@ -29,7 +29,7 @@ namespace AnimalSimulationVersion2
 
             MovementSpeed = 18;
 
-            Colour = (255,120,0);
+            Colour = new Colour(255,120,0);
 
             PackMembers = new(IPack.PackRelationship Relationship, string ID, char Gender)[0];
             MaxPackSize = 6;

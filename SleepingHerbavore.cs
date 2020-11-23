@@ -31,7 +31,7 @@ namespace AnimalSimulationVersion2
             baseDiscoverRange = DiscoverRange;
 
 
-            Colour = (0, 0, 255);
+            Colour = new Colour(0, 0, 255);
         } //if wanting to add the variable values in using a constructor, you will need to do something similar to Dioecious(Plant) for Activator.CreateInstance(type,object[])
         //maybe lower the amount of parameters using a struct... will need a struct for each different constructor since they need to have different variables.
         protected override void TimeUpdate()

@@ -165,7 +165,7 @@ namespace AnimalSimulationVersion2
         /// </summary>
         public class DrawEventArgs
         {
-            private List<(Point[] Design, (byte Red, byte Green, byte Blue) Colour, Vector Location)> drawInformation = new List<(Point[] Design, (byte Red, byte Green, byte Blue) Colour, Vector Location)>();
+            private List<(Point[] Design, Colour Colour, Vector Location)> drawInformation = new List<(Point[] Design, Colour Colour, Vector Location)>();
             /// <summary>
             /// Basic constructor
             /// </summary>
@@ -176,14 +176,14 @@ namespace AnimalSimulationVersion2
             /// Adds inforamtion needed for drawing the lifeform.
             /// </summary>
             /// <param name="information">The dsign, colours and location of the lifeform.</param>
-            public void AddDrawInformation((Point[] Design, (byte Red, byte Green, byte Blue), Vector Location) information)
+            public void AddDrawInformation((Point[] Design, Colour Colour, Vector Location) information)
             {
                 drawInformation.Add(information);
             }
             /// <summary>
             /// Returns the list containing all of the needed information for drawing all lifeforms.
             /// </summary>
-            public List<(Point[] Design, (byte Red, byte Green, byte Blue) Colour, Vector Location)> DrawInformation => drawInformation;
+            public List<(Point[] Design, Colour Colour, Vector Location)> DrawInformation => drawInformation;
             
         }
         /// <summary>

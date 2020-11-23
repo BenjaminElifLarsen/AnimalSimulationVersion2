@@ -22,7 +22,7 @@ namespace AnimalSimulationVersion2
             MaxAge = 4;
             ReproductionAge = 2;
 
-            Colour = (100, 200, 0);
+            Colour = new Colour(100, 200, 0);
             Design = new Point[] { new Point(3,0), new Point(6,3), new Point(3,6), new Point(0,3) };
 
         }
