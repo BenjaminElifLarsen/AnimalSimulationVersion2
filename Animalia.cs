@@ -62,6 +62,10 @@ namespace AnimalSimulationVersion2
         /// </summary>
         protected float HungerFoodSeekingLevel { get; set; }
         /// <summary>
+        /// The maximum distance the animal can be from the nearest food source. 
+        /// </summary>
+        protected float MaxFoodDistanceRange { get; set; }
+        /// <summary>
         /// Default constructor. Initialises properites and variables to 'default' values.
         /// </summary>
         /// <param name="species">The species of this animal.</param>
@@ -74,11 +78,13 @@ namespace AnimalSimulationVersion2
         public Animalia(string species, Vector location, string[] foodSource, IHelper helper, LifeformPublisher lifeformPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : this(species, location,helper, lifeformPublisher, drawPublisher, mapInformation)
         {
             MateLocation = Vector.Copy(location);
-            MoveTo = GenerateRandomEndLocation();
+            //MoveTo = GenerateRandomEndLocation();
             FoodSource = foodSource;
-            MoveTo = GenerateRandomEndLocation();
-            
+            //MoveTo = GenerateRandomEndLocation();
+            MoveTo = Vector.Copy(location);
             MovementSpeed = 10;
+
+            MaxFoodDistanceRange = 100;
 
             MaxHunger = 80;
             HungerFoodSeekingLevel = 0.5f;
@@ -174,7 +180,35 @@ namespace AnimalSimulationVersion2
         /// <returns>Returns a new X and Y coordinate for the animal to move too.</returns>
         protected virtual Vector GenerateRandomEndLocation()
         {
-            return new Vector(helper.GenerateRandomNumber(0,mapInformation.GetSizeOfMap.width-1), helper.GenerateRandomNumber(0, mapInformation.GetSizeOfMap.height - 1),0);
+            string food = FindFood(); //find food and its location
+            if(food != null) 
+            { 
+                Vector foodLocation = GetLifeformLocation(food);
+
+                float xPercent = helper.GenerateRandomNumber(0, 100) / 100f; //calculate the new end location
+                float xMaxDistance = xPercent * MaxFoodDistanceRange;
+                float yMaxDistance = (1 - xPercent) * MaxFoodDistanceRange;
+                float xDistance = (helper.GenerateRandomNumber(0, (int)xMaxDistance)) - (xMaxDistance / 2);
+                float yDistance = (helper.GenerateRandomNumber(0, (int)yMaxDistance)) - (yMaxDistance / 2);
+                Vector newEndLocation = new Vector(foodLocation.X + xDistance, foodLocation.Y + yDistance, foodLocation.Z);
+
+                if(newEndLocation.X < 0 || newEndLocation.X >= mapInformation.mapSize.width) //constrain end location the be inside of the map.
+                {
+                    if (newEndLocation.X < 0)
+                        newEndLocation.X = 0;
+                    else
+                        newEndLocation.X = mapInformation.mapSize.width - 1;
+                }
+                if (newEndLocation.Y < 0 || newEndLocation.Y >= mapInformation.mapSize.height)
+                {
+                    if (newEndLocation.Y < 0)
+                        newEndLocation.Y = 0;
+                    else
+                        newEndLocation.Y = mapInformation.mapSize.height - 1;
+                }
+                return newEndLocation;
+            }
+            return new Vector(helper.GenerateRandomNumber(0, mapInformation.GetSizeOfMap.width - 1), helper.GenerateRandomNumber(0, mapInformation.GetSizeOfMap.height - 1), 0);
         }
         /// <summary>
         /// Finds a mate for the animal and informs the other animal that it got a mate.
