@@ -118,13 +118,21 @@ namespace AnimalSimulationVersion2
             }
         }
         /// <summary>
-        /// overrides Mate(). Calls the base and contains an extra check to if mateID should be set to null.
+        /// Overrides Mate(). Sets mateID to null.
         /// </summary>
         protected override void Mate()
         {
-            base.Mate();
-            if (Vector.Compare(Location, MateLocation))
+            if (Vector.Compare(Location, MateLocation) && !HasReproduced)
+            {
+                lifeformPublisher.Pregnacy(ID, mateID, Gender != 'f');
+                TimeToReproductionNeed = reproductionCooldown;
+                if (Gender == 'f')
+                {
+                    HasReproduced = true;
+                    periodInReproduction = 0;
+                }
                 mateID = null;
+            }
         }
 
         protected override void TimeUpdate()
@@ -179,6 +187,23 @@ namespace AnimalSimulationVersion2
             HuntedBy = array;
             CooldownBetweenHiding = MaxCooldownBetweenHiding;
             IsHiding = false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected override void PregnacyEventHandler(object sender, ControlEvents.PregnacyEventArgs e)
+        {
+            if (e.IDs.ReceiverID == ID)
+            {
+                periodInReproduction = 0; //perhaps have event for mating, so instead of both animals mating in turn, only one has to do it and then inform the other of it.
+                TimeToReproductionNeed = reproductionCooldown;
+                if (e.IsPregnant)
+                    HasReproduced = true;
+                mateID = null;
+            }
         }
 
     }

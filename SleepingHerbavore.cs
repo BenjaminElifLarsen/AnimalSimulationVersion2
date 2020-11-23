@@ -30,6 +30,7 @@ namespace AnimalSimulationVersion2
             baseDiscoverChance = DiscoverChance;
             baseDiscoverRange = DiscoverRange;
 
+            BirthAmount = (2, 3);
 
             Colour = new Colour(0, 0, 255);
         } //if wanting to add the variable values in using a constructor, you will need to do something similar to Dioecious(Plant) for Activator.CreateInstance(type,object[])

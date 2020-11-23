@@ -115,6 +115,7 @@ namespace AnimalSimulationVersion2
             this.lifeformPublisher.RaiseSetMateEvent += GetMateEventHandler;
             this.lifeformPublisher.RaiseRemoveMateEvent += RemoveMateEventHandler;
             this.lifeformPublisher.RaiseInformHunterOfPreyDeath += PreyHasDiedEventHandler;
+            this.lifeformPublisher.RaisePregnacy += PregnacyEventHandler;
         }
 
         /// <summary>
@@ -246,16 +247,21 @@ namespace AnimalSimulationVersion2
         }
         /// <summary>
         /// Animal mates if they are on the same posistion. By default the method assumes the child caring member got the gender of 'f'.
-        /// 
         /// </summary>
+        /// <remarks>By default the gender, 'f', will be pregnant.
+        /// If a specific gender needs to be pregant, this method needs to be overwritten.
+        /// Also, by default it will not set mateID to null.</remarks>
         protected virtual void Mate()
         {
             if (Vector.Compare(Location, MateLocation) && !HasReproduced)
             {
-                periodInReproduction = 0; //perhaps have event for mating, so instead of both animals mating in turn, only one has to do it and then inform the other of it.
-                if (Gender == 'f') //senderID:string, receiverID:string, getPregnant:bool
-                    HasReproduced = true;
+                lifeformPublisher.Pregnacy(ID, mateID, Gender != 'f');
                 TimeToReproductionNeed = reproductionCooldown;
+                if(Gender == 'f')
+                {
+                    HasReproduced = true;
+                    periodInReproduction = 0;
+                }
             }
         }
 
@@ -377,6 +383,22 @@ namespace AnimalSimulationVersion2
                     mateID = null;
         }
         /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>By default it will not set mateID to null.</remarks>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected virtual void PregnacyEventHandler(object sender, ControlEvents.PregnacyEventArgs e)
+        { //Delegate. The mate has mated with this animal.
+            if(e.IDs.ReceiverID == ID)
+            {
+                periodInReproduction = 0;
+                TimeToReproductionNeed = reproductionCooldown;
+                if(e.IsPregnant)
+                    HasReproduced = true;
+            }
+        }
+        /// <summary>
         /// Remove all subscriptions to ensure the animal can be removed from the memory.
         /// </summary>
         protected override void RemoveSubscriptions() //consider renaming some of the methods to have names that make more sense
@@ -386,6 +408,7 @@ namespace AnimalSimulationVersion2
             lifeformPublisher.RaiseSetMateEvent -= GetMateEventHandler;
             lifeformPublisher.RaiseRemoveMateEvent -= RemoveMateEventHandler;
             lifeformPublisher.RaiseInformHunterOfPreyDeath -= PreyHasDiedEventHandler;
+            lifeformPublisher.RaisePregnacy -= PregnacyEventHandler;
         }
 
         ~Animalia()

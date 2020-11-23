@@ -5,6 +5,9 @@ using System.Text;
 
 namespace AnimalSimulationVersion2
 {
+    /// <summary>
+    /// Holds all delegates, events and event triggers that are should and can be used by lifeforms.
+    /// </summary>
     class LifeformPublisher
     {
         //prey
@@ -20,7 +23,7 @@ namespace AnimalSimulationVersion2
         public delegate void informPredatorOfPreyDeathEventHandler(object sender, ControlEvents.InformPredatorOfPreyDeathEventArgs args);
         public event informPredatorOfPreyDeathEventHandler RaiseInformHunterOfPreyDeath;
 
-        //mate
+        //mat(e/ing)
         public delegate void possibleMatesEventHandler(object sender, ControlEvents.PossibleMateEventArgs args);
         public event possibleMatesEventHandler RaisePossibleMatesEvent;
 
@@ -29,6 +32,9 @@ namespace AnimalSimulationVersion2
 
         public delegate void removeMateEventHandler(object sender, ControlEvents.RemoveMateEventArgs args);
         public event removeMateEventHandler RaiseRemoveMateEvent;
+
+        public delegate void pregnacyEventHandler(object sender, ControlEvents.PregnacyEventArgs args);
+        public event pregnacyEventHandler RaisePregnacy;
 
         //AI
         public delegate void aiEvnetHandler(object sender, ControlEvents.AIEventArgs args);
@@ -318,6 +324,22 @@ namespace AnimalSimulationVersion2
                 return e.GetList;
             }
             return null;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="senderID"></param>
+        /// <param name="receiverID"></param>
+        /// <param name="isPregnant"></param>
+        public void Pregnacy(string senderID, string receiverID, bool isPregnant)
+        {
+            OnPregnacy(new ControlEvents.PregnacyEventArgs(senderID, receiverID, isPregnant));
+        }
+        protected void OnPregnacy(ControlEvents.PregnacyEventArgs e)
+        {
+            pregnacyEventHandler eventHandler = RaisePregnacy;
+            if (eventHandler != null)
+                eventHandler.Invoke(this, e);
         }
     }
 }

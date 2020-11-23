@@ -464,5 +464,31 @@ namespace AnimalSimulationVersion2
             /// <param name="gender">The gender of the lifeform.</param>
             public void Add(Vector location, string ID, char gender) => information.Add((location, ID, gender));
         }
+
+        /// <summary>
+        /// Class that holds event data for pregnacy.
+        /// </summary>
+        public class PregnacyEventArgs
+        {
+            /// <summary>
+            /// A Tuple holding both IDs.
+            /// </summary>
+            public (string SenderID,string ReceiverID) IDs { get; }
+            /// <summary>
+            /// True if the lifeform is pregnant.
+            /// </summary>
+            public bool IsPregnant;
+            /// <summary>
+            /// Basic constructor.
+            /// </summary>
+            /// <param name="senderID">The ID of the sender.</param>
+            /// <param name="receiverID">The ID of the receiver.</param>
+            /// <param name="isPregnant">Is true if the receiver is to be pregnant.</param>
+            public PregnacyEventArgs(string senderID, string receiverID, bool isPregnant)
+            {
+                IDs = (senderID, receiverID);
+                IsPregnant = isPregnant;
+            }
+        }
     }
 }
