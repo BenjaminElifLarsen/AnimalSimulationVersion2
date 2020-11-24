@@ -89,10 +89,11 @@ namespace AnimalSimulationVersion2
                     {
                         Point[] drawLocations = new Point[information.Design.Length];
                         //for now, consider Location as top left.
+                        (byte xCenter,byte yCenter) center = CalculateCenter(information.Design);
                         for (int i = 0; i < information.Design.Length; i++)
                         {
-                            drawLocations[i].X = (int)(information.Design[i].X + information.Location.X); //maybe create a new Point array of same size, call it drawinglocations and use that one instead of information.Design
-                            drawLocations[i].Y = (int)(information.Design[i].Y + information.Location.Y);
+                            drawLocations[i].X = (int)(information.Design[i].X + information.Location.X - center.xCenter); //maybe create a new Point array of same size, call it drawinglocations and use that one instead of information.Design
+                            drawLocations[i].Y = (int)(information.Design[i].Y + information.Location.Y - center.yCenter);
                         }
                         using (Pen pen = new Pen(Color.FromArgb(information.Colour.Red, information.Colour.Green, information.Colour.Blue), 1))
                         {
@@ -102,6 +103,27 @@ namespace AnimalSimulationVersion2
                     }
             }
             return map;
+        }
+        private (byte xCenter,byte yCenter) CalculateCenter(Point[] design)
+        {
+            int heighestHeight = int.MinValue;
+            int widthestWidth = int.MinValue;
+            int smallestHeight = int.MaxValue;
+            int smallestWidth = int.MaxValue;
+            foreach(Point point in design)
+            {
+                if (point.X > widthestWidth)
+                    widthestWidth = point.X;
+                if (point.X < smallestWidth)
+                    smallestWidth = point.X;
+                if (point.Y > heighestHeight)
+                    heighestHeight = point.X;
+                if (point.Y < smallestHeight)
+                    smallestHeight = point.Y;
+            }
+            byte xCenter = (byte)((smallestWidth + widthestWidth) / 2);
+            byte yCenter = (byte)((smallestHeight + heighestHeight) / 2);
+            return (xCenter, yCenter);
         }
     }
 
