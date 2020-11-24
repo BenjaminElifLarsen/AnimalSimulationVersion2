@@ -183,7 +183,7 @@ namespace AnimalSimulationVersion2
         /// <returns>Returns a new X and Y coordinate for the animal to move too.</returns>
         protected virtual Vector GenerateRandomEndLocation()
         {
-            string food = FindFood(); //find food and its location
+            string food = FindNearestFood(); //find food and its location
             if(food != null) 
             { 
                 Vector foodLocation = GetLifeformLocation(food);
@@ -297,14 +297,25 @@ namespace AnimalSimulationVersion2
         /// </summary>
         /// <remarks>It will return null if no food can be found</remarks>
         /// <returns>The ID of the food if found. If no food is found it returns null.</returns>
-        protected virtual string FindFood()//maybe have a property for when the animal should start looking for food that is compared to Hunger (not used in this method but rather as a check to see if this method should be called)
+        protected virtual string FindFood()
+        {
+            string nearestFood = FindNearestFood();
+            if(nearestFood != null)
+                lifeformPublisher.SetPrey(ID, nearestFood);
+            return nearestFood;
+        }
+        /// <summary>
+        /// Used to find the nearest food and returns its ID.
+        /// </summary>
+        /// <returns>The ID of the nearest food or null if no food is present.</returns>
+        protected virtual string FindNearestFood()
         {
             string nearestFood = null;
             float distance = Single.MaxValue;
             List<(Vector PreyLocation, string PreyID, string PreySpecies)> possiblePreys = lifeformPublisher.GetPossiblePreys(ID);
             foreach ((Vector Location, string PreyID, string Species) information in possiblePreys)
             {
-                float distanceTo = information.Location.DistanceBetweenVectors(Location);//Math.Abs((information.Location.X - Location.X)) + Math.Abs((information.Location.Y - Location.Y));
+                float distanceTo = information.Location.DistanceBetweenVectors(Location);
                 if (helper.Contains(FoodSource, information.Species))
                     if (distanceTo < distance)
                     {
@@ -312,10 +323,9 @@ namespace AnimalSimulationVersion2
                         nearestFood = information.PreyID;
                     }
             }
-            if(nearestFood != null)
-                lifeformPublisher.SetPrey(ID, nearestFood);
             return nearestFood;
         }
+
         /// <summary>
         /// Animal eats food
         /// </summary>

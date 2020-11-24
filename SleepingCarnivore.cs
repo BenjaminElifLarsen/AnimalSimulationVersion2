@@ -72,7 +72,7 @@ namespace AnimalSimulationVersion2
                     if ((Hunger < MaxHunger * HungerFoodSeekingLevel && EnergyLevel > 0) || Hunger < MaxHunger * 0.1) //softcode those values later.
                     {
                         if (foodID == null) 
-                            foodID = FindFood(); //if they are in a pack/herd they need to stick together.
+                           foodID = FindFood(); //if they are in a pack/herd they need to stick together.
                         if (foodID != null)
                         {
                             TrackPrey();
