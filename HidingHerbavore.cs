@@ -90,12 +90,19 @@ namespace AnimalSimulationVersion2
                 #region Mating
                 else if (Age >= ReproductionAge && TimeToReproductionNeed <= 0)
                 {
+                    Failed:
                     if (mateID == null)
                         mateID = FindMate();
                     if (mateID != null)
                     {
                         CurrentMovementSpeed = MovementSpeed;
                         MoveTo = MateLocation = GetLifeformLocation(mateID);
+                        if(MateLocation == null)
+                        {
+                            lifeformPublisher.RemoveMate(ID, mateID);
+                            mateID = null;
+                            goto Failed;
+                        }
                         Move();
                         Mate();
                     }
@@ -147,24 +154,11 @@ namespace AnimalSimulationVersion2
             }
             if (CooldownBetweenHiding > 0)
                 CooldownBetweenHiding -= timeSinceLastUpdate;
-            //if (LostPredators.Length > 0)
-            //{
-            //    for(int i = 0; i < LostPredators.Length; i++)
-            //    {
-            //        LostPredators[i].TimeSinceEscape += timeSinceLastUpdate;
-            //        if(LostPredators[i].TimeSinceEscape >= TimeThresholdForBeingHuntedAgain)
-            //        {
-            //            (string ID, float TimeSinceEscape)[] predators = LostPredators;
-            //            helper.Remove(ref predators, (LostPredators[i].ID, LostPredators[i].TimeSinceEscape));
-            //            LostPredators = predators;
-            //        }
-            //    }
-            //}
             base.TimeUpdate();
         }
 
         /// <summary>
-        /// The prey will try and hide for a predator. The more predators the harder it is.
+        /// The prey will try and hide for a predator. The more predators, the harder it is.
         /// </summary>
         public void HideFromPredator()
         {
@@ -198,11 +192,11 @@ namespace AnimalSimulationVersion2
         {
             if (e.IDs.ReceiverID == ID)
             {
-                periodInReproduction = 0; //perhaps have event for mating, so instead of both animals mating in turn, only one has to do it and then inform the other of it.
+                mateID = null;
+                periodInReproduction = 0; 
                 TimeToReproductionNeed = reproductionCooldown;
                 if (e.IsPregnant)
                     HasReproduced = true;
-                mateID = null;
             }
         }
 

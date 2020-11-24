@@ -73,12 +73,12 @@ namespace AnimalSimulationVersion2
                 (float X, float Y) spawnLocation = (Location.X + xDistance, Location.Y + yDistance);
                 if (spawnLocation.X < 0)
                     spawnLocation.X = 0;
-                else if (spawnLocation.X > mapInformation.mapSize.width)
-                    spawnLocation.X = mapInformation.mapSize.width - 1;
+                else if (spawnLocation.X > mapInformation.GetSizeOfMap.width)
+                    spawnLocation.X = mapInformation.GetSizeOfMap.width - 1;
                 if (spawnLocation.Y < 0)
                     spawnLocation.Y = 0;
-                else if (spawnLocation.Y > mapInformation.mapSize.height)
-                    spawnLocation.Y = mapInformation.mapSize.height - 1;
+                else if (spawnLocation.Y > mapInformation.GetSizeOfMap.height)
+                    spawnLocation.Y = mapInformation.GetSizeOfMap.height - 1;
                 objArray[1] = new Vector(spawnLocation.X, spawnLocation.Y, 0);
                 Activator.CreateInstance(type, objArray);
             }

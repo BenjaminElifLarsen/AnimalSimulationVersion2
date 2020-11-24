@@ -221,12 +221,12 @@ namespace AnimalSimulationVersion2
                         location.Y += yDistance;
                         if (location.X < 0)
                             location.X = 0;
-                        else if (location.X > mapInformation.mapSize.width)
-                            location.X = mapInformation.mapSize.width - 1;
+                        else if (location.X > mapInformation.GetSizeOfMap.width)
+                            location.X = mapInformation.GetSizeOfMap.width - 1;
                         if (location.Y < 0)
                             location.Y = 0;
-                        else if (location.Y > mapInformation.mapSize.height)
-                            location.Y = mapInformation.mapSize.height - 1;
+                        else if (location.Y > mapInformation.GetSizeOfMap.height)
+                            location.Y = mapInformation.GetSizeOfMap.height - 1;
                         return location;
                     }
                 return base.GenerateRandomEndLocation();

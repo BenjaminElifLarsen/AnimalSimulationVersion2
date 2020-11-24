@@ -6,13 +6,13 @@ namespace AnimalSimulationVersion2
 {
     class Publisher
     {
-        private static LifeformPublisher animalPublisher;
+        private static LifeformPublisher lifeformPublisher;
         private static DrawPublisher drawPublisher;
-        public static LifeformPublisher GetAnimalInstance { get => animalPublisher; }
+        public static LifeformPublisher GetLifeformInstance { get => lifeformPublisher; }
         public static DrawPublisher GetDrawInstance { get => drawPublisher; }
         static Publisher()
         {
-            animalPublisher = new LifeformPublisher();
+            lifeformPublisher = new LifeformPublisher();
             drawPublisher = new DrawPublisher();
         }
     }

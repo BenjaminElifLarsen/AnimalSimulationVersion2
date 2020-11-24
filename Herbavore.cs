@@ -206,17 +206,17 @@ namespace AnimalSimulationVersion2
 
             Vector escapeVector = new Vector(Location.X + xEscapeDistance, Location.Y + yEscapeDistance, 0);
 
-            if (escapeVector.X < 0 || escapeVector.X >= mapInformation.mapSize.width) //restrictions to the map area
+            if (escapeVector.X < 0 || escapeVector.X >= mapInformation.GetSizeOfMap.width) //restrictions to the map area
                 if (escapeVector.X < 0)
                     escapeVector.X = 0;
                 else
-                    escapeVector.X = mapInformation.mapSize.width - 1;
+                    escapeVector.X = mapInformation.GetSizeOfMap.width - 1;
 
-            if (escapeVector.Y < 0 || escapeVector.Y >= mapInformation.mapSize.height) //restrictions to the map area
+            if (escapeVector.Y < 0 || escapeVector.Y >= mapInformation.GetSizeOfMap.height) //restrictions to the map area
                 if (escapeVector.Y < 0)
                     escapeVector.Y = 0;
                 else
-                    escapeVector.Y = mapInformation.mapSize.height - 1;
+                    escapeVector.Y = mapInformation.GetSizeOfMap.height - 1;
 
             return escapeVector;
         }

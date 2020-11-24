@@ -16,7 +16,7 @@ namespace AnimalSimulationVersion2
             /// <summary>
             /// The ID of the sender. Used to prevent the sender from reacting to this event.
             /// </summary>
-            public string SenderID { get; set; }
+            public string SenderID { get; }
             /// <summary>
             /// Basic constructor.
             /// </summary>
@@ -212,7 +212,7 @@ namespace AnimalSimulationVersion2
             /// <summary>
             /// The nutrient value of the lifeform.
             /// </summary>
-            private float nutrienceValue;
+            private float nutrientValue;
             /// <summary>
             /// The ID of the lifeform that got eaten.
             /// </summary>
@@ -229,11 +229,11 @@ namespace AnimalSimulationVersion2
             /// Sets the nutrient value.
             /// </summary>
             /// <param name="value">The nutrient value of the lifeform.</param>
-            public void SetNutrient(float value) => nutrienceValue = value;
+            public void SetNutrient(float value) => nutrientValue = value;
             /// <summary>
             /// Gets the nutrient of the lifeform that was eaten.
             /// </summary>
-            public float GetNutrient => nutrienceValue;
+            public float GetNutrient => nutrientValue;
         }
         /// <summary>
         /// Class that holds event data regarding a lifeform dying.

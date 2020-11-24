@@ -7,7 +7,7 @@ namespace AnimalSimulationVersion2
     interface IHide //if it is hunted, for each predator generate a random number and if it is higher than a certian value that predator will "lose" the prey. The prey's movement speed is set to zero.
     { //maybe have a IFlee
         /// <summary>
-        /// THe stealth level of the lifeform. 
+        /// The stealth level of the lifeform. 
         /// </summary>
         public int StealthLevel { get; set; } 
         /// <summary>

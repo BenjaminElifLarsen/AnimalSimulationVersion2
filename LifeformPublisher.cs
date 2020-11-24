@@ -199,7 +199,7 @@ namespace AnimalSimulationVersion2
                 eventHandler.Invoke(this, e);
                 return e.GetLocation;
             }
-            return new Vector(-1,-1,-1); //have a custom exception for eventHandler being null when the animal got a food/mate id
+            return null; //have a custom exception for eventHandler being null when the animal got a food/mate id
         }
         /// <summary>
         /// Informs <paramref name="receiverID"/> that it has died.
@@ -273,9 +273,9 @@ namespace AnimalSimulationVersion2
         /// Gets the location of every lifeform.
         /// </summary>
         /// <param name="senderID">The ID of the sender, used to ensure the sender does not react to the event.</param>
-        public void GetAllLocations(string senderID)
+        public List<(Vector Location, string ID)> GetAllLocations(string senderID)
         {
-            OnGetAllLocations(new ControlEvents.GetAllLocationsEventArgs(senderID));
+            return OnGetAllLocations(new ControlEvents.GetAllLocationsEventArgs(senderID));
         }
         protected List<(Vector Location, string ID)> OnGetAllLocations(ControlEvents.GetAllLocationsEventArgs e)
         {

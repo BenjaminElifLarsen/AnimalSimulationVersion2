@@ -1,4 +1,4 @@
-﻿#define DEBUG
+﻿#undef DEBUG
 
 using Microsoft.Windows.Themes;
 using System;
@@ -195,19 +195,19 @@ namespace AnimalSimulationVersion2
                 float yDistance = (helper.GenerateRandomNumber(0, (int)yMaxDistance)) - (yMaxDistance / 2);
                 Vector newEndLocation = new Vector(foodLocation.X + xDistance, foodLocation.Y + yDistance, foodLocation.Z);
 
-                if(newEndLocation.X < 0 || newEndLocation.X >= mapInformation.mapSize.width) //constrain end location the be inside of the map.
+                if(newEndLocation.X < 0 || newEndLocation.X >= mapInformation.GetSizeOfMap.width) //constrain end location the be inside of the map.
                 {
                     if (newEndLocation.X < 0)
                         newEndLocation.X = 0;
                     else
-                        newEndLocation.X = mapInformation.mapSize.width - 1;
+                        newEndLocation.X = mapInformation.GetSizeOfMap.width - 1;
                 }
-                if (newEndLocation.Y < 0 || newEndLocation.Y >= mapInformation.mapSize.height)
+                if (newEndLocation.Y < 0 || newEndLocation.Y >= mapInformation.GetSizeOfMap.height)
                 {
                     if (newEndLocation.Y < 0)
                         newEndLocation.Y = 0;
                     else
-                        newEndLocation.Y = mapInformation.mapSize.height - 1;
+                        newEndLocation.Y = mapInformation.GetSizeOfMap.height - 1;
                 }
                 return newEndLocation;
             }

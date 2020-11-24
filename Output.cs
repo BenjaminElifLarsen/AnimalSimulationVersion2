@@ -32,7 +32,7 @@ namespace AnimalSimulationVersion2
         {
             Instance = new Output();
             Instance.DrawPublisher = Publisher.GetDrawInstance;
-            Instance.AnimalPublisher = Publisher.GetAnimalInstance; //set this and the one above from MainWindow
+            Instance.AnimalPublisher = Publisher.GetLifeformInstance; //set this and the one above from MainWindow
             Instance.FramesPerSecond = 30;
             Instance.TimeInSecondsBetweenFrames = 1 / Instance.FramesPerSecond;
         }

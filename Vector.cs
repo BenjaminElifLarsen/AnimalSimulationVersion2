@@ -29,8 +29,8 @@ namespace AnimalSimulationVersion2
         /// <param name="helper"></param>
         public Vector(MapInformation mapInformation, IHelper helper)
         {
-            position[0] = helper.GenerateRandomNumber(0, mapInformation.mapSize.width - 1);
-            position[1] = helper.GenerateRandomNumber(0, mapInformation.mapSize.height - 1);
+            position[0] = helper.GenerateRandomNumber(0, mapInformation.GetSizeOfMap.width - 1);
+            position[1] = helper.GenerateRandomNumber(0, mapInformation.GetSizeOfMap.height - 1);
             position[2] = 0;
         }
         /// <summary>

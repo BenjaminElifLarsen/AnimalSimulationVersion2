@@ -6,7 +6,7 @@ namespace AnimalSimulationVersion2
 {
     class MapInformation
     {
-        public (ushort width, ushort height) mapSize;
+        private (ushort width, ushort height) mapSize;
         public (ushort width, ushort height) GetSizeOfMap { get => mapSize;  }
         public (ushort width, ushort height) SetSizeOfMap { set => mapSize = value; }
         public float OneAgeInSeconds { get; set; }
