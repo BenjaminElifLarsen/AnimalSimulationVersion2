@@ -42,7 +42,7 @@ namespace AnimalSimulationVersion2
             base.TimeUpdate();
             if (IsRunning)
                 TimeSprinted += timeSinceLastUpdate;
-            else
+            else if (TimeSprinted > 0)
                 TimeSprinted -= timeSinceLastUpdate;
             if (HasRolled)
                 TimeSinceLastRoll += timeSinceLastUpdate;
@@ -95,6 +95,8 @@ namespace AnimalSimulationVersion2
                     IsRunning = false;
                     CurrentMovementSpeed = MovementSpeed;
                 }
+                if (HuntedBy.Length == 0 || Hunger < 0)
+                    IsRunning = false;
                 if (IsRunning && Hunger > 0)
                 {
                     Move();
