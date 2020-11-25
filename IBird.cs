@@ -51,5 +51,9 @@ namespace AnimalSimulationVersion2
         /// </summary>
         /// <returns></returns>
         public Vector[] Circle();
+        /// <summary>
+        /// Update the alpha value of the bird. The heigher up, the lower the alpha.
+        /// </summary>
+        public void UpdateAlpha();
     }
 }
