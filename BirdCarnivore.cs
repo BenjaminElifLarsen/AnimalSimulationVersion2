@@ -371,8 +371,8 @@ namespace AnimalSimulationVersion2
 
         public void UpdateAlpha()
         {
-            float alphaPercentage = 1 - Location.Z / (MaximumHeight+40);
-            byte newAlpha = (byte)(byte.MaxValue * alphaPercentage);
+            float alphaPercentage = 1 - Location.Z / (MaximumHeight+40); //the + 40 is not the best solution as it will affect the final number differently depending on MaximumHeight.
+            byte newAlpha = (byte)(byte.MaxValue * alphaPercentage); //maybe (MaximumHeight+MaximumHeight*0.4) or something like that.
             if (Colour.Alpha != newAlpha)
                 Colour = new Colour(Colour.Red, Colour.Green, Colour.Blue, newAlpha);
         }
