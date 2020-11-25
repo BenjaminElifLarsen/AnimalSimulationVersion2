@@ -34,6 +34,17 @@ namespace AnimalSimulationVersion2
             position[2] = 0;
         }
         /// <summary>
+        /// Creates an instance of the Vector class with a random location on the map.
+        /// </summary>
+        /// <param name="mapInformation"></param>
+        /// <param name="helper"></param>
+        public Vector(MapInformation mapInformation, IHelper helper, float maxHeight)
+        {
+            position[0] = helper.GenerateRandomNumber(0, mapInformation.GetSizeOfMap.width - 1);
+            position[1] = helper.GenerateRandomNumber(0, mapInformation.GetSizeOfMap.height - 1);
+            position[2] = helper.GenerateRandomNumber(0, (int)maxHeight);
+        }
+        /// <summary>
         /// Get or set the X position.
         /// </summary>
         public float X { get => position[0]; set => position[0] = value; }
