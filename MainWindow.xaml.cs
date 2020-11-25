@@ -60,6 +60,8 @@ namespace AnimalSimulationVersion2
                 new DioeciousPlant("Carica Papaya", new Vector(mapInformation, Helper.Instance), Helper.Instance, Publisher.GetLifeformInstance, Publisher.GetDrawInstance, MapInformation.Instance);
             for (int i = 0; i < 6; i++) //6
                 new PackCarnivore("Crocuta Crocuta", new Vector(mapInformation, Helper.Instance), new string[] { "Oryctolagus Cuniculus", "Antidorcas Marsupialis" }, Helper.Instance, Publisher.GetLifeformInstance, Publisher.GetDrawInstance, MapInformation.Instance);
+            for(int i = 0; i < 10; i++) //10
+                new BirdCarnivore("Haliaeetus Albicilla", new Vector(mapInformation, Helper.Instance), new string[] { "Antidorcas Marsupialis","Oryctolagus Cuniculus","Carnis Lupus" }, Helper.Instance, Publisher.GetLifeformInstance, Publisher.GetDrawInstance, MapInformation.Instance);
             output.RunVisualThread();
             output.RunAIThread();
 
