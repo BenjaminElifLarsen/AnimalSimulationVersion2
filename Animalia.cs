@@ -180,6 +180,7 @@ namespace AnimalSimulationVersion2
         }
         /// <summary>
         /// Generates a random end location on the map. X and Y will each be between 0 and the maximum value of their respective maximum possible distance.
+        /// Z will be 0.
         /// </summary>
         /// <returns>Returns a new X and Y coordinate for the animal to move too.</returns>
         protected virtual Vector GenerateRandomEndLocation()
@@ -315,7 +316,7 @@ namespace AnimalSimulationVersion2
             float distance = Single.MaxValue;
             List<(Vector PreyLocation, string PreyID, string PreySpecies)> possiblePreys = lifeformPublisher.GetPossiblePreys(ID);
             foreach ((Vector Location, string PreyID, string Species) information in possiblePreys)
-            {
+            { //move distanceTo calculation into the if-statement  scope with the check to minimize computational cost
                 float distanceTo = information.Location.DistanceBetweenVectors(Location);
                 if (helper.Contains(FoodSource, information.Species))
                     if (distanceTo < distance)
