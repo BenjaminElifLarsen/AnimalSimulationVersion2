@@ -85,6 +85,7 @@ namespace AnimalSimulationVersion2
             //MoveTo = GenerateRandomEndLocation();
             MoveTo = Vector.Copy(location);
             MovementSpeed = 10;
+            CurrentMovementSpeed = MovementSpeed;
 
             MaxFoodDistanceRange = 100;
 
