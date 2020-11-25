@@ -18,11 +18,15 @@ namespace AnimalSimulationVersion2
         /// </summary>
         public float MaximumHeight { get; }
         /// <summary>
-        /// The maximum speed which the bird can ascend with.
+        /// The maximum speed which the bird can ascend with. Units per second.
         /// </summary>
         public float AscendSpeed { get; }
         /// <summary>
-        /// The maximum speed which the bird can desend with.
+        /// 
+        /// </summary>
+        public float DiveSpeed { get; }
+        /// <summary>
+        /// The maximum speed which the bird can desend with. Units per second.
         /// </summary>
         public float DesendSpeed { get; }
         /// <summary>
@@ -37,5 +41,15 @@ namespace AnimalSimulationVersion2
         /// Modifier to time depending variables on hovering, e.g. increased or decreased hunger decreasement per second.
         /// </summary>
         public float HoverModifier { get; }
+        public float CurrentModifier { get; set; }
+        /// <summary>
+        /// The maximum diameter of the circle. 
+        /// </summary>
+        public float CircleRange { get; }
+        /// <summary>
+        /// Bird will circle a location
+        /// </summary>
+        /// <returns></returns>
+        public Vector[] Circle();
     }
 }
