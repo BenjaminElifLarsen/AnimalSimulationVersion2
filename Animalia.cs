@@ -125,11 +125,11 @@ namespace AnimalSimulationVersion2
         {
             float xDistance = Math.Abs(MoveTo.X - Location.X);
             float yDistance = Math.Abs(MoveTo.Y - Location.Y);
-            float distanceToEndLocation = xDistance + yDistance;
+            float distanceToEndLocation = (float)Math.Sqrt(Math.Pow(xDistance,2) + Math.Pow(yDistance,2));
             if (distanceToEndLocation != 0)
             {
                 //calculates the %s of the move distance that belong to x and y and then multiply those numbers with the current movement speed. 
-                float xPercentage = Math.Abs(MoveTo.X - Location.X) / distanceToEndLocation;
+                float xPercentage = Math.Abs(MoveTo.X - Location.X) / distanceToEndLocation; //could just use xDistance to optimise the code a little bit
                 float xCurrentSpeed = xPercentage * CurrentMovementSpeed * timeSinceLastUpdate; //multiply with the amount of seconds that have gone.
                 float yCurrentSpeed = (1 - xPercentage) * CurrentMovementSpeed * timeSinceLastUpdate;
                 //calculates the direction to move in for each axel. 
