@@ -22,7 +22,7 @@ namespace AnimalSimulationVersion2
         /// </summary>
         public byte Blue { get; }
         /// <summary>
-        /// Get teh alpha.
+        /// Get the alpha.
         /// </summary>
         public byte Alpha { get; }
         /// <summary>
