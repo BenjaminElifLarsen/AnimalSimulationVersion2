@@ -95,7 +95,7 @@ namespace AnimalSimulationVersion2
                             drawLocations[i].X = (int)(information.Design[i].X + information.Location.X - center.xCenter); //maybe create a new Point array of same size, call it drawinglocations and use that one instead of information.Design
                             drawLocations[i].Y = (int)(information.Design[i].Y + information.Location.Y - center.yCenter);
                         }
-                        using (Pen pen = new Pen(Color.FromArgb(information.Colour.Red, information.Colour.Green, information.Colour.Blue), 1))
+                        using (Pen pen = new Pen(Color.FromArgb(information.Colour.Alpha, information.Colour.Red, information.Colour.Green, information.Colour.Blue), 1))
                         {
                             g.DrawPolygon(pen, drawLocations);
                         }
