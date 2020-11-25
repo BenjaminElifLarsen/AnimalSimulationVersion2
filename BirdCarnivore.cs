@@ -79,6 +79,7 @@ namespace AnimalSimulationVersion2
 
         protected override void AI()
         {
+            UpdateAlpha();
             //do stuff //need a full overriding of all TimeUpdate()s, since currentModifier needs to be used.
             TimeUpdate(); //when the bird does something that is not moving in circle, the circleLocations should set to empty.
             if (Age >= MaxAge || Health <= 0)
@@ -99,6 +100,8 @@ namespace AnimalSimulationVersion2
                         Move();
                         AttackPrey();
                     }
+                    else
+                        DefaultMovement();
                 }
                 else if (Age >= ReproductionAge && TimeToReproductionNeed <= 0 && !HasReproduced)
                 {
@@ -200,6 +203,8 @@ namespace AnimalSimulationVersion2
             {
                 Eat();
                 CurrentMovementSpeed = MovementSpeed;
+                if (isDiving)
+                    isDiving = false;
             }
         }
 
@@ -276,6 +281,8 @@ namespace AnimalSimulationVersion2
                 float yDeviantionDistance = (1 - xDeviantionPercentage) * distance;
                 location.X += xDeviantionDistance;
                 location.Y += yDeviantionDistance;
+                if (location.Z == 0)
+                    location.Z = helper.GenerateRandomNumber(0, (int)MaximumHeight);
             }
             else
             {
@@ -296,16 +303,16 @@ namespace AnimalSimulationVersion2
             if (centerLocation.X - CircleRange < 0 || centerLocation.X + CircleRange >= mapInformation.GetSizeOfMap.width) //constrain end location the be inside of the map and with a distance to the edge that allows the bird to circle.
             {
                 if (centerLocation.X - CircleRange < 0)
-                    centerLocation.X = 0 + CircleRange;
+                    centerLocation.X = helper.GenerateRandomNumber(0,10) + CircleRange; //the helper.GenerateRandomNumber(...,...) is in use to add deviations, else the birds would be to close to eachother.
                 else
-                    centerLocation.X = mapInformation.GetSizeOfMap.width - 1 - CircleRange;
+                    centerLocation.X = mapInformation.GetSizeOfMap.width - helper.GenerateRandomNumber(1, 11) - CircleRange;
             }
             if (centerLocation.Y - CircleRange < 0 || centerLocation.Y + CircleRange >= mapInformation.GetSizeOfMap.height)
             {
                 if (centerLocation.Y - CircleRange < 0)
-                    centerLocation.Y = 0 + CircleRange;
+                    centerLocation.Y = helper.GenerateRandomNumber(0, 10) + CircleRange;
                 else
-                    centerLocation.Y = mapInformation.GetSizeOfMap.height - 1 - CircleRange;
+                    centerLocation.Y = mapInformation.GetSizeOfMap.height - helper.GenerateRandomNumber(1, 11) - CircleRange;
             }
 
             Vector[] circlePoints = new Vector[7];
@@ -360,6 +367,14 @@ namespace AnimalSimulationVersion2
                 CurrentMovementSpeed = MovementSpeed * AttackSpeedMultiplier;
                 MoveTo = preyLocation;
             }
+        }
+
+        public void UpdateAlpha()
+        {
+            float alphaPercentage = 1 - Location.Z / (MaximumHeight+40);
+            byte newAlpha = (byte)(byte.MaxValue * alphaPercentage);
+            if (Colour.Alpha != newAlpha)
+                Colour = new Colour(Colour.Red, Colour.Green, Colour.Blue, newAlpha);
         }
     }
 }
