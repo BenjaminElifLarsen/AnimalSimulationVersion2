@@ -97,11 +97,10 @@ namespace AnimalSimulationVersion2
         /// </summary>
         private void VisualThread()
         {
-            //Thread.CurrentThread.IsBackground = false; //did not help
             DateTime lastTime = DateTime.Now;
             while (true)
             {
-                if ((DateTime.Now - lastTime).TotalSeconds >= TimeInSecondsBetweenFrames) //the part before >= needs also be accessed by the AI thread. 
+                if ((DateTime.Now - lastTime).TotalSeconds >= TimeInSecondsBetweenFrames)
                 {
                     lastTime = DateTime.Now;
                     PaintEvent?.Invoke(this, new ImageEventArgs { BitMapImage = Draw(Map, DrawPublisher.Draw()) });
@@ -125,11 +124,10 @@ namespace AnimalSimulationVersion2
                     foreach ((Point[] Design, Colour Colour, Vector Location) information in drawInforamtion)
                     {
                         Point[] drawLocations = new Point[information.Design.Length];
-                        //for now, consider Location as top left.
                         (byte xCenter,byte yCenter) center = CalculateCenter(information.Design);
                         for (int i = 0; i < information.Design.Length; i++)
                         {
-                            drawLocations[i].X = (int)(information.Design[i].X + information.Location.X - center.xCenter); //maybe create a new Point array of same size, call it drawinglocations and use that one instead of information.Design
+                            drawLocations[i].X = (int)(information.Design[i].X + information.Location.X - center.xCenter); 
                             drawLocations[i].Y = (int)(information.Design[i].Y + information.Location.Y - center.yCenter);
                         }
                         using (Pen pen = new Pen(Color.FromArgb(information.Colour.Alpha, information.Colour.Red, information.Colour.Green, information.Colour.Blue), 1))

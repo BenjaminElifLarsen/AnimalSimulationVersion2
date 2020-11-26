@@ -105,7 +105,7 @@ namespace AnimalSimulationVersion2
         {
             if (HuntedBy.Length > 0 && TimeHidden < MaxHideTime)
                 TimeHidden += timeSinceLastUpdate;
-            if (HuntedBy.Length == 0 && TimeHidden > 0) //rewrite to look better and less code later
+            if (HuntedBy.Length == 0 && TimeHidden > 0) 
             {
                 TimeHidden -= timeSinceLastUpdate;
                 if (TimeHidden < 0) 
