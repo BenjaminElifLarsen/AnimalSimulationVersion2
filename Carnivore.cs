@@ -21,7 +21,7 @@ namespace AnimalSimulationVersion2
         /// <param name="lifeformPublisher">An instance of AnimalPublisher.</param>
         /// <param name="drawPublisher">An instance of DrawPublisher.</param>
         /// <param name="mapInformation">An instance of MapInformation.</param>
-        public Carnivore(string species, Vector location, string[] foodSource, IHelper helper, LifeformPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, animalPublisher, drawPublisher, mapInformation)
+        public Carnivore(string species, Vector location, string[] foodSource, IHelper helper, LifeformPublisher lifeformPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, lifeformPublisher, drawPublisher, mapInformation)
         {
             Design = new Point[] { new Point(0, 0), new Point(8, 0), new Point(8, 8), new Point(0, 8) };
         }
