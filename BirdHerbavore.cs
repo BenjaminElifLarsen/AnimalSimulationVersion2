@@ -121,7 +121,13 @@ namespace AnimalSimulationVersion2
 
         public new void HideFromPredator()
         {
-
+            if(Location.Z <= 10)
+            {
+                int valueToRollOver = (int)(StealthLevel * 8 + 30 * HuntedBy.Length);
+                int rolledNUmber = helper.GenerateRandomNumber(0, valueToRollOver - StealthLevel);
+                if (rolledNUmber > valueToRollOver)
+                    LostPredator();
+            }
         }
 
         public Vector[] Circle()
