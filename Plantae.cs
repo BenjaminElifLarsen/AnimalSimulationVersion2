@@ -21,9 +21,18 @@ namespace AnimalSimulationVersion2
         /// The minimum and maximum amount of offsprings.
         /// </summary>
         protected (byte Minimum, byte Maximum) offspringAmount; //maybe move this up to Eukaryote.
-
-        public Plantae(string species, Vector location, IHelper helper, LifeformPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, helper, animalPublisher, drawPublisher, mapInformation)
-        { //could properly overwrite IsPossiblePreyEvnethandler to make (some specific) sure plants that are to old cannot be eated, e.g. a big tree
+        /// <summary>
+        /// Default constructor. Initialises properites and variables to 'default' values.
+        /// </summary>
+        /// <param name="species">The species of this animal.</param>
+        /// <param name="location">The start location of this animal.</param>
+        /// <param name="foodSource">The food source of this animal.</param>
+        /// <param name="helper">An instance of IHelper.</param>
+        /// <param name="lifeformPublisher">An instance of AnimalPublisher.</param>
+        /// <param name="drawPublisher">An instance of DrawPublisher.</param>
+        /// <param name="mapInformation">An instance of MapInformation.</param>
+        public Plantae(string species, Vector location, IHelper helper, LifeformPublisher lifeform, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, helper, lifeform, drawPublisher, mapInformation)
+        { //could properly overwrite IsPossiblePreyEvnethandler to make (some specific) plants that if to old, cannot be eated, e.g. a big tree
         }
 
         /// <summary>
@@ -43,7 +52,15 @@ namespace AnimalSimulationVersion2
             }
             return false;
         }
+        /// <summary>
+        /// Contains the code of the reproduction part of the AI.
+        /// </summary>
+        /// <returns></returns>
         protected abstract bool ReproductionAI();
+        /// <summary>
+        /// Contains the code of the generate offspring part of the AI.
+        /// </summary>
+        /// <returns></returns>
         protected abstract bool GiveOffspringsAI();
 
         /// <summary>

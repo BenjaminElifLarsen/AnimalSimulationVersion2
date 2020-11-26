@@ -20,8 +20,17 @@ namespace AnimalSimulationVersion2
 
         public float MaxEnergyLevel { get; }
         public float SleepModifer { get; }
-
-        public SleepingHerbavore(string species, Vector location, string[] foodSource, IHelper helper, LifeformPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, animalPublisher, drawPublisher, mapInformation)
+        /// <summary>
+        /// Default constructor. Initialises properites and variables to 'default' values.
+        /// </summary>
+        /// <param name="species">The species of this animal.</param>
+        /// <param name="location">The start location of this animal.</param>
+        /// <param name="foodSource">The food source of this animal.</param>
+        /// <param name="helper">An instance of IHelper.</param>
+        /// <param name="lifeformPublisher">An instance of AnimalPublisher.</param>
+        /// <param name="drawPublisher">An instance of DrawPublisher.</param>
+        /// <param name="mapInformation">An instance of MapInformation.</param>
+        public SleepingHerbavore(string species, Vector location, string[] foodSource, IHelper helper, LifeformPublisher lifeformPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, lifeformPublisher, drawPublisher, mapInformation)
         {
             MaxEnergyLevel = 30;
             EnergyLevel = MaxEnergyLevel;
@@ -33,8 +42,8 @@ namespace AnimalSimulationVersion2
             BirthAmount = (2, 3);
 
             Colour = new Colour(0, 0, 255);
-        } //if wanting to add the variable values in using a constructor, you will need to do something similar to Dioecious(Plant) for Activator.CreateInstance(type,object[])
-        //maybe lower the amount of parameters using a struct... will need a struct for each different constructor since they need to have different variables.
+        }
+
         protected override void TimeUpdate()
         {
             if (Sleeping)
@@ -53,7 +62,7 @@ namespace AnimalSimulationVersion2
 
         }
 
-        public void Sleep() //got a very different implementation than SleepingCarnivore.Sleep()
+        public void Sleep() 
         {
             if (!Sleeping)
             {

@@ -5,6 +5,9 @@ using System.Text;
 
 namespace AnimalSimulationVersion2
 {
+    /// <summary>
+    /// Implements IHelper.
+    /// </summary>
     public class Helper : IHelper
     {
         private static Random rnd;

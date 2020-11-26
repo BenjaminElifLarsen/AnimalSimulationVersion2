@@ -61,7 +61,9 @@ namespace AnimalSimulationVersion2
             for (int i = 0; i < 6; i++) //6
                 new PackCarnivore("Crocuta Crocuta", new Vector(mapInformation, Helper.Instance), new string[] { "Oryctolagus Cuniculus", "Antidorcas Marsupialis" }, Helper.Instance, Publisher.GetLifeformInstance, Publisher.GetDrawInstance, MapInformation.Instance);
             for(int i = 0; i < 6; i++) //6
-                new BirdCarnivore("Haliaeetus Albicilla", new Vector(mapInformation, Helper.Instance), new string[] { "Antidorcas Marsupialis","Oryctolagus Cuniculus","Carnis Lupus" }, Helper.Instance, Publisher.GetLifeformInstance, Publisher.GetDrawInstance, MapInformation.Instance);
+                new BirdCarnivore("Haliaeetus Albicilla", new Vector(mapInformation, Helper.Instance), new string[] { "Turdus Merula", "Antidorcas Marsupialis","Oryctolagus Cuniculus","Carnis Lupus" }, Helper.Instance, Publisher.GetLifeformInstance, Publisher.GetDrawInstance, MapInformation.Instance);
+            for (int i = 0; i < 10; i++) //6
+                new BirdHerbavore("Turdus Merula", new Vector(mapInformation, Helper.Instance), new string[] { "Carica Papaya", "Cucumis Melo" }, Helper.Instance, Publisher.GetLifeformInstance, Publisher.GetDrawInstance, MapInformation.Instance);
             output.RunVisualThread();
             output.RunAIThread();
 

@@ -7,7 +7,13 @@ namespace AnimalSimulationVersion2
 {
     class BirdCarnivore : Carnivore, IBird
     {
+        /// <summary>
+        /// Contains each point of a circle.
+        /// </summary>
         protected Vector[] circleLocations = new Vector[0];
+        /// <summary>
+        /// Is the bird currently diving?
+        /// </summary>
         protected bool isDiving = false;
 
         public override float AttackRange { get; set; }
@@ -32,7 +38,16 @@ namespace AnimalSimulationVersion2
         public float CircleRange { get; }
 
         public float CurrentModifier { get; set; }
-
+        /// <summary>
+        /// Default constructor. Initialises properites and variables to 'default' values.
+        /// </summary>
+        /// <param name="species">The species of this animal.</param>
+        /// <param name="location">The start location of this animal.</param>
+        /// <param name="foodSource">The food source of this animal.</param>
+        /// <param name="helper">An instance of IHelper.</param>
+        /// <param name="lifeformPublisher">An instance of AnimalPublisher.</param>
+        /// <param name="drawPublisher">An instance of DrawPublisher.</param>
+        /// <param name="mapInformation">An instance of MapInformation.</param>
         public BirdCarnivore(string species, Vector location, string[] foodSource, IHelper helper, LifeformPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, animalPublisher, drawPublisher, mapInformation)
         {
             MaximumHeight = 100;
@@ -59,7 +74,7 @@ namespace AnimalSimulationVersion2
         }
 
         /// <summary>
-        /// Does not use the base' version...
+        /// Updates timeAlive, Age, TimeToProductionNeed, Health, Hunger, FindMateCooldown, and FindFoodCooldown. 
         /// </summary>
         protected override void TimeUpdate()
         {
@@ -69,13 +84,14 @@ namespace AnimalSimulationVersion2
             if (periodInReproduction < lengthOfReproduction && HasReproduced)
                 periodInReproduction += timeSinceLastUpdate;
             if (Health < MaxHealth)
-                Health = Health + timeSinceLastUpdate > MaxHealth ? MaxHealth : Health + timeSinceLastUpdate;
-            
-            //readd the outcommented code when it got a food source and can hunt.
+                Health = Health + timeSinceLastUpdate > MaxHealth ? MaxHealth : Health + timeSinceLastUpdate;            
             Hunger -= timeSinceLastUpdate * CurrentModifier;
             if (Hunger < 0)
                 Health -= timeSinceLastUpdate;
-
+            if (FindMateCooldown > 0)
+                FindMateCooldown -= timeSinceLastUpdate;
+            if (FindFoodCooldown > 0)
+                FindFoodCooldown -= timeSinceLastUpdate;
         }
 
         protected override void AI()
@@ -136,7 +152,11 @@ namespace AnimalSimulationVersion2
             }
             return false;
         }
-        
+
+        /// <summary>
+        /// Contains the code of the AI related to cicling.
+        /// </summary>
+        /// <returns>True if the bird is circling.</returns>
         protected virtual bool CircleAI()
         {
             if (circleLocations.Length == 0)
@@ -164,9 +184,9 @@ namespace AnimalSimulationVersion2
         }
 
         /// <summary>
-        /// ... Overridden to focus on preys that are below the predator and within a specific (x,y) distance
+        /// Overridden to focus on preys that are below the predator and within a specific (x,y) distance
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The ID of the nearest food.</returns>
         protected override string FindNearestFood()
         {
             string nearestFood = null;
@@ -205,9 +225,9 @@ namespace AnimalSimulationVersion2
         }
 
         /// <summary>
-        /// ... overridden to set the Z value.
+        /// Overridden to set the Z value.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A new vector to move too. The Z value is also sat.</returns>
         protected override Vector GenerateRandomEndLocation()
         {
             Vector location =  base.GenerateRandomEndLocation();
@@ -215,6 +235,9 @@ namespace AnimalSimulationVersion2
             return location;
         }
 
+        /// <summary>
+        /// Overridden to allow the bird to stop diving, if it is diving.
+        /// </summary>
         public override void AttackPrey()
         { 
             Vector preyLocation = lifeformPublisher.GetLocation(foodID); 
@@ -228,6 +251,9 @@ namespace AnimalSimulationVersion2
             }
         }
 
+        /// <summary>
+        /// Overridden to allow the bird to move in 3D space.
+        /// </summary>
         protected override void Move()
         {
             float xDistance = Math.Abs(MoveTo.X - Location.X);
@@ -243,7 +269,7 @@ namespace AnimalSimulationVersion2
                 float zSpeed;
                 //it will switch from hover mode to one of the other modes
                 if ((MoveTo.Z - Location.Z) < 0 || (MoveTo.Z - Location.Z) > 0) //let the numbers get modified by the distance, i.e. it require less energy to move 5 up over 200 distance compared to move 5 up over 1 distance 
-                { //how to best use the ascend-/desendSpeeds 
+                { 
                     if ((MoveTo.Z - Location.Z) > 0)
                     {
                         zSpeed = AscendSpeed;
@@ -294,7 +320,7 @@ namespace AnimalSimulationVersion2
             if (nearestFood != null)
             {
                 location = GetLifeformLocation(nearestFood);
-                //add some deviantion here
+                //adding some deviantion here
                 float xDeviantionPercentage = helper.GenerateRandomNumber(-100,100)/100f;
                 float distance = 30;
                 float xDeviantionDistance = xDeviantionPercentage * distance;
@@ -362,11 +388,11 @@ namespace AnimalSimulationVersion2
         }
 
         /// <summary>
-        /// The bird will keep a certain z height different, until it is withit attack range.
+        /// The bird will keep a certain z height different, until it is withit attack range. If it can dive and close enough, isDiving is sat to true.
         /// </summary>
         /// <remarks>If the bird is within attack range, the bool isDiving will be set to true, else false.</remarks>
         public override void TrackPrey()
-        { //should track the prey, but keep a Z difference.
+        { 
             Vector preyLocation = lifeformPublisher.GetLocation(foodID);
             float xDistance = Math.Abs(preyLocation.X - Location.X);
             float yDistance = Math.Abs(preyLocation.Y - Location.Y);
@@ -391,8 +417,8 @@ namespace AnimalSimulationVersion2
 
         public void UpdateAlpha()
         {
-            float alphaPercentage = 1 - Location.Z / (MaximumHeight+40); //the + 40 is not the best solution as it will affect the final number differently depending on MaximumHeight.
-            byte newAlpha = (byte)(byte.MaxValue * alphaPercentage); //maybe (MaximumHeight+MaximumHeight*0.4) or something like that.
+            float alphaPercentage = 1 - Location.Z / (MaximumHeight+MaximumHeight*0.4f); 
+            byte newAlpha = (byte)(byte.MaxValue * alphaPercentage); 
             if (Colour.Alpha != newAlpha)
                 Colour = new Colour(Colour.Red, Colour.Green, Colour.Blue, newAlpha);
         }

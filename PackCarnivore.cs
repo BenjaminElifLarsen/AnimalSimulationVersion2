@@ -6,6 +6,9 @@ namespace AnimalSimulationVersion2
 {
     class PackCarnivore : SleepingCarnivore, IPack
     {
+        /// <summary>
+        /// The animal has been killed.
+        /// </summary>
         private bool isKilled;
         public (IPack.PackRelationship Relationship, string ID, char Gender)[] PackMembers { get; set; }
         public byte MaxPackSize { get; set; }
@@ -19,11 +22,21 @@ namespace AnimalSimulationVersion2
         public float AttackSpeed { get; }
         public float AttackCooldown { get; set; }
         /// <summary>
-        /// 
+        /// The cooldown between looking for a pack.
         /// </summary>
         protected float FindPackCooldown { get; set; }
 
-        public PackCarnivore(string species, Vector location, string[] foodSource, IHelper helper, LifeformPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, animalPublisher, drawPublisher, mapInformation)
+        /// <summary>
+        /// Default constructor. Initialises properites and variables to 'default' values.
+        /// </summary>
+        /// <param name="species">The species of this animal.</param>
+        /// <param name="location">The start location of this animal.</param>
+        /// <param name="foodSource">The food source of this animal.</param>
+        /// <param name="helper">An instance of IHelper.</param>
+        /// <param name="lifeformPublisher">An instance of AnimalPublisher.</param>
+        /// <param name="drawPublisher">An instance of DrawPublisher.</param>
+        /// <param name="mapInformation">An instance of MapInformation.</param>
+        public PackCarnivore(string species, Vector location, string[] foodSource, IHelper helper, LifeformPublisher lifeformPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, lifeformPublisher, drawPublisher, mapInformation)
         {
             AttackRange = 40;
             AttackSpeedMultiplier = 1.2f; 
@@ -42,8 +55,8 @@ namespace AnimalSimulationVersion2
             AttackSpeed = 1.4f;
             StrikeRange = 10;
 
-            lifeformPublisher.RaiseTransmitData += RelationshipEventHandler;
-            lifeformPublisher.RaisePossibleRelationshipJoiner += RelationshipCandidateEventHandler;
+            base.lifeformPublisher.RaiseTransmitData += RelationshipEventHandler;
+            base.lifeformPublisher.RaisePossibleRelationshipJoiner += RelationshipCandidateEventHandler;
         }
 
         protected override void AI() 
@@ -56,7 +69,10 @@ namespace AnimalSimulationVersion2
                 Fight(); 
             }
         }
-
+        /// <summary>
+        /// Contains the code of the AI related to finding a pack.
+        /// </summary>
+        /// <returns>True if a pack was found.</returns>
         protected virtual bool PackAI()
         {
             if (FindPackCooldown <= 0)
@@ -81,7 +97,7 @@ namespace AnimalSimulationVersion2
 
         public void Fight()
         { //maybe allow damage to be in range, but then the damage event needs to use float instead of. Maybe damage should also be calculated as a per second (could go wrong with bad slowdowns)
-            if(CanFightForAlpha) //in both cases the animals need to be close enough to each other.
+            if(CanFightForAlpha) 
                 if(Relationship != IPack.PackRelationship.Alpha)
                 {
                     if(TimeSinceLastFight <= 0)
@@ -99,9 +115,6 @@ namespace AnimalSimulationVersion2
                                         bool killed = lifeformPublisher.DamageLifeform(ID, id, damage);
                                         if (killed)
                                         { //update the relationship to alpha and transmit the pack to each member
-                                            //string[] attacks = AttackedBy;
-                                            //helper.Remove(ref attacks, id);
-                                            //AttackedBy = attacks;
                                             helper.Replace(PackMembers, (Relationship, ID, Gender), (IPack.PackRelationship.Alpha, ID, Gender));
                                             Relationship = IPack.PackRelationship.Alpha;
                                             foreach ((_, string id_, _) in PackMembers)
@@ -114,7 +127,7 @@ namespace AnimalSimulationVersion2
                         }
                     }
                 }
-                else if (AttackedBy.Length > 0 && AttackCooldown <= 0) //AttackedBy needs to be set to null at some point and also there might be multiple attackers rather than 1
+                else if (AttackedBy.Length > 0 && AttackCooldown <= 0) 
                 { //is alpha and being attacked. 
                     AttackCooldown = AttackSpeed;
                     float distance = Location.DistanceBetweenVectors(GetLifeformLocation(AttackedBy[0]));
@@ -122,12 +135,6 @@ namespace AnimalSimulationVersion2
                     {
                         byte damage = (byte)helper.GenerateRandomNumber(0, 16);
                         bool killed = lifeformPublisher.DamageLifeform(ID, AttackedBy[0], damage);
-                        //if (killed)
-                        //{ //at some point, move the code in this scope into the methods in Helper that needs these to work.
-                        //    string[] attacks = AttackedBy;
-                        //    helper.Remove(ref attacks, AttackedBy[0]);
-                        //    AttackedBy = attacks;
-                        //}
                     }
                 }
         }
@@ -253,7 +260,7 @@ namespace AnimalSimulationVersion2
             lifeformPublisher.TransmitData(ID, receiverID, data);
         }
 
-        public void GeneratePack() //right now this could just be a void
+        public void GeneratePack() 
         {
             if(PackMembers == null || PackMembers.Length <= 1)
             {
@@ -316,8 +323,8 @@ namespace AnimalSimulationVersion2
         }
 
         public void RelationshipCandidateEventHandler(object sender, ControlEvents.RelationshipCandidatesEventArgs e)
-        {
-            if (e.RelationshipType.IsAssignableFrom(GetType())) //true if the instance implements e.RelationshipType. //reflection, costly. Trying to use 'IS' did not work because of no constance
+        { //delegate
+            if (e.RelationshipType.IsAssignableFrom(GetType())) //true if the instance implements e.RelationshipType. //reflection, costly. 
                 if(PackMembers == null || PackMembers.Length <= 1)
                     if(e.SenderID != ID)
                         if(e.Species == Species)

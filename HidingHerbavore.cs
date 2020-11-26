@@ -13,10 +13,17 @@ namespace AnimalSimulationVersion2
         public bool IsHiding { get; set; }
         public float CooldownBetweenHiding { get; set; }
         public float MaxCooldownBetweenHiding { get; set; }
-
-        //public (float TimeSinceLost, string HunterID)[] LostPredators { get; set; }
-
-        public HidingHerbavore(string species, Vector location, string[] foodSource, IHelper helper, LifeformPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, animalPublisher, drawPublisher, mapInformation)
+        /// <summary>
+        /// Default constructor. Initialises properites and variables to 'default' values.
+        /// </summary>
+        /// <param name="species">The species of this animal.</param>
+        /// <param name="location">The start location of this animal.</param>
+        /// <param name="foodSource">The food source of this animal.</param>
+        /// <param name="helper">An instance of IHelper.</param>
+        /// <param name="lifeformPublisher">An instance of AnimalPublisher.</param>
+        /// <param name="drawPublisher">An instance of DrawPublisher.</param>
+        /// <param name="mapInformation">An instance of MapInformation.</param>
+        public HidingHerbavore(string species, Vector location, string[] foodSource, IHelper helper, LifeformPublisher lifeformPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, lifeformPublisher, drawPublisher, mapInformation)
         {
             MovementSpeed = 10;
             CurrentMovementSpeed = MovementSpeed;
@@ -59,7 +66,10 @@ namespace AnimalSimulationVersion2
 
             }
         }
-
+        /// <summary>
+        /// Contains the code of the AI related to hiding.
+        /// </summary>
+        /// <returns>True if hiding.</returns>
         protected virtual bool HidingAI()
         {
             #region Hiding

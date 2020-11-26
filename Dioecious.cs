@@ -5,16 +5,44 @@ namespace AnimalSimulationVersion2
 {
     class Dioecious : Plantae
     {
+        /// <summary>
+        /// The ID of the mate.
+        /// </summary>
         protected string mateID;
+        /// <summary>
+        /// The location of the mate.
+        /// </summary>
         protected Vector mateLocation;
+        /// <summary>
+        /// The distance to the mate.
+        /// </summary>
         protected float mateDistance;
+        /// <summary>
+        /// The increasement in reproduction time.
+        /// </summary>
         protected float reproductionExtraTime;
+        /// <summary>
+        /// Value used to divide mateDistance.
+        /// </summary>
         protected float distanceDivider;
+        /// <summary>
+        /// The gender of the plant.
+        /// </summary>
         protected char Gender { get; set; }
         /// <summary>
-        /// 
+        /// The cooldown between finding a mate.
         /// </summary>
         protected float FindMateCooldown { get; set; }
+        /// <summary>
+        /// Default constructor. Initialises properites and variables to 'default' values.
+        /// </summary>
+        /// <param name="species">The species of this animal.</param>
+        /// <param name="location">The start location of this animal.</param>
+        /// <param name="foodSource">The food source of this animal.</param>
+        /// <param name="helper">An instance of IHelper.</param>
+        /// <param name="lifeformPublisher">An instance of AnimalPublisher.</param>
+        /// <param name="drawPublisher">An instance of DrawPublisher.</param>
+        /// <param name="mapInformation">An instance of MapInformation.</param>
         public Dioecious(string species, Vector location, IHelper helper, LifeformPublisher lifeformPublisher, DrawPublisher drawPublisher, MapInformation mapInformation, char gender = (char)0) : base(species, location, helper, lifeformPublisher, drawPublisher, mapInformation)
         {
             if (gender == 0)
@@ -33,7 +61,6 @@ namespace AnimalSimulationVersion2
         }
         protected override bool GiveOffspringsAI()
         {
-
             if (Gender == 'f')
                 if (HasReproduced && periodInReproduction >= lengthOfReproduction + reproductionExtraTime)
                     Reproduce();
@@ -126,7 +153,7 @@ namespace AnimalSimulationVersion2
             List<(string mateID, Vector Location)> possibleMates = lifeformPublisher.PossibleMates(Species, Gender, ID);
             foreach ((string Mate, Vector Location) information in possibleMates)
             { //need to catch null
-                float distanceTo = information.Location.DistanceBetweenVectors(Location);//Math.Abs((information.Location.X - Location.X)) + Math.Abs((information.Location.Y - Location.Y));
+                float distanceTo = information.Location.DistanceBetweenVectors(Location);
                 if (distanceTo < distance)
                 {
                     distance = distanceTo;
@@ -144,7 +171,6 @@ namespace AnimalSimulationVersion2
         /// <returns></returns>
         protected virtual float DistanceTime(/*Vector locationOfMate*/)
         { //if this class end up using the new pregnacy event, if it is the receiver it should also get the location of the mate and then call this method.
-            //float distance = (float)Math.Sqrt(Math.Pow(Math.Abs(Location.X - locationOfMate.X),2) + Math.Pow(Math.Abs(Location.Y - locationOfMate.Y), 2));
 
             return mateDistance / distanceDivider;
         }

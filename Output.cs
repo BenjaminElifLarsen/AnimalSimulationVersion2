@@ -20,33 +20,65 @@ namespace AnimalSimulationVersion2
         public delegate void textEvent(object sender, TextEventArgs args);
         public event textEvent TextEvent;
 
+        /// <summary>
+        /// The bitmap of the map.
+        /// </summary>
         public Bitmap Map { get; set; }
+        /// <summary>
+        /// The bitmapImage of the map.
+        /// </summary>
         public BitmapImage MapImage { get; set; }
+        /// <summary>
+        /// The amount of frames per second.
+        /// </summary>
         public float FramesPerSecond { get; set; }
+        /// <summary>
+        /// The time between frames.
+        /// </summary>
         private float TimeInSecondsBetweenFrames { get; set; }
+        /// <summary>
+        /// An instance of DrawPublisher.
+        /// </summary>
         private DrawPublisher DrawPublisher { get; set; }
-        private LifeformPublisher AnimalPublisher { get; set; }
+        /// <summary>
+        /// An instance of LifeformPublisher.
+        /// </summary>
+        private LifeformPublisher LifeformPublisher { get; set; }
+        /// <summary>
+        /// The instance of Output.
+        /// </summary>
         public static Output Instance { get; }
 
+        /// <summary>
+        /// The static constructor. Sets the Instance up for use.
+        /// </summary>
         static Output()
         {
             Instance = new Output();
             Instance.DrawPublisher = Publisher.GetDrawInstance;
-            Instance.AnimalPublisher = Publisher.GetLifeformInstance; //set this and the one above from MainWindow
+            Instance.LifeformPublisher = Publisher.GetLifeformInstance; //set this and the one above from MainWindow
             Instance.FramesPerSecond = 30;
             Instance.TimeInSecondsBetweenFrames = 1 / Instance.FramesPerSecond;
         }
+        /// <summary>
+        /// Starts the visual thread up.
+        /// </summary>
         public void RunVisualThread()
         {
             Thread thread = new Thread(VisualThread);
             thread.Start();
         }
+        /// <summary>
+        /// Setarts the AI thread up.
+        /// </summary>
         public void RunAIThread()
         {
             Thread thread = new Thread(AIThread);
             thread.Start();
         }
-
+        /// <summary>
+        /// Thread that loops the AI events.
+        /// </summary>
         private void AIThread()
         {
             DateTime lastTime = DateTime.Now;
@@ -56,11 +88,13 @@ namespace AnimalSimulationVersion2
                 if (passedTime >= TimeInSecondsBetweenFrames)
                 {
                     lastTime = DateTime.Now;
-                    AnimalPublisher.AI((float)passedTime);
+                    LifeformPublisher.AI((float)passedTime);
                 }
             }
         }
-
+        /// <summary>
+        /// Thread that loops the Draw and speciesAndAmount events.
+        /// </summary>
         private void VisualThread()
         {
             //Thread.CurrentThread.IsBackground = false; //did not help
@@ -79,6 +113,12 @@ namespace AnimalSimulationVersion2
             }
         }
 
+        /// <summary>
+        /// Draws out a bitmap with all lifeforms.
+        /// </summary>
+        /// <param name="map">The map to draw on.</param>
+        /// <param name="drawInforamtion">The information of all lifeforms.</param>
+        /// <returns>A map painted with all lifeforms.</returns>
         private Bitmap Draw(Bitmap map, List<(Point[] Design, Colour Colour, Vector Location)> drawInforamtion)
         {
             using (Graphics g = Graphics.FromImage(map))
@@ -104,6 +144,11 @@ namespace AnimalSimulationVersion2
             }
             return map;
         }
+        /// <summary>
+        /// Calculates the center of <paramref name="design"/>.
+        /// </summary>
+        /// <param name="design">Contains the design of a lifeform.</param>
+        /// <returns>The values of the center (x,y)</returns>
         private (byte xCenter,byte yCenter) CalculateCenter(Point[] design)
         {
             int heighestHeight = int.MinValue;
@@ -126,11 +171,16 @@ namespace AnimalSimulationVersion2
             return (xCenter, yCenter);
         }
     }
-
+    /// <summary>
+    /// Contains the information for the image event.
+    /// </summary>
     public class ImageEventArgs : EventArgs
     {
         public Bitmap BitMapImage { get; set; }
     }
+    /// <summary>
+    /// Contains the information for the text event.
+    /// </summary>
     public class TextEventArgs : EventArgs
     {
         public List<(string Species, ushort Amount)> ListInformation { get; set; }

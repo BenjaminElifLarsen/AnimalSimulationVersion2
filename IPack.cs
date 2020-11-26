@@ -16,9 +16,12 @@ namespace AnimalSimulationVersion2
             Member = 2,
             NonMember = 0
         }
+        /// <summary>
+        /// The relationship of the lifeform in the pack.
+        /// </summary>
         public PackRelationship Relationship { get; set; }
         /// <summary>
-        /// 
+        /// True if only alphas can mate.
         /// </summary>
         public bool AlphaMatingOnly { get; set; } 
         /// <summary>
@@ -34,9 +37,9 @@ namespace AnimalSimulationVersion2
         /// </summary>
         public byte MaxPackSize { get; set; }
         /// <summary>
-        /// The amount of time that has passed since the last fight.
+        /// The amount of time that has passed since the last fight, in seconds.
         /// </summary>
-        public float TimeSinceLastFight { get; set; } //update uml
+        public float TimeSinceLastFight { get; set; }
         /// <summary>
         /// The amount of time, in seconds, that has to be between each fight.
         /// </summary>
@@ -44,9 +47,9 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// True if the pack can fight for alpha posistion.
         /// </summary>
-        public bool CanFightForAlpha { get; set; } //how to ensure the animals do not fight all the time and also figure out why one animal would fight another for alpha
+        public bool CanFightForAlpha { get; set; } 
         /// <summary>
-        /// 
+        /// Contains the ID of all lifeforms that have attacked this lifeform.
         /// </summary>
         public string[] AttackedBy { get; set; }
         /// <summary>
@@ -65,7 +68,7 @@ namespace AnimalSimulationVersion2
         /// Allows a pack member to fight another pack member.
         /// </summary>
         /// <param name="ID">The ID of the target</param>
-        public void Fight(); //transmit delegate. 
+        public void Fight();
         /// <summary>
         /// Generates a pack.
         /// </summary>
@@ -83,7 +86,7 @@ namespace AnimalSimulationVersion2
         /// <param name="e">Contains IDs and Data.</param>
         public void RelationshipEventHandler(object sender, ControlEvents.TransmitDataEventArgs e);
         /// <summary>
-        /// 
+        /// Someone is looking for a pack and wants to know if this lifeform can join.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

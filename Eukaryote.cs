@@ -9,7 +9,7 @@ namespace AnimalSimulationVersion2
     abstract class Eukaryote
     {
         /// <summary>
-        /// 
+        /// True if the lifeform has died.
         /// </summary>
         protected bool isDead = false; 
         /// <summary>
@@ -70,7 +70,7 @@ namespace AnimalSimulationVersion2
         /// </summary>
         protected Vector Location { get; set; }
         /// <summary>
-        /// The amount of time before the lifeform will feel a need to reproduce in seconds.
+        /// The amount of time, before the lifeform will feel a need to reproduce, in seconds.
         /// </summary>
         protected float TimeToReproductionNeed { get; set; }
         /// <summary>
@@ -96,7 +96,7 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// Predatores of the lifeform.
         /// </summary>
-        protected string[] HuntedBy { get; set; } //the IDs that are after it
+        protected string[] HuntedBy { get; set; } 
         /// <summary>
         /// The nutrience value of the lifeform.
         /// </summary>
@@ -109,22 +109,23 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// True if the lifeform has reproduced and is waiting on children.
         /// </summary>
-        protected bool HasReproduced { get; set; } //find a better name
+        protected bool HasReproduced { get; set; } 
         /// <summary>
         /// The amount of seconds that has to have been between two calls, with the same purpose, out.
         /// </summary>
         protected float ContactCooldownLength { get; private set; }
-        
+
         /// <summary>
-        /// Sets the Species and Location and call another constructor. //rewrite
+        /// Default constructor. Initialises properites and variables to 'default' values.
         /// </summary>
-        /// <param name="species"></param>
-        /// <param name="location"></param>
-        /// <param name="helper"></param>
-        /// <param name="animalPublisher"></param>
-        /// <param name="drawPublisher"></param>
-        /// <param name="mapInformation"></param>
-        public Eukaryote(string species, Vector location, IHelper helper, LifeformPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : this(helper, animalPublisher, drawPublisher, mapInformation)
+        /// <param name="species">The species of this animal.</param>
+        /// <param name="location">The start location of this animal.</param>
+        /// <param name="foodSource">The food source of this animal.</param>
+        /// <param name="helper">An instance of IHelper.</param>
+        /// <param name="lifeformPublisher">An instance of AnimalPublisher.</param>
+        /// <param name="drawPublisher">An instance of DrawPublisher.</param>
+        /// <param name="mapInformation">An instance of MapInformation.</param>
+        public Eukaryote(string species, Vector location, IHelper helper, LifeformPublisher lifeformPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : this(helper, lifeformPublisher, drawPublisher, mapInformation)
         {
             Species = species;
             Location = location;
@@ -174,9 +175,9 @@ namespace AnimalSimulationVersion2
         /// </summary>
         protected abstract void AI();
         /// <summary>
-        /// 
+        /// Contains the code of the AI related to death.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>True if the lifeform has died.</returns>
         protected abstract bool DeathCheckAI();
         /// <summary>
         /// Updates the variables and properties that depends on time.
@@ -325,7 +326,7 @@ namespace AnimalSimulationVersion2
         /// Adds it species to a list in <paramref name="e"/>.
         /// </summary>
         /// <param name="sender">The sender of the event.</param>
-        /// <param name="e">Contains an Add(string:Species) method...</param>
+        /// <param name="e">Contains an Add(string:Species) method.</param>
         protected virtual void SpeciesAmountEventHandler(object sender, ControlEvents.SpeciesAndAmountEventArgs e)
         { //delegate. Transmit species back.
             e.Add(Species);
@@ -359,6 +360,9 @@ namespace AnimalSimulationVersion2
             drawPublisher.RaiseSpeciesAndAmountEvent -= SpeciesAmountEventHandler;
         }
 
+        /// <summary>
+        /// Deconstructor. Used for bugfixing.
+        /// </summary>
         ~Eukaryote() //only here to ensure that all references to the object have been removed.
         {
             #if DEBUG

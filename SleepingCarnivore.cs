@@ -5,9 +5,8 @@ using System.Reflection.Emit;
 using System.Text;
 
 namespace AnimalSimulationVersion2
-{ //maybe have two wolf classes, one there is territorial and one that moves in pack. Both inheriting from this one. This class could be renamed to TerrestrialCarnivore
-    //Wolf becomes abstract then and keeps ISleep (bird class could be called AvesCarnivore). This class could also be called SleepingCarnivore, since codewise the biggest different between a bird and non-bird would be Z. Then again bird could implement something like IDive
-    class SleepingCarnivore : Carnivore, ISleep //, ITerritorial //have an interface for pack/herd behavior? Maybe two interfaces, since in pacts normally only alphas mate, while in herd it is all???
+{
+    class SleepingCarnivore : Carnivore, ISleep 
     { 
 
         public override float AttackRange { get; set; }
@@ -17,8 +16,17 @@ namespace AnimalSimulationVersion2
         public float TimeSlept { get; set; }
         public float SleepLength { get; }
         public bool Sleeping { get; set; }
-
-        public SleepingCarnivore(string species, Vector location, string[] foodSource, IHelper helper, LifeformPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, animalPublisher, drawPublisher, mapInformation)
+        /// <summary>
+        /// Default constructor. Initialises properites and variables to 'default' values.
+        /// </summary>
+        /// <param name="species">The species of this animal.</param>
+        /// <param name="location">The start location of this animal.</param>
+        /// <param name="foodSource">The food source of this animal.</param>
+        /// <param name="helper">An instance of IHelper.</param>
+        /// <param name="lifeformPublisher">An instance of AnimalPublisher.</param>
+        /// <param name="drawPublisher">An instance of DrawPublisher.</param>
+        /// <param name="mapInformation">An instance of MapInformation.</param>
+        public SleepingCarnivore(string species, Vector location, string[] foodSource, IHelper helper, LifeformPublisher lifeformPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, lifeformPublisher, drawPublisher, mapInformation)
         {
             AttackRange = 20; //order these into groups. 
             AttackSpeedMultiplier = 1.5f;
@@ -31,14 +39,14 @@ namespace AnimalSimulationVersion2
             CurrentMovementSpeed = MovementSpeed;
             MaxHunger = 100;
             Hunger = MaxHunger;
-            MaxEnergyLevel = 140; //perhaps have things like energy level, hunger etc. be in seconds. 
+            MaxEnergyLevel = 140;
             EnergyLevel = MaxEnergyLevel;
             SleepLength = 10; 
             BirthAmount = (1, 3);
             MaxAge = 20;
             ReproductionAge = 4;
             HungerFoodSeekingLevel = 0.5f;
-            Gender = GenerateGender(genderInformation); //would be better if this could be called in the base, but genderInformation is first set after... maybe move it up the variable
+            Gender = GenerateGender(genderInformation); 
         }
 
         /// <summary>
@@ -97,8 +105,8 @@ namespace AnimalSimulationVersion2
         /// Else it will calculate the possible next location out from the current and last location. 
         /// Both cases MoveTo is set to a new Vector.
         /// </summary>
-        public override void TrackPrey()  //move this and the others into a single class and give an instance to it 
-        { //maybe it should try and predict the next location of the prey if it is not in attackRange.
+        public override void TrackPrey()  
+        { 
             if (PreyLastLocation == null)
             {
                 PreyLastLocation = lifeformPublisher.GetLocation(foodID);
@@ -113,7 +121,6 @@ namespace AnimalSimulationVersion2
                     (float X, float Y, float Z) differene = (preyLocation.X - PreyLastLocation.X, preyLocation.Y - PreyLastLocation.Y, preyLocation.Z - PreyLastLocation.Z);
                     Vector possibleNextLocation = new Vector(preyLocation.X + differene.X, preyLocation.Y + differene.Y, differene.Z);
                     MoveTo = possibleNextLocation;
-                    //CurrentMovementSpeed = MovementSpeed;
                     PreyLastLocation = preyLocation;
                 }
                 else
@@ -131,7 +138,7 @@ namespace AnimalSimulationVersion2
         {
             Sleeping = true;
             TimeSlept = 0;
-        } //(IPack.PackRelationship, string) test = ((IPack.PackRelationship)1, "");
+        } 
 
         protected override bool GiveBirthAI()
         {
@@ -201,9 +208,12 @@ namespace AnimalSimulationVersion2
             }
             return false;
         }
+        /// <summary>
+        /// The animal might wake up.
+        /// </summary>
+        /// <returns>True if the animal woke up.</returns>
         protected virtual bool WakeUp()
         {
-            //consider making a method in ISleep for this
             if (TimeSlept >= SleepLength || Hunger < 10)
             {
                 Sleeping = false;

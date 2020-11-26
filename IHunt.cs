@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AnimalSimulationVersion2
 {
-    interface IHunt //i.e. if range to prey is less than n movementspeed*1.2 or something like that.
+    interface IHunt
     { //perhaps have a sprint duration just like IEscapePredator
         /// <summary>
         /// The last location of the prey.

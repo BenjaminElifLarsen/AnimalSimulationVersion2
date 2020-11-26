@@ -7,7 +7,13 @@ namespace AnimalSimulationVersion2
 {
     class BirdHerbavore : HidingHerbavore, IBird
     {
+        /// <summary>
+        /// The bird needs to lower its height, so it can hide.
+        /// </summary>
         protected bool needToGoLower = false;
+        /// <summary>
+        /// Contains the end points of the circle.
+        /// </summary>
         protected Vector[] circleLocations = new Vector[0];
 
         public bool CanDive { get; }
@@ -30,7 +36,16 @@ namespace AnimalSimulationVersion2
 
         public float CircleRange { get; }
 
-
+        /// <summary>
+        /// Default constructor. Initialises properites and variables to 'default' values.
+        /// </summary>
+        /// <param name="species">The species of this animal.</param>
+        /// <param name="location">The start location of this animal.</param>
+        /// <param name="foodSource">The food source of this animal.</param>
+        /// <param name="helper">An instance of IHelper.</param>
+        /// <param name="lifeformPublisher">An instance of AnimalPublisher.</param>
+        /// <param name="drawPublisher">An instance of DrawPublisher.</param>
+        /// <param name="mapInformation">An instance of MapInformation.</param>
         public BirdHerbavore(string species, Vector location, string[] foodSource, IHelper helper, LifeformPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, animalPublisher, drawPublisher, mapInformation)
         {
             CanDive = false;
@@ -49,12 +64,23 @@ namespace AnimalSimulationVersion2
             lengthOfReproduction = 4;
 
             Design = new Point[] { new Point(0, 0), new Point(3, 3), new Point(6, 0), new Point(3, 6) };
-            Colour = new Colour(0, 70, 255);
+            Colour = new Colour(255, 255, 255);
         }
 
         protected override void AI()
         {
-            base.AI();
+            TimeUpdate();
+            if (!DeathCheckAI())
+            {
+                GiveBirthAI();
+                if(!HidingAI())
+                    if(!EscapingAI())
+                        if (!HungerAI())
+                            if (!ReproductionAI())
+                                if (!CircleAI())
+                                    MovementAI();
+                UpdateAlpha();
+            }
         }
 
         protected override Vector GenerateRandomEndLocation()
@@ -78,7 +104,7 @@ namespace AnimalSimulationVersion2
 
                 float zSpeed;
                 //it will switch from hover mode to one of the other modes
-                if ((MoveTo.Z - Location.Z) < 0 || (MoveTo.Z - Location.Z) > 0) //let the numbers get modified by the distance, i.e. it require less energy to move 5 up over 200 distance compared to move 5 up over 1 distance 
+                if ((MoveTo.Z - Location.Z) < 0 || (MoveTo.Z - Location.Z) > 0)
                 { 
                     if ((MoveTo.Z - Location.Z) > 0)
                     {
@@ -119,12 +145,15 @@ namespace AnimalSimulationVersion2
                 Location = new Vector(Location.X + xCurrentSpeed, Location.Y + yCurrentSpeed, Location.Z + zCurrentSpeed);
             }
         }
-
+        /// <summary>
+        /// Overridden to force the bird down to a low Z value, before it can hide.
+        /// </summary>
+        /// <returns>True if the bird is hiding.</returns>
         protected override bool HidingAI()
         {
             #region Hiding
             if (!IsHiding && HuntedBy.Length > 0 && TimeHidden < MaxHideTime && CooldownBetweenHiding <= 0)
-                IsHiding = true; //maybe make it such that if there are to many predators after it, it will run instead of hiding.
+                IsHiding = true; 
             else if (TimeHidden > MaxHideTime)
                 IsHiding = false;
             if (IsHiding && Location.Z > 10)
@@ -144,9 +173,32 @@ namespace AnimalSimulationVersion2
             return IsHiding;
         }
 
+        /// <summary>
+        /// Contains the code of the AI related to circling.
+        /// </summary>
+        /// <returns>True if the bird is circling.</returns>
+        protected virtual bool CircleAI()
+        {
+            if (CircleRange == 0)
+                return false;
+            if (circleLocations.Length == 0)
+                circleLocations = Circle();
+            if (Vector.Compare(Location, MoveTo))
+            {
+                CurrentMovementSpeed = MovementSpeed;
+                MoveTo = circleLocations[0];
+                Vector[] locations = circleLocations;
+                helper.Remove(ref locations, circleLocations[0]);
+                circleLocations = locations;
+                Move();
+                return true;
+            }
+            return false;
+        }
 
         public Vector[] Circle()
         {
+
             string nearestFood = FindNearestFood();
             Vector location;
             if (nearestFood != null)

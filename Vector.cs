@@ -25,8 +25,8 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// Creates an instance of the Vector class with a random location on the map.
         /// </summary>
-        /// <param name="mapInformation"></param>
-        /// <param name="helper"></param>
+        /// <param name="mapInformation">An instance of MapInformation.</param>
+        /// <param name="helper">An instance of IHelper.</param>
         public Vector(MapInformation mapInformation, IHelper helper)
         {
             position[0] = helper.GenerateRandomNumber(0, mapInformation.GetSizeOfMap.width - 1);
@@ -36,8 +36,9 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// Creates an instance of the Vector class with a random location on the map.
         /// </summary>
-        /// <param name="mapInformation"></param>
-        /// <param name="helper"></param>
+        /// <param name="mapInformation">An instance of MapInformation.</param>
+        /// <param name="helper">An instance of IHelper.</param>
+        /// <param name="maxHeight">The maximum height.</param>
         public Vector(MapInformation mapInformation, IHelper helper, float maxHeight)
         {
             position[0] = helper.GenerateRandomNumber(0, mapInformation.GetSizeOfMap.width - 1);
@@ -81,7 +82,7 @@ namespace AnimalSimulationVersion2
         /// </summary>
         /// <param name="vector1">The first vector to compare.</param>
         /// <param name="vector2">The second vector to compare.</param>
-        /// <returns>If both vectors' posistion values are the same it returns true, else false.</returns>
+        /// <returns>If both vectors' posistion values are the same, it returns true.</returns>
         public static bool Compare(Vector vector1, Vector vector2)
         {
             if ((vector1 == null && vector2 != null) || (vector1 != null && vector2 == null))

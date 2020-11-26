@@ -12,7 +12,7 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// True if the bird can conduct a dive.
         /// </summary>
-        public bool CanDive { get; } //maybe have a property for dive speed.
+        public bool CanDive { get; } 
         /// <summary>
         /// The maximum height the bird can reach.
         /// </summary>

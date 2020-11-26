@@ -60,7 +60,7 @@ namespace AnimalSimulationVersion2
         /// </summary>
         protected Vector MateLocation { get; set; }
         /// <summary>
-        /// The % of hunger in form of 0.n that should get the animal to hunt //rewrite
+        /// The % of hunger in form of 0.n that should get the animal to hunt.
         /// </summary>
         protected float HungerFoodSeekingLevel { get; set; }
         /// <summary>
@@ -68,11 +68,11 @@ namespace AnimalSimulationVersion2
         /// </summary>
         protected float MaxFoodDistanceRange { get; set; }
         /// <summary>
-        /// 
+        /// The cooldown between trying to find a mate.
         /// </summary>
         protected float FindMateCooldown { get; set; }
         /// <summary>
-        /// 
+        /// The cooldown between trying to find food.
         /// </summary>
         protected float FindFoodCooldown { get; set; }
         /// <summary>
@@ -134,9 +134,25 @@ namespace AnimalSimulationVersion2
             }
             return false;
         }
+        /// <summary>
+        /// Contains the code of the AI related to birth.
+        /// </summary>
+        /// <returns></returns>
         protected abstract bool GiveBirthAI();
+        /// <summary>
+        /// Contains the code of the AI related to hunger.
+        /// </summary>
+        /// <returns>True if it found food.</returns>
         protected abstract bool HungerAI();
+        /// <summary>
+        /// Contains the code of the AI related to reproduction.
+        /// </summary>
+        /// <returns>True if it mated.</returns>
         protected abstract bool ReproductionAI();
+        /// <summary>
+        /// Contains the code of the AI related to random movement.
+        /// </summary>
+        /// <returns></returns>
         protected abstract bool MovementAI();
 
         /// <summary>
@@ -153,8 +169,8 @@ namespace AnimalSimulationVersion2
                 float xPercentage = Math.Abs(MoveTo.X - Location.X) / distanceToEndLocation; //could just use xDistance to optimise the code a little bit
                 float xCurrentSpeed = xPercentage * CurrentMovementSpeed * timeSinceLastUpdate; //multiply with the amount of seconds that have gone.
                 float yCurrentSpeed = (1 - xPercentage) * CurrentMovementSpeed * timeSinceLastUpdate;
-                //calculates the direction to move in for each axel. 
 
+                //calculates the direction to move in for each axel. 
                 bool moveLeft = (MoveTo.X - Location.X) < 0;
                 bool moveUp = (MoveTo.Y - Location.Y) < 0;
 
@@ -166,7 +182,6 @@ namespace AnimalSimulationVersion2
                 if (moveUp)
                     yCurrentSpeed = -yCurrentSpeed;
 
-                //set the new location
                 Location = new Vector(Location.X + xCurrentSpeed, Location.Y + yCurrentSpeed,0);
             }
         }
@@ -175,7 +190,7 @@ namespace AnimalSimulationVersion2
         /// </summary>
         /// <remarks>
         /// By default this is: 
-        /// timeAlive, Age, Hunger and TimeToProductionNeed
+        /// timeAlive, Age, Hunger, TimeToProductionNeed, FindMateCooldown, and FindFoodCooldown.
         /// </remarks>
         protected override void TimeUpdate()
         {
@@ -197,16 +212,16 @@ namespace AnimalSimulationVersion2
         {
             object[] dataObject = new object[] { Species, Location, FoodSource, helper, lifeformPublisher, drawPublisher, mapInformation };
 
-            byte childAmount = (byte)helper.GenerateRandomNumber(BirthAmount.Minimum, BirthAmount.Maximum); //seems like wolves mate for life, but if losing a mate, they will quickly find another one.
-            for (int i = 0; i < childAmount; i++) //perhaps use the Activator.CreateInstance(...) and this method takes a Type argument, then this implementation could be moved up to Animalia
-                Activator.CreateInstance(GetType(), dataObject);//new SleepingCarnivore(Species, Location, FoodSource, helper, animalPublisher, drawPublisher, mapInformation);
+            byte childAmount = (byte)helper.GenerateRandomNumber(BirthAmount.Minimum, BirthAmount.Maximum); 
+            for (int i = 0; i < childAmount; i++) 
+                Activator.CreateInstance(GetType(), dataObject);
             HasReproduced = false;
         }
         /// <summary>
         /// Generates a random end location on the map. X and Y will each be between 0 and the maximum value of their respective maximum possible distance.
         /// Z will be 0.
         /// </summary>
-        /// <returns>Returns a new X and Y coordinate for the animal to move too.</returns>
+        /// <returns>A new X and Y coordinate for the animal to move too.</returns>
         protected virtual Vector GenerateRandomEndLocation()
         {
             string food = FindNearestFood(); //find food and its location
@@ -263,10 +278,10 @@ namespace AnimalSimulationVersion2
             return nearestMate; 
         }
         /// <summary>
-        /// Gets the current location of the lifeform with ID of <paramref name="lifeformID"/>.
+        /// Gets the current location of the lifeform with ID value in <paramref name="lifeformID"/>.
         /// </summary>
         /// <param name="lifeformID">The ID of the lifeform.</param>
-        /// <returns>Returns the location of the lifeform.</returns>
+        /// <returns>The location of the lifeform with ID value in <paramref name="lifeformID"/>.</returns>
         protected virtual Vector GetLifeformLocation(string lifeformID)
         {
             return lifeformPublisher.GetLocation(lifeformID);
@@ -276,7 +291,7 @@ namespace AnimalSimulationVersion2
         /// </summary>
         /// <remarks>By default the gender, 'f', will be pregnant.
         /// If a specific gender needs to be pregant, this method needs to be overwritten.
-        /// Also, by default it will not set mateID to null.</remarks>
+        /// Also by default, it will not set mateID to null.</remarks>
         protected virtual void Mate()
         {
             if (Vector.Compare(Location, MateLocation) && !HasReproduced)
@@ -292,10 +307,10 @@ namespace AnimalSimulationVersion2
         }
 
         /// <summary>
-        /// Generates a gender for the animal  out from the data in <paramref name="genderInfo"/>.
+        /// Generates a gender for the animal from the data in <paramref name="genderInfo"/>.
         /// </summary>
-        /// <param name="genderInfo">Contains a set of possible genders and gender weights</param>
-        /// <returns></returns>
+        /// <param name="genderInfo">Contains a set of possible genders and gender weights.</param>
+        /// <returns>The gender of the animal.</returns>
         protected virtual char GenerateGender((char Gender, byte Weight)[] genderInfo) //it should take an array of possible genders and a % for each of them.
         {
             ushort totalWeight = 0;
@@ -322,7 +337,7 @@ namespace AnimalSimulationVersion2
         /// Finds food and informs the food that it has been found.
         /// </summary>
         /// <remarks>It will return null if no food can be found</remarks>
-        /// <returns>The ID of the food if found. If no food is found it returns null.</returns>
+        /// <returns>The ID of the food if found. If no food is found, returns null.</returns>
         protected virtual string FindFood()
         {
             string nearestFood = FindNearestFood();
@@ -377,8 +392,13 @@ namespace AnimalSimulationVersion2
             }
             base.Death();
         }
+        /// <summary>
+        /// The prey has either died or escaped from this animal.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected virtual void PreyHasDiedEventHandler(object sender, ControlEvents.InformPredatorOfPreyDeathEventArgs e)
-        { //delegate. The prey has died. //rename this event handler since it is also used for losing a prey
+        { //delegate. The prey has died. //rename this event handler, since it is also used for losing a prey
             if (e.IDs.ReceiverID == ID)
                 foodID = null;
         }
@@ -419,7 +439,7 @@ namespace AnimalSimulationVersion2
                     mateID = null;
         }
         /// <summary>
-        /// 
+        /// Its mate have mated with this animal. If e.IsPRegnant is true, this animal is pregnant.
         /// </summary>
         /// <remarks>By default it will not set mateID to null.</remarks>
         /// <param name="sender"></param>
@@ -447,6 +467,9 @@ namespace AnimalSimulationVersion2
             lifeformPublisher.RaisePregnacy -= PregnacyEventHandler;
         }
 
+        /// <summary>
+        /// Deconstructor, used for bugfixing.
+        /// </summary>
         ~Animalia()
         {
             #if DEBUG

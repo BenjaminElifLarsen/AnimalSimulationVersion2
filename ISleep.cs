@@ -21,7 +21,7 @@ namespace AnimalSimulationVersion2
         /// <summary>
         /// The current energy level.
         /// </summary>
-        public abstract float EnergyLevel { get; set; } //affects change to fail/succede at something like losing a prey or get away
+        public abstract float EnergyLevel { get; set; }
         /// <summary>
         /// The maximum energy level.
         /// </summary>
@@ -33,4 +33,3 @@ namespace AnimalSimulationVersion2
         //maybe have a wake up method
     }
 }
-//for animals that does not sleep with both brain parts at the same time, have a debuff. Maybe just in thier implementation
