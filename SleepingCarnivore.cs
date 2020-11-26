@@ -79,7 +79,7 @@ namespace AnimalSimulationVersion2
                 }
                 else
                 {
-                    WakeUp();
+                    WakeUpAI();
                 }
 
             }
@@ -212,7 +212,7 @@ namespace AnimalSimulationVersion2
         /// The animal might wake up.
         /// </summary>
         /// <returns>True if the animal woke up.</returns>
-        protected virtual bool WakeUp()
+        protected virtual bool WakeUpAI()
         {
             if (TimeSlept >= SleepLength || Hunger < 10)
             {
