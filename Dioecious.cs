@@ -33,8 +33,11 @@ namespace AnimalSimulationVersion2
                     Reproduce();
             if(Age >= ReproductionAge && TimeToReproductionNeed <= 0 && !HasReproduced)
             {
-                if (mateID == null)
+                if (mateID == null && FindMateCooldown <= 0)
+                {
                     mateID = FindMate();
+                    FindMateCooldown = ContactCooldownLength;
+                }
                 if(mateID != null)
                 {
                     mateLocation = GetMateLocation(mateID);
@@ -77,6 +80,8 @@ namespace AnimalSimulationVersion2
             TimeToReproductionNeed -= timeSinceLastUpdate;
             if (periodInReproduction < lengthOfReproduction + reproductionExtraTime && HasReproduced)
                 periodInReproduction += timeSinceLastUpdate;
+            if (FindMateCooldown > 0)
+                FindMateCooldown = ContactCooldownLength;
         }
 
         protected override void Polinate()

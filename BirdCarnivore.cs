@@ -50,6 +50,7 @@ namespace AnimalSimulationVersion2
             AttackRange = 30;
             AttackSpeedMultiplier = 1.1f;
 
+            BirthAmount = (1, 1);
             reproductionCooldown = 40;
             lengthOfReproduction = 4;
 

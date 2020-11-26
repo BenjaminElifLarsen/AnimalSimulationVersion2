@@ -173,6 +173,10 @@ namespace AnimalSimulationVersion2
             Hunger -= timeSinceLastUpdate;
             if (Hunger < 0)
                 Health -= timeSinceLastUpdate;
+            if (FindMateCooldown > 0)
+                FindMateCooldown -= timeSinceLastUpdate;
+            if (FindFoodCooldown > 0)
+                FindFoodCooldown -= timeSinceLastUpdate;
         }
         /// <summary>
         /// Animal produces offsprings at the same location as it.

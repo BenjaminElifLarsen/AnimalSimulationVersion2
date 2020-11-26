@@ -71,8 +71,11 @@ namespace AnimalSimulationVersion2
                 {
                     if ((Hunger < MaxHunger * HungerFoodSeekingLevel && EnergyLevel > 0) || Hunger < MaxHunger * 0.1) //softcode those values later.
                     {
-                        if (foodID == null) 
-                           foodID = FindFood(); //if they are in a pack/herd they need to stick together.
+                        if (foodID == null && FindFoodCooldown <= 0) 
+                        { 
+                            foodID = FindFood();
+                            FindFoodCooldown = ContactCooldownLength;
+                        }
                         if (foodID != null)
                         {
                             TrackPrey();
@@ -84,8 +87,11 @@ namespace AnimalSimulationVersion2
                     }
                     else if (Age >= ReproductionAge && EnergyLevel > 0 && TimeToReproductionNeed <= 0)
                     {
-                        if (mateID == null)
+                        if (mateID == null && FindMateCooldown <= 0)
+                        {
                             mateID = FindMate();
+                            FindMateCooldown = ContactCooldownLength;
+                        }
                         if (mateID != null)
                         {
                             CurrentMovementSpeed = MovementSpeed;

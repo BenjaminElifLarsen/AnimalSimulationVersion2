@@ -52,7 +52,11 @@ namespace AnimalSimulationVersion2
                 base.AI();
             if (!isDead)
             {
-                GeneratePack();
+                if (FindPackCooldown <= 0)
+                {
+                    GeneratePack();
+                    FindPackCooldown = ContactCooldownLength;
+                }
                 Fight(); //outcommented while debugging some other bugs.
             }
         }
@@ -64,6 +68,8 @@ namespace AnimalSimulationVersion2
                 TimeSinceLastFight -= timeSinceLastUpdate;
             if (AttackCooldown > 0)
                 AttackCooldown -= timeSinceLastUpdate;
+            if (FindPackCooldown > 0)
+                FindPackCooldown -= timeSinceLastUpdate;
         }
 
         public void Fight()
