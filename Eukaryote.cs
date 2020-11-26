@@ -174,6 +174,11 @@ namespace AnimalSimulationVersion2
         /// </summary>
         protected abstract void AI();
         /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        protected abstract bool DeathCheckAI();
+        /// <summary>
         /// Updates the variables and properties that depends on time.
         /// </summary>
         protected virtual void TimeUpdate()

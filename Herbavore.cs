@@ -70,102 +70,124 @@ namespace AnimalSimulationVersion2
         protected override void AI()
         {
             TimeUpdate();
-            if (Age >= MaxAge || Health <= 0)
-                Death();
-            else
+            if (!DeathCheckAI())
             {
-                #region Female Reproduction
-                if (Gender == 'f')
-                    if (HasReproduced)
-                        if (periodInReproduction >= lengthOfReproduction)
-                            Reproduce();
-                #endregion
-                #region Escaping
-                if (!IsRunning && HuntedBy.Length > 0 && TimeSprinted < EscapeSprintTime && Hunger > 0)
-                {
-                    IsRunning = DiscoveredPredator(DiscoverRange, DiscoverChance);
-                    if (IsRunning) 
-                    { 
-                        CurrentMovementSpeed *= EscapeSpeedMultiplier;
-                        MoveTo = EscapeLocation(PredatorID);
-                    }
-                }
-                else if (TimeSprinted > EscapeSprintTime)
-                {
-                    IsRunning = false;
-                    CurrentMovementSpeed = MovementSpeed;
-                }
-                if (HuntedBy.Length == 0 || Hunger < 0)
-                    IsRunning = false;
-                if (IsRunning && Hunger > 0)
-                {
-                    Move();
-                    if (!HasRolled)
-                    {
-                        HasRolled = true;
-                        TimeSinceLastRoll = 0;
-                        if (TryLosePredator(PredatorID))
-                        {
-                            LostPredator(PredatorID);
-                            IsRunning = false;
-                            CurrentMovementSpeed = MovementSpeed;
-                        }
-                        else
-                            if (Vector.Compare(MoveTo, Location))
-                            MoveTo = EscapeLocation(PredatorID);
-                    }
-                }
-                #endregion
-                #region Hunger
-                else if (Hunger < MaxHunger * HungerFoodSeekingLevel)
-                {
-                    if (mateID != null)
-                    {
-                        lifeformPublisher.RemoveMate(ID, mateID);
-                        mateID = null;
-                    }
-                    if (foodID == null)
-                        foodID = FindFood();
-                    if (foodID != null)
-                    {
-                        MoveTo = lifeformPublisher.GetLocation(foodID);
-                        Move();
-                        if (Vector.Compare(Location, MoveTo))
-                            Eat();
-                    }
-                    else
-                        DefaultMovement();
-                }
-                #endregion
-                #region Mating
-                else if (Age >= ReproductionAge && TimeToReproductionNeed <= 0)
-                {
-                    if (mateID == null)
-                        mateID = FindMate();
-                    if (mateID != null)
-                    {
-                        CurrentMovementSpeed = MovementSpeed;
-                        MoveTo = MateLocation = GetLifeformLocation(mateID);
-                        Move();
-                        Mate();
-                    }
-                    else
-                        DefaultMovement();
-                }
-                #endregion
-                #region Default Movement
-                else
-                    DefaultMovement();
-                #endregion
+                GiveBirthAI();
+                if (!EscapingAI())
+                    if(!HungerAI())
+                        if(!ReproductionAI())
+                            MovementAI();
             }
 
-            void DefaultMovement()
+        }
+        protected override bool GiveBirthAI()
+        {
+            #region Female Reproduction
+            if (Gender == 'f')
+                if (HasReproduced)
+                    if (periodInReproduction >= lengthOfReproduction)
+                        Reproduce();
+            #endregion
+            return true;
+        }
+
+        protected override bool DeathCheckAI()
+        {
+            if (Age >= MaxAge || Health <= 0)
             {
-                if (Vector.Compare(Location, MoveTo))
-                    MoveTo = GenerateRandomEndLocation();
-                CurrentMovementSpeed = MovementSpeed;
-                Move();
+                Death();
+                return true;
             }
+            return false;
+        }
+        protected override bool HungerAI()
+        {
+            if (Hunger < MaxHunger * HungerFoodSeekingLevel)
+            {
+                if (mateID != null)
+                {
+                    lifeformPublisher.RemoveMate(ID, mateID);
+                    mateID = null;
+                }
+                if (foodID == null)
+                    foodID = FindFood();
+                if (foodID != null)
+                {
+                    MoveTo = lifeformPublisher.GetLocation(foodID);
+                    Move();
+                    if (Vector.Compare(Location, MoveTo))
+                        Eat();
+                    return true;
+                }
+            }
+            return false;
+        }
+        protected override bool ReproductionAI()
+        {
+            #region Mating
+            if (Age >= ReproductionAge && TimeToReproductionNeed <= 0)
+            {
+                if (mateID == null)
+                    mateID = FindMate();
+                if (mateID != null)
+                {
+                    CurrentMovementSpeed = MovementSpeed;
+                    MoveTo = MateLocation = GetLifeformLocation(mateID);
+                    Move();
+                    Mate();
+                    return true;
+                }
+            }
+            return false;
+            #endregion
+        }
+        protected override bool MovementAI()
+        {
+            if (Vector.Compare(Location, MoveTo))
+                MoveTo = GenerateRandomEndLocation();
+            CurrentMovementSpeed = MovementSpeed;
+            Move();
+            return true;
+        }
+        protected virtual bool EscapingAI()
+        {
+            #region Escaping
+            if (!IsRunning && HuntedBy.Length > 0 && TimeSprinted < EscapeSprintTime && Hunger > 0)
+            {
+                IsRunning = DiscoveredPredator(DiscoverRange, DiscoverChance);
+                if (IsRunning)
+                {
+                    CurrentMovementSpeed *= EscapeSpeedMultiplier;
+                    MoveTo = EscapeLocation(PredatorID);
+                }
+            }
+            else if (TimeSprinted > EscapeSprintTime)
+            {
+                IsRunning = false;
+                CurrentMovementSpeed = MovementSpeed;
+            }
+            if (HuntedBy.Length == 0 || Hunger < 0)
+                IsRunning = false;
+            if (IsRunning && Hunger > 0)
+            {
+                Move();
+                if (!HasRolled)
+                {
+                    HasRolled = true;
+                    TimeSinceLastRoll = 0;
+                    if (TryLosePredator(PredatorID))
+                    {
+                        LostPredator(PredatorID);
+                        IsRunning = false;
+                        CurrentMovementSpeed = MovementSpeed;
+                    }
+                    else
+                        if (Vector.Compare(MoveTo, Location))
+                        MoveTo = EscapeLocation(PredatorID);
+                }
+            }
+            return IsRunning;
+            #endregion
         }
 
         public bool DiscoveredPredator(float discoverRange, byte discoverChance)
@@ -243,6 +265,7 @@ namespace AnimalSimulationVersion2
             float roll = (float)(helper.GenerateRandomNumber(0, (int)EscapeDistance) / EscapeDistance);
             return roll >= rollOver;
         }
+
 
         /// <summary>
         /// Is asked for information such that another animal can decided if this animal is food or not.

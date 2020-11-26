@@ -59,114 +59,23 @@ namespace AnimalSimulationVersion2
         {
             TimeUpdate();
 
-            if (Health <= 0 || Age > MaxAge) //nothing is finalised for the AI design.
-                Death();
-            else
+            if(!DeathCheckAI())
             {
-                if (Gender == 'f')
-                    if(HasReproduced)
-                        if (periodInReproduction >= lengthOfReproduction)
-                            Reproduce();
+                GiveBirthAI();
                 if (!Sleeping)
                 {
-                    if ((Hunger < MaxHunger * HungerFoodSeekingLevel && EnergyLevel > 0) || Hunger < MaxHunger * 0.1) //softcode those values later.
-                    {
-                        if (foodID == null && FindFoodCooldown <= 0) 
-                        { 
-                            foodID = FindFood();
-                            FindFoodCooldown = ContactCooldownLength;
-                        }
-                        if (foodID != null)
-                        {
-                            TrackPrey();
-                            Move();
-                            AttackPrey();
-                        }
-                        else
-                            DefaultMovement();
-                    }
-                    else if (Age >= ReproductionAge && EnergyLevel > 0 && TimeToReproductionNeed <= 0)
-                    {
-                        if (mateID == null && FindMateCooldown <= 0)
-                        {
-                            mateID = FindMate();
-                            FindMateCooldown = ContactCooldownLength;
-                        }
-                        if (mateID != null)
-                        {
-                            CurrentMovementSpeed = MovementSpeed;
-                            MateLocation = GetLifeformLocation(mateID);
-                            MoveTo = MateLocation;
-                            Move();
-                            Mate();
-                        }
-                        else
-                            DefaultMovement();//figure out a good way to lower the amount of calls to Move() in this method.
-
-                    }
-                    else if (EnergyLevel <= 0)
-                    {
-                        Sleep();
-                    }
-                    else
-                    { //set a random location, a wolf should stay close or inside its territory
-                        DefaultMovement();
-                    }
+                    if (!HungerAI())
+                        if (!ReproductionAI())
+                            if (!FallAsleepAI())
+                                MovementAI();
                 }
                 else
                 {
-                    //consider making a method in ISleep for this
-                    if (TimeSlept >= SleepLength || Hunger < 10)
-                    { 
-                        Sleeping = false;
-                        EnergyLevel = MaxEnergyLevel * TimeSlept / SleepLength;
-                    }
+                    WakeUp();
                 }
 
-                void DefaultMovement()
-                {
-                    if (Vector.Compare(Location, MoveTo))
-                        MoveTo = GenerateRandomEndLocation();
-                    CurrentMovementSpeed = MovementSpeed;
-                    Move();
-                }
             }
         }
-
-        ///// <summary>
-        ///// Generates a territory with four corners. 
-        ///// </summary>
-        ///// <returns></returns>
-        //public (ushort X, ushort Y)[] GenerateTerritory() //Maybe return Vector[] instead of
-        //{
-        //    byte maxLength = 200;
-        //    (ushort X, ushort Y)[] corners = new (ushort X, ushort Y)[4];
-        //    (ushort width, ushort height) mapSize = mapInformation.GetSizeOfMap;
-        //    ushort mostLeftValue = Location.X - maxLength < 0 ? (ushort)0 : (ushort)(Location.X - maxLength); //ensures that the wolf will spawns its territory inside near itself
-        //    ushort mostTopValue = Location.Y - maxLength < 0 ? (ushort)0 : (ushort)(Location.Y - maxLength);
-        //    ushort leftX = (ushort)helper.GenerateRandomNumber(mostLeftValue, mapSize.width - maxLength);
-        //    ushort topY = (ushort)helper.GenerateRandomNumber(mostTopValue, mapSize.height - maxLength);
-        //    corners[0] = (leftX, topY); //left top
-        //    corners[1] = ((ushort)helper.GenerateRandomNumber(leftX + 10, leftX + 100), (ushort)helper.GenerateRandomNumber(topY, topY + 100)); //right top
-        //    corners[2] = ((ushort)helper.GenerateRandomNumber(corners[1].X - 6, corners[1].X + 50), (ushort)helper.GenerateRandomNumber(corners[1].Y, corners[1].Y + 50)); //right bottom 
-        //    corners[3] = ((ushort)helper.GenerateRandomNumber(corners[2].X - 3, corners[2].X + 30), (ushort)helper.GenerateRandomNumber(corners[2].Y + 10, corners[2].Y + 80)); //left bottom
-        //    return corners;
-        //}
-
-        ///// <summary>
-        ///// Animal produces one or multiple offsprings at the same location as it.
-        ///// Sets HasReproduced to false. 
-        ///// </summary>
-        //protected override void Reproduce()
-        //{
-        //    object[] dataObject = new object[] { Species, Location, FoodSource, helper, animalPublisher, drawPublisher, mapInformation };
-
-        //    byte childAmount = (byte)helper.GenerateRandomNumber(BirthAmount.Minimum, BirthAmount.Maximum); //seems like wolves mate for life, but if losing a mate, they will quickly find another one.
-        //    for (int i = 0; i < childAmount; i++) //perhaps use the Activator.CreateInstance(...) and this method takes a Type argument, then this implementation could be moved up to Animalia
-        //        Activator.CreateInstance(GetType(), dataObject);//new SleepingCarnivore(Species, Location, FoodSource, helper, animalPublisher, drawPublisher, mapInformation);
-        //    HasReproduced = false;
-        //}
-        
 
         /// <summary>
         /// Predator attacks prey if possible. 
@@ -174,17 +83,13 @@ namespace AnimalSimulationVersion2
         /// </summary>
         public override void AttackPrey()
         {
-            Vector preyLocation = lifeformPublisher.GetLocation(foodID);  //get location via event
+            Vector preyLocation = lifeformPublisher.GetLocation(foodID);  
             float distance = preyLocation.DistanceBetweenVectors(Location);
             if (distance == 0)
             {
-                Eat();//have two events for dead animals. One for a prey been eaten and one for an animal died 'normally'. For eaten it should returns the animal's nutrience value.
+                Eat();
                 CurrentMovementSpeed = MovementSpeed;
             }
-            //else if(distance <= AttackRange)
-            //{
-            //    CurrentMovementSpeed = MovementSpeed * AttackSpeedMultiplier;
-            //} 
         }
 
         /// <summary>
@@ -227,7 +132,87 @@ namespace AnimalSimulationVersion2
             Sleeping = true;
             TimeSlept = 0;
         } //(IPack.PackRelationship, string) test = ((IPack.PackRelationship)1, "");
-    } //(object, string) test = ((IPack.PackRelationship)1, "");
+
+        protected override bool GiveBirthAI()
+        {
+            if (Gender == 'f')
+                if (HasReproduced)
+                    if (periodInReproduction >= lengthOfReproduction)
+                        Reproduce();
+            return true;
+        }
+
+        protected override bool HungerAI()
+        {
+            if ((Hunger < MaxHunger * HungerFoodSeekingLevel && EnergyLevel > 0) || Hunger < MaxHunger * 0.1) //softcode those values later.
+            {
+                if (foodID == null && FindFoodCooldown <= 0)
+                {
+                    foodID = FindFood();
+                    FindFoodCooldown = ContactCooldownLength;
+                }
+                if (foodID != null)
+                {
+                    TrackPrey();
+                    Move();
+                    AttackPrey();
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        protected override bool ReproductionAI()
+        {
+            if (Age >= ReproductionAge && EnergyLevel > 0 && TimeToReproductionNeed <= 0)
+            {
+                if (mateID == null && FindMateCooldown <= 0)
+                {
+                    mateID = FindMate();
+                    FindMateCooldown = ContactCooldownLength;
+                }
+                if (mateID != null)
+                {
+                    CurrentMovementSpeed = MovementSpeed;
+                    MateLocation = GetLifeformLocation(mateID);
+                    MoveTo = MateLocation;
+                    Move();
+                    Mate();
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        protected override bool MovementAI()
+        {
+            if (Vector.Compare(Location, MoveTo))
+                MoveTo = GenerateRandomEndLocation();
+            CurrentMovementSpeed = MovementSpeed;
+            Move();
+            return true;
+        }
+        protected virtual bool FallAsleepAI()
+        {
+            if (EnergyLevel <= 0)
+            {
+                Sleep();
+                return true;
+            }
+            return false;
+        }
+        protected virtual bool WakeUp()
+        {
+            //consider making a method in ISleep for this
+            if (TimeSlept >= SleepLength || Hunger < 10)
+            {
+                Sleeping = false;
+                EnergyLevel = MaxEnergyLevel * TimeSlept / SleepLength;
+                return true;
+            }
+            return false;
+        }
+    } 
 
 
 }

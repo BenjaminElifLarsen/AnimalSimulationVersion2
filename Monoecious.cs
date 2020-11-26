@@ -9,10 +9,8 @@
         {
             TimeUpdate();
             base.AI();
-            if (TimeToReproductionNeed <= 0)
-                Polinate();
-            if (HasReproduced && periodInReproduction >= lengthOfReproduction)
-                Reproduce();
+            ReproductionAI();
+            GiveOffspringsAI();
         }
 
         /// <summary>
@@ -24,7 +22,18 @@
             periodInReproduction = 0;
             HasReproduced = true;
         }
-        
 
+        protected override bool GiveOffspringsAI()
+        {
+            if (HasReproduced && periodInReproduction >= lengthOfReproduction)
+                Reproduce();
+            return true;
+        }
+        protected override bool ReproductionAI()
+        {
+            if (TimeToReproductionNeed <= 0)
+                Polinate();
+            return true;
+        }
     }
 }

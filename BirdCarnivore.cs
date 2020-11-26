@@ -80,68 +80,87 @@ namespace AnimalSimulationVersion2
 
         protected override void AI()
         {
-            UpdateAlpha();
-            //do stuff //need a full overriding of all TimeUpdate()s, since currentModifier needs to be used.
-            TimeUpdate(); //when the bird does something that is not moving in circle, the circleLocations should set to empty.
-            if (Age >= MaxAge || Health <= 0)
-                Death();
-            else 
-            { 
-                if (Gender == 'f')
-                    if (HasReproduced)
-                        if (periodInReproduction >= lengthOfReproduction)
-                            Reproduce();
-                if(Hunger < MaxHunger * HungerFoodSeekingLevel || Hunger < MaxHunger * 0.1)
-                {
-                    if (foodID == null)
-                        foodID = FindFood();
-                    if(foodID != null)
-                    {
-                        TrackPrey();
-                        Move();
-                        AttackPrey();
-                    }
-                    else
-                        DefaultMovement();
-                }
-                else if (Age >= ReproductionAge && TimeToReproductionNeed <= 0 && !HasReproduced)
-                {
-                    if (mateID == null)
-                        mateID = FindMate();
-                    if (mateID != null)
-                    {
-                        circleLocations = new Vector[0];
-                        MoveTo = MateLocation = GetLifeformLocation(mateID);
-                        Move();
-                        Mate();
-                    }
-                    else
-                        DefaultMovement();
-                }
-                else 
-                { 
-                    if (circleLocations.Length == 0) 
-                        circleLocations = Circle();
-                    if (Vector.Compare(Location,MoveTo))
-                    {
-                        CurrentMovementSpeed = MovementSpeed;
-                        MoveTo = circleLocations[0];
-                        Vector[] locations = circleLocations;
-                        helper.Remove(ref locations, circleLocations[0]);
-                        circleLocations = locations;
-                    }
-                    Move();
-                }
-
-            }
-            void DefaultMovement()
+            TimeUpdate();
+            if (!DeathCheckAI())
             {
-                if (Vector.Compare(Location, MoveTo))
-                    MoveTo = GenerateRandomEndLocation();
-                CurrentMovementSpeed = MovementSpeed;
-                Move();
+                GiveBirthAI();
+                if (!HungerAI())
+                    if (!ReproductionAI())
+                        if (!CircleAI())
+                            MovementAI();
+                UpdateAlpha();
             }
-            //do stuff
+
+        }
+
+        protected override bool GiveBirthAI()
+        {
+            if (Gender == 'f')
+                if (HasReproduced)
+                    if (periodInReproduction >= lengthOfReproduction)
+                        Reproduce();
+            return true;
+        }
+        protected override bool HungerAI()
+        {
+            if (Hunger < MaxHunger * HungerFoodSeekingLevel || Hunger < MaxHunger * 0.1)
+            {
+                if (foodID == null)
+                    foodID = FindFood();
+                if (foodID != null)
+                {
+                    circleLocations = new Vector[0];
+                    TrackPrey();
+                    Move();
+                    AttackPrey();
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        protected override bool ReproductionAI()
+        {
+            if (Age >= ReproductionAge && TimeToReproductionNeed <= 0 && !HasReproduced)
+            {
+                if (mateID == null)
+                    mateID = FindMate();
+                if (mateID != null)
+                {
+                    circleLocations = new Vector[0];
+                    MoveTo = MateLocation = GetLifeformLocation(mateID);
+                    Move();
+                    Mate();
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        protected virtual bool CircleAI()
+        {
+            if (circleLocations.Length == 0)
+                circleLocations = Circle();
+            if (Vector.Compare(Location, MoveTo))
+            {
+                CurrentMovementSpeed = MovementSpeed;
+                MoveTo = circleLocations[0];
+                Vector[] locations = circleLocations;
+                helper.Remove(ref locations, circleLocations[0]);
+                circleLocations = locations;
+                Move();
+                return true;
+            }
+            return false;
+        }
+
+        protected override bool MovementAI()
+        {
+            if (Vector.Compare(Location, MoveTo))
+                MoveTo = GenerateRandomEndLocation();
+            CurrentMovementSpeed = MovementSpeed;
+            Move();
+            return true;
         }
 
         /// <summary>
@@ -377,5 +396,6 @@ namespace AnimalSimulationVersion2
             if (Colour.Alpha != newAlpha)
                 Colour = new Colour(Colour.Red, Colour.Green, Colour.Blue, newAlpha);
         }
+
     }
 }

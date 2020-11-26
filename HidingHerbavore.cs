@@ -48,82 +48,31 @@ namespace AnimalSimulationVersion2
         protected override void AI()
         {
             TimeUpdate();
-            if (Age >= MaxAge || Health <= 0)
-                Death();
-            else
+            if (!DeathCheckAI()) 
             {
-                #region Female Reproduction
-                if (Gender == 'f')
-                    if (HasReproduced)
-                        if (periodInReproduction >= lengthOfReproduction)
-                            Reproduce();
-                #endregion
-                #region Hiding
-                if (!IsHiding && HuntedBy.Length > 0 && TimeHidden < MaxHideTime && CooldownBetweenHiding <= 0)
-                    IsHiding = true; //maybe make it such that if there are to many predators after it, it will run instead of hiding.
-                else if (TimeHidden > MaxHideTime)
-                    IsHiding = false;
-                if (IsHiding)
-                    HideFromPredator();
-                #endregion
-                #region Hunger
-                else if (Hunger < MaxHunger * HungerFoodSeekingLevel) //consider splitting the parts of the AI into methods that can overriden and reused.
-                {
-                    if (mateID != null) 
-                    { 
-                        lifeformPublisher.RemoveMate(ID, mateID);
-                        mateID = null;
-                    }
-                    if (foodID == null)
-                        foodID = FindFood();
-                    if (foodID != null)
-                    {
-                        MoveTo = lifeformPublisher.GetLocation(foodID);
-                        Move();
-                        if (Vector.Compare(Location, MoveTo))
-                            Eat();
-                    }
-                    else
-                        DefaultMovement();
-                }
-                #endregion
-                #region Mating
-                else if (Age >= ReproductionAge && TimeToReproductionNeed <= 0)
-                {
-                    Failed:
-                    if (mateID == null)
-                        mateID = FindMate();
-                    if (mateID != null)
-                    {
-                        CurrentMovementSpeed = MovementSpeed;
-                        MoveTo = MateLocation = GetLifeformLocation(mateID);
-                        if(MateLocation == null)
-                        {
-                            lifeformPublisher.RemoveMate(ID, mateID);
-                            mateID = null;
-                            goto Failed;
-                        }
-                        Move();
-                        Mate();
-                    }
-                    else
-                        DefaultMovement();
-                }
-                #endregion
-                #region Default Movement
-                else
-                    DefaultMovement();
-                #endregion
-            }
+                GiveBirthAI();
+                if (!HidingAI())
+                    if (!EscapingAI())
+                        if (!HungerAI())
+                            if (!ReproductionAI())
+                                MovementAI();
 
-            void DefaultMovement()
-            {
-                if (Vector.Compare(Location,MoveTo))
-                    MoveTo = GenerateRandomEndLocation();
-                CurrentMovementSpeed = MovementSpeed;
-                Move();
             }
         }
+
+        protected virtual bool HidingAI()
+        {
+            #region Hiding
+            if (!IsHiding && HuntedBy.Length > 0 && TimeHidden < MaxHideTime && CooldownBetweenHiding <= 0)
+                IsHiding = true; //maybe make it such that if there are to many predators after it, it will run instead of hiding.
+            else if (TimeHidden > MaxHideTime)
+                IsHiding = false;
+            if (IsHiding)
+                HideFromPredator();
+            #endregion
+            return IsHiding;
+        }
+
         /// <summary>
         /// Overrides Mate(). Sets mateID to null.
         /// </summary>
