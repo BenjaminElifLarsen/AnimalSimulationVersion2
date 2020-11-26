@@ -125,6 +125,20 @@ namespace AnimalSimulationVersion2
             this.lifeformPublisher.RaisePregnacy += PregnacyEventHandler;
         }
 
+        protected override bool DeathCheckAI()
+        {
+            if (Age >= MaxAge || Health <= 0)
+            {
+                Death();
+                return true;
+            }
+            return false;
+        }
+        protected abstract bool GiveBirthAI();
+        protected abstract bool HungerAI();
+        protected abstract bool ReproductionAI();
+        protected abstract bool MovementAI();
+
         /// <summary>
         /// Moves the animal.
         /// </summary>

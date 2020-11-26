@@ -52,13 +52,20 @@ namespace AnimalSimulationVersion2
                 base.AI();
             if (!isDead)
             {
-                if (FindPackCooldown <= 0)
-                {
-                    GeneratePack();
-                    FindPackCooldown = ContactCooldownLength;
-                }
-                Fight(); //outcommented while debugging some other bugs.
+                PackAI();
+                Fight(); 
             }
+        }
+
+        protected virtual bool PackAI()
+        {
+            if (FindPackCooldown <= 0)
+            {
+                GeneratePack();
+                FindPackCooldown = ContactCooldownLength;
+                return true;
+            }
+            return false;
         }
 
         protected override void TimeUpdate()

@@ -28,24 +28,36 @@ namespace AnimalSimulationVersion2
         {
             TimeUpdate();
             base.AI();
+            GiveOffspringsAI();
+            ReproductionAI();
+        }
+        protected override bool GiveOffspringsAI()
+        {
+
             if (Gender == 'f')
                 if (HasReproduced && periodInReproduction >= lengthOfReproduction + reproductionExtraTime)
                     Reproduce();
-            if(Age >= ReproductionAge && TimeToReproductionNeed <= 0 && !HasReproduced)
+            return true;
+        }
+        protected override bool ReproductionAI()
+        {
+            if (Age >= ReproductionAge && TimeToReproductionNeed <= 0 && !HasReproduced)
             {
                 if (mateID == null && FindMateCooldown <= 0)
                 {
                     mateID = FindMate();
                     FindMateCooldown = ContactCooldownLength;
                 }
-                if(mateID != null)
+                if (mateID != null)
                 {
                     mateLocation = GetMateLocation(mateID);
                     reproductionExtraTime = DistanceTime(/*mateLocation*/);
                     Polinate();
                     mateID = null;
+                    return true;
                 }
             }
+            return false;
         }
 
         protected override void Reproduce()
@@ -158,5 +170,6 @@ namespace AnimalSimulationVersion2
             lifeformPublisher.RaisePossibleMatesEvent -= CanMateEventHandler;
             base.RemoveSubscriptions();
         }
+
     }
 }

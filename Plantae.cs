@@ -32,9 +32,19 @@ namespace AnimalSimulationVersion2
         /// </summary>
         protected override void AI()
         {
-            if (Age >= MaxAge || Health <= 0)
-                Death();
+            DeathCheckAI();
         }
+        protected override bool DeathCheckAI()
+        {
+            if (Age >= MaxAge || Health <= 0)
+            {
+                Death();
+                return true;
+            }
+            return false;
+        }
+        protected abstract bool ReproductionAI();
+        protected abstract bool GiveOffspringsAI();
 
         /// <summary>
         /// Polinating the plant.

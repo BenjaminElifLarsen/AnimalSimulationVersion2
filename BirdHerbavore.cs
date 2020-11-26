@@ -7,6 +7,7 @@ namespace AnimalSimulationVersion2
 {
     class BirdHerbavore : HidingHerbavore, IBird
     {
+        protected bool needToGoLower = false;
         protected Vector[] circleLocations = new Vector[0];
 
         public bool CanDive { get; }
@@ -119,10 +120,30 @@ namespace AnimalSimulationVersion2
             }
         }
 
-        public new void HideFromPredator()
+        protected override bool HidingAI()
         {
-
+            #region Hiding
+            if (!IsHiding && HuntedBy.Length > 0 && TimeHidden < MaxHideTime && CooldownBetweenHiding <= 0)
+                IsHiding = true; //maybe make it such that if there are to many predators after it, it will run instead of hiding.
+            else if (TimeHidden > MaxHideTime)
+                IsHiding = false;
+            if (IsHiding && Location.Z > 10)
+                needToGoLower = true;
+            if (needToGoLower)
+            {
+                Location.Z = helper.GenerateRandomNumber(0, 10);
+                MoveTo = Location;
+                Move();
+            }
+            if (IsHiding && Location.Z <= 10)
+            {
+                HideFromPredator();
+                needToGoLower = false;
+            }
+            #endregion
+            return IsHiding;
         }
+
 
         public Vector[] Circle()
         {
