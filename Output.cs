@@ -104,11 +104,8 @@ namespace AnimalSimulationVersion2
                 if ((DateTime.Now - lastTime).TotalSeconds >= TimeInSecondsBetweenFrames) //the part before >= needs also be accessed by the AI thread. 
                 {
                     lastTime = DateTime.Now;
-                    List<(Point[] Design, Colour Colour, Vector Location)> drawInforamtion = DrawPublisher.Draw();
-                    List<(string Species, ushort Amount)> speciesInformation = DrawPublisher.SpeciesAndAmount();
-                    Map = Draw(Map, drawInforamtion);
-                    PaintEvent?.Invoke(this, new ImageEventArgs { BitMapImage = Map });
-                    TextEvent?.Invoke(this, new TextEventArgs { ListInformation = speciesInformation });
+                    PaintEvent?.Invoke(this, new ImageEventArgs { BitMapImage = Draw(Map, DrawPublisher.Draw()) });
+                    TextEvent?.Invoke(this, new TextEventArgs { ListInformation = DrawPublisher.SpeciesAndAmount() });
                 }
             }
         }
