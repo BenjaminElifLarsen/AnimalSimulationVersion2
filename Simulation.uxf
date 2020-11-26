@@ -1,4 +1,4 @@
-<diagram program="umletino" version="14.3.0"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>2113</x><y>92</y><w>560</w><h>920</h></coordinates><panel_attributes>/Eukaryote/
+<diagram program="umletino" version="14.3.0"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>2113</x><y>52</y><w>560</w><h>950</h></coordinates><panel_attributes>/Eukaryote/
 --
 # isDead : bool
 # timeAlive : float
@@ -41,6 +41,8 @@
 # setOneAgeInSeconsd(float) : void
 # getHasReproduced() : bool
 # setHasReproduced(bool) : void
+# getContactCooldownLength() : float
+- setContactCooldownLength(float) : void
 --
 + Eukaryote(string, Vector, IHelper, LifeformPublisher, DrawPublisher, MapInformation)
 - Eukaryote(IHelper, LifeformlPublisher, DrawPublisher, MapInformation)
@@ -70,7 +72,7 @@
 {override} # AI() : void
 /# Polinate() : void /
 {override} # Reproduce() : void
-# GenerateChildren(int,object[]) : void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2413</x><y>1142</y><w>500</w><h>720</h></coordinates><panel_attributes>/Animalia/
+# GenerateChildren(int,object[]) : void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2413</x><y>1082</y><w>500</w><h>780</h></coordinates><panel_attributes>/Animalia/
 --
 # foodID : string
 # mateID : string
@@ -98,6 +100,10 @@
 # setHungerFoodSeekingLevel(float) : void
 # getMaxFoodDistanceRange() : float
 # setMaxFoodDistanceRange(float) : void
+# getFindMateCooldown() : float
+# setFindMateCooldown(float) : void
+# getFindFoodCooldown() : float
+# setFindFoodCooldown(float) : void
 --
 + Animalia(string Vector, IHelper, LifeformPublisher, DrawPublisher, MapInformation)
 # Animalia(string,(float, float), IHelper, LifeformPublisher, DrawPublisher, MapInformation)
@@ -128,7 +134,7 @@
 
 
 
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2073</x><y>1002</y><w>310</w><h>220</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>290;10;290;110;10;110;10;200</additional_attributes></element><element><id>Relation</id><coordinates><x>2353</x><y>1002</y><w>330</w><h>160</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;110;310;110;310;140</additional_attributes></element><element><id>Text</id><coordinates><x>2363</x><y>1072</y><w>120</w><h>30</h></coordinates><panel_attributes>Type of Kingdom
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2073</x><y>992</y><w>310</w><h>230</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>290;10;290;120;10;120;10;210</additional_attributes></element><element><id>Relation</id><coordinates><x>2353</x><y>992</y><w>330</w><h>110</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;70;310;70;310;90</additional_attributes></element><element><id>Text</id><coordinates><x>2363</x><y>1032</y><w>120</w><h>30</h></coordinates><panel_attributes>Type of Kingdom
 style=wordwrap</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2123</x><y>1922</y><w>490</w><h>60</h></coordinates><panel_attributes>/Carnivore/
 --
 + Carnivore(string, Vector, IHelper, LifeformPublisher, DrawPublisher, MapInformation)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2643</x><y>1932</y><w>530</w><h>100</h></coordinates><panel_attributes>/Herbavore/
@@ -136,7 +142,7 @@ style=wordwrap</panel_attributes><additional_attributes></additional_attributes>
 + Herbavore(string, Vector, IHelper, LifeformPublisher, DrawPublisher, MapInformation)
 {override} # TimeUpdate() : void
 {override} # AI() : void
-{override} # IsPossiblePreyEventHandler(object, ControlEvents.GetPossiblePreyEventArgs) : void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1883</x><y>1392</y><w>490</w><h>310</h></coordinates><panel_attributes>/Dioecious/
+{override} # IsPossiblePreyEventHandler(object, ControlEvents.GetPossiblePreyEventArgs) : void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1883</x><y>1392</y><w>490</w><h>340</h></coordinates><panel_attributes>/Dioecious/
 --
 # mateID : string
 # mateLocation : Vector
@@ -146,6 +152,8 @@ style=wordwrap</panel_attributes><additional_attributes></additional_attributes>
 --
 # getGender() : char
 # setGender(char) : void
+# getFindMateCooldown() : float
+# setFindMateCooldown(float) : void
 --
 + Dioecious(string,(float, float), IHelper, LifeformPublisher, DrawPublisher, MapInformation)
 {override} # AI() : void
@@ -386,11 +394,13 @@ PackRelationship
 Alpha : 1
 Member : 2
 NonMember: 0</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>3533</x><y>432</y><w>60</w><h>40</h></coordinates><panel_attributes>lt=-(+)
-</panel_attributes><additional_attributes>40;20;10;20</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1733</x><y>345</y><w>240</w><h>210</h></coordinates><panel_attributes>Vector
+</panel_attributes><additional_attributes>40;20;10;20</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1733</x><y>345</y><w>240</w><h>230</h></coordinates><panel_attributes>Vector
 --
 - posistion : float[3]
 --
 + Vector(float,float,float) 
++ Vector(MapInformation,IHelper)
++ Vector(MapInformation,IHelper,float)
 + getX(void) : float
 + setX(float) : void
 + getY(void) : float
@@ -403,10 +413,13 @@ _+ Compare(Vector,Vector) : bool_
 </panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1373</x><y>1505</y><w>500</w><h>50</h></coordinates><panel_attributes>MonoeciousPlant
 --
 + MonoeciousPlant(string, Vector, IHelper, LifeformPublisher, DrawPublisher, MapInformation)
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1883</x><y>1735</y><w>490</w><h>40</h></coordinates><panel_attributes>DioeciousPlant
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1883</x><y>1765</y><w>490</w><h>40</h></coordinates><panel_attributes>DioeciousPlant
 --
 + DioeciousPlant(string, Vector, IHelper, LifeformPublisher, DrawPublisher, MapInformation)
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2123</x><y>1695</y><w>30</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;40</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1553</x><y>2142</y><w>510</w><h>170</h></coordinates><panel_attributes>PackCarnivore
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2123</x><y>1725</y><w>30</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;40</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1553</x><y>2142</y><w>510</w><h>200</h></coordinates><panel_attributes>PackCarnivore
+--
+# getFindPackCooldown() : float
+# setFindPackCooldown(float) : void
 --
 + PackCarnivore(string, Vector, IHelper, AnimalPublisher, DrawPublisher, MapInformation)
 {override} # TimeUpdate() : void
@@ -783,7 +796,7 @@ _Output()_
 + UpdateInformation(string) : void
 - Output_UpdateVisualEvent(object,ImageEventArgs) : void
 + UpdateVisualImage(BitmapSource) : void
-_- ConvertBitmapToBitmapImage(Bitmap) : BitmapImage_</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1733</x><y>572</y><w>240</w><h>160</h></coordinates><panel_attributes>MapInformation
+_- ConvertBitmapToBitmapImage(Bitmap) : BitmapImage_</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1733</x><y>592</y><w>240</w><h>160</h></coordinates><panel_attributes>MapInformation
 --
 - (width,height) mapSize : (ushort,ushort)
 --
@@ -793,7 +806,7 @@ _- ConvertBitmapToBitmapImage(Bitmap) : BitmapImage_</panel_attributes><addition
 + setOneAgeInSeoncds(float) : void
 _+ getInstance() : MapInformation_
 --
-_ MapInformation()_</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1833</x><y>2332</y><w>510</w><h>150</h></coordinates><panel_attributes>BirdCarnivore
+_ MapInformation()_</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1833</x><y>2372</y><w>510</w><h>150</h></coordinates><panel_attributes>BirdCarnivore
 --
 # circleLocations : Vector[]
 # isDiving : bool
@@ -803,10 +816,10 @@ _ MapInformation()_</panel_attributes><additional_attributes></additional_attrib
 {override} # FindNearestFood() : string
 {override} # GenerateRandomEndLocation() : Vector
 {override} # Move() : void
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2083</x><y>1972</y><w>320</w><h>380</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>280;10;280;30;300;30;300;160;40;160;40;280;10;280;10;360</additional_attributes></element><element><id>Relation</id><coordinates><x>2333</x><y>2342</y><w>130</w><h>50</h></coordinates><panel_attributes>lt=)-
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2083</x><y>1972</y><w>320</w><h>420</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>280;10;280;30;300;30;300;160;40;160;40;280;10;280;10;400</additional_attributes></element><element><id>Relation</id><coordinates><x>2333</x><y>2382</y><w>130</w><h>50</h></coordinates><panel_attributes>lt=)-
 m1=require
 IBird
-</panel_attributes><additional_attributes>100;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>2333</x><y>2392</y><w>130</w><h>50</h></coordinates><panel_attributes>lt=-()
+</panel_attributes><additional_attributes>100;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>2333</x><y>2432</y><w>130</w><h>50</h></coordinates><panel_attributes>lt=-()
 m2=provide
 IBird</panel_attributes><additional_attributes>10;20;110;20</additional_attributes></element><element><id>UMLClass</id><coordinates><x>3283</x><y>852</y><w>250</w><h>170</h></coordinates><panel_attributes>&lt;&lt;Interface&gt;&gt;
 ITerritorial
