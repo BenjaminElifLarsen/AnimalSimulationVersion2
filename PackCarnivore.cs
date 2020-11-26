@@ -15,12 +15,13 @@ namespace AnimalSimulationVersion2
         public IPack.PackRelationship Relationship { get; set; }
         public bool AlphaMatingOnly { get; set; }
         public string[] AttackedBy { get; set; }
-
         public float StrikeRange { get; }
-
         public float AttackSpeed { get; }
-
         public float AttackCooldown { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        protected float FindPackCooldown { get; set; }
 
         public PackCarnivore(string species, Vector location, string[] foodSource, IHelper helper, LifeformPublisher animalPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : base(species, location, foodSource, helper, animalPublisher, drawPublisher, mapInformation)
         {

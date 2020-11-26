@@ -11,6 +11,10 @@ namespace AnimalSimulationVersion2
         protected float reproductionExtraTime;
         protected float distanceDivider;
         protected char Gender { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        protected float FindMateCooldown { get; set; }
         public Dioecious(string species, Vector location, IHelper helper, LifeformPublisher lifeformPublisher, DrawPublisher drawPublisher, MapInformation mapInformation, char gender = (char)0) : base(species, location, helper, lifeformPublisher, drawPublisher, mapInformation)
         {
             if (gender == 0)

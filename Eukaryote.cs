@@ -110,7 +110,11 @@ namespace AnimalSimulationVersion2
         /// True if the lifeform has reproduced and is waiting on children.
         /// </summary>
         protected bool HasReproduced { get; set; } //find a better name
-
+        /// <summary>
+        /// The amount of seconds that has to have been between two calls, with the same purpose, out.
+        /// </summary>
+        protected float ContactCooldownLength { get; private set; }
+        
         /// <summary>
         /// Sets the Species and Location and call another constructor. //rewrite
         /// </summary>
@@ -129,6 +133,8 @@ namespace AnimalSimulationVersion2
             Health = MaxHealth;
             MaxAge = 10;
             NutrientValue = 50;
+
+            ContactCooldownLength = 0.5f;
 
             Colour = new Colour(122,122,122);
             Design = new Point[] { new Point(0, 0), new Point(4, 0), new Point(4, 4), new Point(0, 4) };

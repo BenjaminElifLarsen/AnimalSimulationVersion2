@@ -68,6 +68,18 @@ namespace AnimalSimulationVersion2
         /// </summary>
         protected float MaxFoodDistanceRange { get; set; }
         /// <summary>
+        /// 
+        /// </summary>
+        protected float FindMateCooldown { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        protected float FindFoodCooldown { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        protected float FindMovementPoint { get; set; } //rename
+        /// <summary>
         /// Default constructor. Initialises properites and variables to 'default' values.
         /// </summary>
         /// <param name="species">The species of this animal.</param>
@@ -80,9 +92,7 @@ namespace AnimalSimulationVersion2
         public Animalia(string species, Vector location, string[] foodSource, IHelper helper, LifeformPublisher lifeformPublisher, DrawPublisher drawPublisher, MapInformation mapInformation) : this(species, location,helper, lifeformPublisher, drawPublisher, mapInformation)
         {
             MateLocation = Vector.Copy(location);
-            //MoveTo = GenerateRandomEndLocation();
             FoodSource = foodSource;
-            //MoveTo = GenerateRandomEndLocation();
             MoveTo = Vector.Copy(location);
             MovementSpeed = 10;
             CurrentMovementSpeed = MovementSpeed;
