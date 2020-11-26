@@ -61,7 +61,9 @@ namespace AnimalSimulationVersion2
             base.AI();
 
         }
-
+        /// <summary>
+        /// Checks if a lifeform should fall asleep or wake up.
+        /// </summary>
         public void Sleep() 
         {
             if (!Sleeping)
