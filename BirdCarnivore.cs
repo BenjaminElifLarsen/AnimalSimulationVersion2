@@ -320,7 +320,7 @@ namespace AnimalSimulationVersion2
             (float X, float Y)[] rename = new (float X, float Y)[] { (-1, 0), (-0.5f, 1), (0.5f, 1), (1, 0), (0.5f, -1), (-0.5f, -1) };
             //calculate six points the bird has to fly to to move in a circle
             float radius = CircleRange / 2f;
-            for (byte i = 0; i < circlePoints.Length - 1; i++) //how to calculate the points
+            for (byte i = 0; i < circlePoints.Length - 1; i++)
             {
                 float x = rename[i].X * radius;
                 float y = rename[i].Y * radius;
