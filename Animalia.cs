@@ -76,10 +76,6 @@ namespace AnimalSimulationVersion2
         /// </summary>
         protected float FindFoodCooldown { get; set; }
         /// <summary>
-        /// 
-        /// </summary>
-        protected float FindMovementPoint { get; set; } //rename
-        /// <summary>
         /// Default constructor. Initialises properites and variables to 'default' values.
         /// </summary>
         /// <param name="species">The species of this animal.</param>
