@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualBasic;
+﻿#define DEBUG
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -100,7 +101,8 @@ namespace AnimalSimulationVersion2
             DateTime lastTime = DateTime.Now;
             while (true)
             {
-                if ((DateTime.Now - lastTime).TotalSeconds >= TimeInSecondsBetweenFrames)
+                double passedTime = (DateTime.Now - lastTime).TotalSeconds;
+                if (passedTime >= TimeInSecondsBetweenFrames)
                 {
                     lastTime = DateTime.Now;
                     PaintEvent?.Invoke(this, new ImageEventArgs { BitMapImage = Draw(Map, DrawPublisher.Draw()) });
@@ -157,7 +159,7 @@ namespace AnimalSimulationVersion2
                 if (point.X < smallestWidth)
                     smallestWidth = point.X;
                 if (point.Y > heighestHeight)
-                    heighestHeight = point.X;
+                    heighestHeight = point.Y;
                 if (point.Y < smallestHeight)
                     smallestHeight = point.Y;
             }

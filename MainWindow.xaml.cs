@@ -1,6 +1,8 @@
-﻿using System;
+﻿#define DEBUG
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -117,6 +119,10 @@ namespace AnimalSimulationVersion2
                 {
                     ImageBox.Source.Freeze();
                     ImageBox.Source = bitmapImage;
+                    #if DEBUG
+                    if ((int)ImageBox.Width != 783 || (int)ImageBox.Height != 407)
+                        Debug.WriteLine(ImageBox.Width + ", " + ImageBox.Height);
+                    #endif
                 });
         }
 
@@ -138,6 +144,10 @@ namespace AnimalSimulationVersion2
                 bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
                 bitmapImage.EndInit();
             }
+            #if DEBUG
+            if ((int)bitmapImage.Width+1 != (int)bitmap.Width || (int)bitmapImage.Height+1 != (int)bitmap.Height)
+                Debug.WriteLine("(" + bitmapImage.Width + ", " + bitmapImage.Height + "), (" + bitmap.Width + ", " + bitmap.Height + ")");
+            #endif
             return bitmapImage;
         }
     }
